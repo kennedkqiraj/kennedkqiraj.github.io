@@ -56,7 +56,7 @@
     .visually-hidden{position:absolute; clip:rect(1px, 1px, 1px, 1px); padding:0; border:0; height:1px; width:1px; overflow:hidden;}
     .avatar{width:100%; max-width: clamp(300px, 40vw, 480px); display:block; margin:6px auto 12px; border-radius:18px; object-fit:cover; border:1px solid var(--border); box-shadow:var(--shadow); cursor:pointer;}
 
-    /* Projects — brandable (dynamic from JSON) */
+    /* Projects — dynamic from JSON */
     .projects-grid{display:grid; gap:18px; grid-template-columns:1fr}
     @media(min-width:860px){.projects-grid{grid-template-columns:1fr 1fr}}
     .proj-card{border:1px solid var(--border); border-radius:18px; background:var(--panel); box-shadow:var(--shadow); overflow:hidden; position:relative}
@@ -67,7 +67,6 @@
     .proj-title{margin:0 0 8px; font-weight:700; font-size:18px}
     .p-tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
     .tag{font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--border); color:var(--muted)}
-    /* ensure overlays (like watermarks) sit behind content */
     .proj-card .proj-banner, .proj-card .proj-body { position:relative; z-index:1; }
 
     /* Brand palettes */
@@ -75,26 +74,31 @@
     .proj-card[data-brand="nzz"]{--brand:#111111; --brand-2:#4b5563}
     .proj-card[data-brand="on"]{--brand:#0b0b0e; --brand-2:#6b7280}
 
-    /* === IBM covers the WHOLE card (gradient + watermark) === */
+    /* === IBM light lilac background across the WHOLE card === */
     .proj-card[data-brand="ibm"]{
-      background: linear-gradient(135deg, var(--brand), var(--brand-2));
-      border-color: rgba(255,255,255,.18);
-      color:#fff;
+      /* soft lilac/neutral layered background */
+      background:
+        radial-gradient(1100px 700px at 120% -10%, rgba(129,140,248,.10), transparent 50%),
+        radial-gradient(900px 600px at -20% 120%, rgba(168,85,247,.10), transparent 60%),
+        linear-gradient(135deg, #f3f1ff 0%, #eeeaff 45%, #e9efff 100%);
+      border-color: rgba(17,18,25,.10);
+      color:#111217; /* dark text on light bg */
     }
     .proj-card[data-brand="ibm"] .proj-banner{ background:transparent; }
-    .proj-card[data-brand="ibm"] .proj-title{ color:#fff; }
-    .proj-card[data-brand="ibm"] .muted{ color:rgba(255,255,255,.92); }
+    .proj-card[data-brand="ibm"] .proj-title{ color:#111217; }
+    .proj-card[data-brand="ibm"] .muted{ color:#4b4f5c; }
     .proj-card[data-brand="ibm"] .tag{
-      background: rgba(255,255,255,.10);
-      border-color: rgba(255,255,255,.35);
-      color:#fff;
+      background: rgba(17,18,25,.05);
+      border-color: rgba(17,18,25,.12);
+      color:#111217;
     }
+    /* Very light IBM watermark */
     .proj-card[data-brand="ibm"]::after{
       content:"";
       position:absolute; inset:0; z-index:0;
-      background: url('assets/ibm.png') center/480px auto no-repeat;
-      opacity:.08;
-      filter: grayscale(1) contrast(.9) brightness(1.2);
+      background: url('assets/ibm.png') center/520px auto no-repeat;
+      opacity:.06;            /* lighter & less contrast */
+      filter: grayscale(1) contrast(.85) brightness(1.15);
       pointer-events:none;
     }
   </style>
