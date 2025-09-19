@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Kened Kqiraj — Data Science Portfolio</title>
-  <meta name="description" content="Portfolio website for a Data Science jobseeker: projects, skills, experience, and contact." />
+  <title>Kened Kqiraj — Data Science</title>
+  <meta name="description" content="Portfolio for Kened Kqiraj: experience, education, skills, and contact." />
   <meta name="author" content="Kened Kqiraj" />
-  <meta property="og:title" content="Kened Kqiraj — Data Science Portfolio" />
-  <meta property="og:description" content="Projects, skills, and experience in Data Science, ML, and Analytics." />
+  <meta property="og:title" content="Kened Kqiraj — Data Science" />
+  <meta property="og:description" content="Data Science portfolio: experience, education, skills, and contact." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://kennedkqiraj.github.io/assets/my_picture.png" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -15,37 +15,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%230a0a0a'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' font-size='40' fill='%23fff' font-family='sans-serif'%3EK%3C/text%3E%3C/svg%3E">
   <style>
-    :root{
-      --bg: #0b0b0e;
-      --panel:#111219; 
-      --text:#e8e8ea;
-      --muted:#b6b6c2;
-      --accent:#6ee7b7; /* mint */
-      --accent-2:#60a5fa; /* blue */
-      --border:#1d1e26;
-      --shadow: 0 10px 30px rgba(0,0,0,0.35);
-      --radius: 18px;
-    }
-    :root.light{
-      --bg:#f7f7fb;
-      --panel:#ffffff;
-      --text:#111217;
-      --muted:#4b4f5c;
-      --accent:#0ea5e9; /* blue */
-      --accent-2:#22c55e; /* green */
-      --border:#e9e9f3;
-      --shadow: 0 20px 40px rgba(10, 10, 10, 0.08);
-    }
+    :root{ --bg:#0b0b0e; --panel:#111219; --text:#e8e8ea; --muted:#b6b6c2; --accent:#6ee7b7; --accent-2:#60a5fa; --border:#1d1e26; --shadow:0 10px 30px rgba(0,0,0,.35); --radius:18px; }
+    :root.light{ --bg:#f7f7fb; --panel:#ffffff; --text:#111217; --muted:#4b4f5c; --accent:#0ea5e9; --accent-2:#22c55e; --border:#e9e9f3; --shadow:0 20px 40px rgba(10,10,10,.08); }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{
-      margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; 
-      color:var(--text); background:radial-gradient(1200px 800px at 100% -10%, rgba(96,165,250,.15), transparent),
-      radial-gradient(800px 600px at -10% 110%, rgba(110,231,183,.12), transparent), var(--bg);
-      line-height:1.6;
-    }
+    body{margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans; color:var(--text); background:radial-gradient(1200px 800px at 100% -10%, rgba(96,165,250,.15), transparent), radial-gradient(800px 600px at -10% 110%, rgba(110,231,183,.12), transparent), var(--bg); line-height:1.6;}
     a{color:inherit; text-decoration:none}
-    .container{max-width:1100px; margin:0 auto; padding: 24px 20px 56px}
+    .container{max-width:1100px; margin:0 auto; padding:24px 20px 56px}
     .nav{position:sticky; top:0; backdrop-filter:saturate(180%) blur(8px); background:color-mix(in oklab, var(--bg) 85%, transparent); border-bottom:1px solid var(--border); z-index:50}
     .nav-inner{display:flex; align-items:center; justify-content:space-between; padding:14px 20px; max-width:1100px; margin:0 auto}
     .brand{display:flex; align-items:center; gap:10px; font-weight:700}
@@ -58,24 +34,12 @@
     .btn-primary{background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#0b0b0e; border-color:transparent; font-weight:700}
     .btn-ghost{background:transparent; box-shadow:none}
     .grid{display:grid; gap:18px}
-    @media(min-width:820px){
-      .hero{grid-template-columns: 1.3fr .7fr; align-items:center}
-    }
+    @media(min-width:820px){ .hero{grid-template-columns: 1.2fr .8fr; align-items:center} }
     .card{background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow)}
-    .hero-title{font-size: clamp(28px, 4.4vw, 52px); line-height:1.05; letter-spacing:-.02em; margin: 0 0 8px}
-    .hero-sub{font-size: clamp(16px, 2vw, 20px); color:var(--muted); margin:0 0 18px}
-    .badges{display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 20px}
-    .badge{--bgp: color-mix(in oklab, var(--panel) 80%, transparent); background:var(--bgp); border:1px solid var(--border); padding:6px 10px; border-radius:999px; font-size:13px}
+    .hero-title{font-size:clamp(28px,4.4vw,52px); line-height:1.05; letter-spacing:-.02em; margin:0 0 8px}
+    .hero-sub{font-size:clamp(16px,2vw,20px); color:var(--muted); margin:0 0 18px}
+    .badge{--bgp:color-mix(in oklab, var(--panel) 80%, transparent); background:var(--bgp); border:1px solid var(--border); padding:6px 10px; border-radius:999px; font-size:13px}
     .section{margin-top:32px}
-    .section h2{font-size: clamp(20px, 2.6vw, 28px); margin: 0 0 12px}
-    .projects{grid-template-columns: repeat(auto-fit, minmax(260px, 1fr))}
-    .proj{position:relative; overflow:hidden}
-    .proj .thumb{height:160px; border-radius:14px; background:linear-gradient(145deg, color-mix(in oklab, var(--accent) 25%, transparent), color-mix(in oklab, var(--accent-2) 30%, transparent)); border:1px solid var(--border); margin:10px;}
-    .proj .content{padding: 0 16px 14px}
-    .proj h3{margin:8px 0 6px; font-size:18px}
-    .tags{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 10px}
-    .tag{font-size:12px; padding:4px 8px; border-radius:999px; background:color-mix(in oklab, var(--panel) 80%, transparent); border:1px solid var(--border)}
-    .row{display:flex; flex-wrap:wrap; gap:10px}
     .split{display:grid; grid-template-columns: 1fr; gap:18px}
     @media(min-width:860px){.split{grid-template-columns: 1fr 1fr}}
     .timeline{position:relative; padding-left:22px}
@@ -85,10 +49,11 @@
     .t-title{font-weight:600}
     .muted{color:var(--muted)}
     footer{margin-top:40px; padding-top:24px; border-top:1px solid var(--border); color:var(--muted); font-size:14px}
-    .kbd{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; background:color-mix(in oklab, var(--panel) 80%, transparent); border:1px solid var(--border); padding:2px 6px; border-radius:6px}
+    .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; background:color-mix(in oklab, var(--panel) 80%, transparent); border:1px solid var(--border); padding:2px 6px; border-radius:6px}
     .visually-hidden{position:absolute; clip:rect(1px, 1px, 1px, 1px); padding:0; border:0; height:1px; width:1px; overflow:hidden;}
-  
-    .avatar{width:100%; max-width:240px; display:block; margin:6px auto 12px; aspect-ratio:1/1; border-radius:18px; object-fit:cover; border:1px solid var(--border); box-shadow:var(--shadow)}</style>
+    .avatar{width:100%; max-width:240px; display:block; margin:6px auto 12px; aspect-ratio:1/1; border-radius:18px; object-fit:cover; border:1px solid var(--border); box-shadow:var(--shadow)}
+    .badges{display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 0}
+  </style>
 </head>
 <body>
   <header class="nav">
@@ -99,16 +64,13 @@
       </a>
       <nav class="row">
         <a class="link" href="#experience">Experience</a>
+        <a class="link" href="#education">Education</a>
+        <a class="link" href="#skills">Skills</a>
         <a class="link" href="#contact">Contact</a>
       </nav>
       <div class="nav-actions">
-        <button id="themeToggle" class="btn btn-ghost" aria-label="Toggle theme" title="Toggle theme">
-          <span id="themeIcon" aria-hidden="true">🌙</span>
-        </button>
-        <a class="btn btn-primary" href="assets/KenedKqirajCV.pdf.pdf" download>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4" stroke="#0b0b0e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 15v3a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-3" stroke="#0b0b0e" stroke-width="2" stroke-linecap="round"/></svg>
-          <span>Download CV</span>
-        </a>
+        <button id="themeToggle" class="btn btn-ghost" aria-label="Toggle theme" title="Toggle theme"><span id="themeIcon" aria-hidden="true">🌙</span></button>
+        <a class="btn btn-primary" href="assets/KenedKqirajCV.pdf.pdf" download>Download CV</a>
       </div>
     </div>
   </header>
@@ -118,19 +80,17 @@
       <div class="card" style="padding:24px">
         <p class="badge">Based in 6300 Zug, Switzerland • Open to full-time roles</p>
         <h1 class="hero-title">Data Scientist (MSc, Applied Information &amp; Data Science)</h1>
-        <p class="hero-sub">Highly motivated Data Scientist with a strong foundation in data analysis, statistical modeling, visualization, and data engineering. Finalizing a Master’s thesis on automating rule extraction and interpretation from FTAs using NLP/LLMs. Actively pursuing full-time opportunities in Data Science and AI Engineering.</p>
-        <div class="row" style="margin: 16px 0 8px">
-          <a class="btn" href="https://github.com/kennedkqiraj" target="_blank" rel="noreferrer">GitHub</a>
-          <a class="btn" href="https://www.linkedin.com/in/kened-kqiraj" target="_blank" rel="noreferrer">LinkedIn</a>
-          <a class="btn" href="#contact">Email</a>
-        </div>
+        <p class="hero-sub">Highly motivated Data Scientist with a strong foundation in data analysis, statistical modeling, visualization, and data engineering. Completing a Master’s degree in Applied Information and Data Science and finalizing my thesis; actively pursuing full-time roles in Data Science and AI Engineering.</p>
         <div class="badges">
-          <span class="badge">Python</span><span class="badge">R</span><span class="badge">SQL</span>
-          <span class="badge">Tableau</span><span class="badge">Streamlit</span>
-          <span class="badge">LangChain</span><span class="badge">Statistical Analysis</span>
+          <span class="badge">Python</span>
+          <span class="badge">R</span>
+          <span class="badge">SQL</span>
+          <span class="badge">Tableau</span>
+          <span class="badge">Streamlit</span>
+          <span class="badge">LangChain</span>
           <span class="badge">Data Pipelines</span>
           <span class="badge">GCP • Vertex AI</span>
-          <span class="badge">Git/GitHub</span><span class="badge">Docker</span>
+          <span class="badge">Git/GitHub</span>
         </div>
       </div>
       <aside class="card" style="padding:20px; display:flex; align-items:center; justify-content:center">
@@ -162,9 +122,30 @@
       </div>
     </section>
 
+    <section class="section" id="education">
+      <div class="card" style="padding:18px">
+        <h2>Education</h2>
+        <ul style="margin:0; padding-left:18px">
+          <li><strong>Master of Science in Applied Information and Data Science</strong> — Lucerne University of Applied Sciences and Arts (HSLU)</li>
+          <li><strong>Bachelor of Accounting</strong> — University of Prishtina (2016)</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="skills">
+      <div class="card" style="padding:18px">
+        <h2>Skills</h2>
+        <div class="badges">
+          <span class="badge">Python</span><span class="badge">R</span><span class="badge">SQL</span>
+          <span class="badge">Tableau</span><span class="badge">Streamlit</span><span class="badge">LangChain</span>
+          <span class="badge">Data Pipelines</span><span class="badge">GCP • Vertex AI</span><span class="badge">Git/GitHub</span>
+        </div>
+      </div>
+    </section>
+
     <section class="section card" style="padding:18px" id="contact">
       <h2>Contact</h2>
-      <p class="muted">6300 Zug, Switzerland • Phone: <a href="tel:+41765672985">+41 76 567 29 85</a>. Email: <a href="#" id="em"></a>. Connect on <a href="https://www.linkedin.com/in/kened-kqiraj" target="_blank" rel="noreferrer">LinkedIn</a> or explore my <a href="https://github.com/kennedkqiraj" target="_blank" rel="noreferrer">GitHub</a>.</p>
+      <p class="muted">6300 Zug, Switzerland • Phone: <a href="tel:+41765672985">+41 76 567 29 85</a>. Email: <a href="#" id="em"></a>. Connect on <a href="https://www.linkedin.com/in/kened-kqiraj" target="_blank" rel="noreferrer">LinkedIn</a> or view my <a href="https://github.com/kennedkqiraj" target="_blank" rel="noreferrer">GitHub</a>.</p>
       <div class="row" style="margin-top:6px">
         <a class="btn" href="https://github.com/kennedkqiraj" target="_blank" rel="noreferrer">GitHub</a>
         <a class="btn" href="mailto:kened.kqiraj@stud.hslu.ch">Email</a>
@@ -177,21 +158,16 @@
   </main>
 
   <script>
-    // Theme: respect system preference; persist toggle
+    // Theme persistence
     const root = document.documentElement;
     const saved = localStorage.getItem('theme');
     if(saved){ saved === 'light' ? root.classList.add('light') : root.classList.remove('light'); }
     else if(window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches){ root.classList.add('light'); }
-
     const btn = document.getElementById('themeToggle');
     const icon = document.getElementById('themeIcon');
     function setIcon(){ icon.textContent = root.classList.contains('light') ? '🌞' : '🌙'; }
     setIcon();
-    btn.addEventListener('click', ()=>{
-      root.classList.toggle('light');
-      localStorage.setItem('theme', root.classList.contains('light') ? 'light' : 'dark');
-      setIcon();
-    });
+    btn.addEventListener('click', ()=>{ root.classList.toggle('light'); localStorage.setItem('theme', root.classList.contains('light') ? 'light' : 'dark'); setIcon(); });
 
     // Year
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -199,33 +175,13 @@
     // Email obfuscation
     (function(){
       const user = 'kened.kqiraj';
-      const domain = 'stud.hslu.ch'; // change to your email domain
+      const domain = 'stud.hslu.ch';
       const el = document.getElementById('em');
       const addr = user + '@' + domain;
       el.textContent = addr; el.href = 'mailto:'+addr;
     })();
-
-    // Quick search (press '/') to focus anchor filter
-    document.addEventListener('keydown', (e)=>{
-      if(e.key === '/'){
-        e.preventDefault();
-        const target = document.querySelector('#projects');
-        if(target) target.scrollIntoView({behavior:'smooth'});
-      }
-    });
-
-    // Smooth anchor scrolling
-    document.querySelectorAll('a[href^="#"]').forEach(a=>{
-      a.addEventListener('click', e=>{
-        const id = a.getAttribute('href').slice(1);
-        if(!id) return;
-        const el = document.getElementById(id);
-        if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth'}); }
-      });
-    });
   </script>
 
-  <!-- Structured Data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
