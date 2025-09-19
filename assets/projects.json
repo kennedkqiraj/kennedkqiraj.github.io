@@ -26,8 +26,8 @@
   },
   {
     "title": "GenAI Email Automation — RAG + Llama",
-    "brand": "personal",
-    "logo": "",
+    "brand": "llama",
+    "logo": "assets/llama.png",
     "desc": "Drafts customer-reply emails by pulling context from past threads and internal docs. A RAG pipeline retrieves the right snippets; a Llama-based model generates tone-aware drafts with a human in the loop.",
     "bullets": [
       "Indexed prior email threads and internal knowledge; chunked and embedded for fast retrieval.",
