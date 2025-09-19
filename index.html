@@ -44,10 +44,20 @@
     .section{margin-top:32px}
     .split{display:grid; grid-template-columns: 1fr; gap:18px}
     @media(min-width:860px){.split{grid-template-columns: 1fr 1fr}}
-    .timeline{position:relative; padding-left:22px}
-    .timeline::before{content:""; position:absolute; left:7px; top:6px; bottom:6px; width:2px; background:var(--border)}
+
+    /* Timeline layout fix: move line & dots left and align vertically */
+    .timeline{position:relative; padding-left:28px}
+    .timeline::before{content:""; position:absolute; left:12px; top:6px; bottom:6px; width:2px; background:var(--border)}
     .t-item{position:relative; margin-bottom:14px}
-    .t-item::before{content:""; position:absolute; left:-2px; top:6px; width:10px; height:10px; border-radius:50%; background:linear-gradient(135deg, var(--accent), var(--accent-2));}
+    .t-item::before{
+      content:"";
+      position:absolute;
+      left:-20px;              /* shifted left so it sits beside, not in, the title */
+      top:0.9em;               /* aligns with first text line */
+      transform:translateY(-50%);
+      width:10px; height:10px; border-radius:50%;
+      background:linear-gradient(135deg, var(--accent), var(--accent-2));
+    }
     .t-title{font-weight:600}
     .muted{color:var(--muted)}
     footer{margin-top:40px; padding-top:24px; border-top:1px solid var(--border); color:var(--muted); font-size:14px}
@@ -263,15 +273,15 @@
           </span>
 
           <!-- No official icons: use the name as the icon -->
-          <span class="icon-badge text-only" role="listitem" title="" aria-label="LangChain">
+          <span class="icon-badge text-only" role="listitem" title="LangChain" aria-label="LangChain">
             <span class="pseudo-icon">LangChain</span>
             <span class="label">LangChain</span>
           </span>
-          <span class="icon-badge text-only" role="listitem" title="" aria-label="Data Pipelines">
+          <span class="icon-badge text-only" role="listitem" title="Data Pipelines" aria-label="Data Pipelines">
             <span class="pseudo-icon">Data&nbsp;Pipelines</span>
             <span class="label">Data Pipelines</span>
           </span>
-          <span class="icon-badge text-only" role="listitem" title="" aria-label="Vertex AI">
+          <span class="icon-badge text-only" role="listitem" title="Vertex AI" aria-label="Vertex AI">
             <span class="pseudo-icon">Vertex&nbsp;AI</span>
             <span class="label">Vertex AI</span>
           </span>
