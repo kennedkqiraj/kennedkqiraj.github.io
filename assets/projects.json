@@ -4,7 +4,6 @@
     "brand": "ibm",
     "logo": "assets/ibm.png",
     "desc": "Interface for analyzing comments on NZZ articles — automatic categorization, summarization, sentiment analysis, and word cloud display, built on IBM Watsonx and supervised by IBM Zürich.",
-    "source": "https://www.nzz.ch",
     "bullets": [
       "Develop a system to automatically categorize and summarize data.",
       "Use LLMs to extract insights, including trending topics, common themes, sentiment analysis, and areas of disagreement or confusion.",
