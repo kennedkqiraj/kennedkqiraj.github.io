@@ -13,7 +13,6 @@
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Devicon icon font -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%230a0a0a'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' font-size='40' fill='%23fff' font-family='sans-serif'%3EK%3C/text%3E%3C/svg%3E">
   <style>
@@ -43,48 +42,27 @@
     .badge{--bgp:color-mix(in oklab, var(--panel) 80%, transparent); background:var(--bgp); border:1px solid var(--border); padding:6px 10px; border-radius:999px; font-size:13px}
     .section{margin-top:32px}
     .split{display:grid; grid-template-columns: 1fr; gap:18px}
-    @media(min-width:860px){.split{grid-template-columns: 1 fr 1fr}}
+    @media(min-width:860px){.split{grid-template-columns: 1fr 1fr}}
 
-    /* Timeline layout fix */
+    /* Timeline */
     .timeline{position:relative; padding-left:28px}
     .timeline::before{content:""; position:absolute; left:12px; top:6px; bottom:6px; width:2px; background:var(--border)}
     .t-item{position:relative; margin-bottom:14px}
-    .t-item::before{
-      content:"";
-      position:absolute;
-      left:-20px;
-      top:0.9em;
-      transform:translateY(-50%);
-      width:10px; height:10px; border-radius:50%;
-      background:linear-gradient(135deg, var(--accent), var(--accent-2));
-    }
+    .t-item::before{content:""; position:absolute; left:-20px; top:0.9em; transform:translateY(-50%); width:10px; height:10px; border-radius:50%; background:linear-gradient(135deg, var(--accent), var(--accent-2));}
     .t-title{font-weight:600}
     .muted{color:var(--muted)}
     footer{margin-top:40px; padding-top:24px; border-top:1px solid var(--border); color:var(--muted); font-size:14px}
-    .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; background:color-mix(in oklab, var(--panel) 80%, transparent); border:1px solid var(--border); padding:2px 6px; border-radius:6px}
     .visually-hidden{position:absolute; clip:rect(1px, 1px, 1px, 1px); padding:0; border:0; height:1px; width:1px; overflow:hidden;}
-    .avatar{
-      width:100%;
-      max-width: clamp(300px, 40vw, 480px);
-      display:block;
-      margin:6px auto 12px;
-      aspect-ratio:auto;
-      border-radius:18px;
-      object-fit:cover;
-      border:1px solid var(--border);
-      box-shadow:var(--shadow);
-      cursor:pointer;
-    }
-    .badges{display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 0}
+    .avatar{width:100%; max-width: clamp(300px, 40vw, 480px); display:block; margin:6px auto 12px; border-radius:18px; object-fit:cover; border:1px solid var(--border); box-shadow:var(--shadow); cursor:pointer;}
 
-    /* Projects — brandable cards */
+    /* Projects — brandable */
     .projects-grid{display:grid; gap:18px; grid-template-columns:1fr}
     @media(min-width:860px){.projects-grid{grid-template-columns:1fr 1fr}}
     .proj-card{border:1px solid var(--border); border-radius:18px; background:var(--panel); box-shadow:var(--shadow); overflow:hidden; position:relative}
     .proj-banner{height:140px; background:linear-gradient(135deg,var(--brand,#6ee7b7),var(--brand-2,#60a5fa)); display:flex; align-items:flex-start; justify-content:space-between; padding:12px 14px}
     .logo-chip{background:rgba(255,255,255,.92); color:#0b0b0e; border-radius:12px; padding:6px 10px; display:flex; gap:8px; align-items:center; border:1px solid rgba(0,0,0,.08)}
     .logo-chip img{height:18px; width:auto}
-    .proj-body{padding:14px 16px}
+    .proj-body{padding:14px 16px; position:relative; overflow:hidden}
     .proj-title{margin:0 0 8px; font-weight:700; font-size:18px}
     .p-tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
     .tag{font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--border); color:var(--muted)}
@@ -92,32 +70,21 @@
     .proj-card[data-brand="ibm"]{--brand:#0f62fe; --brand-2:#4589ff}
     .proj-card[data-brand="nzz"]{--brand:#111111; --brand-2:#4b5563}
     .proj-card[data-brand="on"]{--brand:#0b0b0e; --brand-2:#6b7280}
-
-    /* Skills icon badges (with labels) */
-    .icon-badges{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}
-    .icon-badge{
-      display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
-      padding:10px 8px; width:86px; border-radius:14px; border:1px solid var(--border);
-      background:var(--panel); box-shadow:var(--shadow); text-align:center
-    }
-    .icon-badge i{font-size:34px;line-height:1}
-    .icon-badge .label{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.1}
-    .icon-badge.text-only .pseudo-icon{
-      font-size:13px;font-weight:600;letter-spacing:.2px;line-height:1.1
-    }
-    @media (max-width:520px){
-      .icon-badge{width:76px;padding:8px 6px}
-      .icon-badge i{font-size:28px}
+    /* IBM watermark across project body */
+    .proj-card[data-brand="ibm"] .proj-body::after{
+      content:"";
+      position:absolute; inset:0;
+      background: url('assets/ibm.png') center/ 420px auto no-repeat;
+      opacity:.08;             /* low contrast */
+      filter: grayscale(1) contrast(.9) brightness(1.2);
+      pointer-events:none;
     }
   </style>
 </head>
 <body>
   <header class="nav">
     <div class="nav-inner">
-      <a href="#top" class="brand">
-        <span class="logo">K</span>
-        <span>Kened Kqiraj</span>
-      </a>
+      <a href="#top" class="brand"><span class="logo">K</span><span>Kened Kqiraj</span></a>
       <nav class="row">
         <a class="link" href="#projects">Projects</a>
         <a class="link" href="#experience">Experience</a>
@@ -133,21 +100,14 @@
   </header>
 
   <main class="container" id="top">
+    <!-- HERO -->
     <section class="grid hero">
       <div class="card" style="padding:24px">
         <p class="badge">Based in 6300 Zug, Switzerland • Open to full-time roles</p>
         <h1 class="hero-title">Data Scientist (MSc, Applied Information &amp; Data Science)</h1>
         <p class="hero-sub">Highly motivated Data Scientist with a strong foundation in data analysis, statistical modeling, visualization, and data engineering. Completing a Master’s degree in Applied Information and Data Science and finalizing my thesis; actively pursuing full-time roles in Data Science and AI Engineering.</p>
         <div class="badges">
-          <span class="badge">Python</span>
-          <span class="badge">R</span>
-          <span class="badge">SQL</span>
-          <span class="badge">Tableau</span>
-          <span class="badge">Streamlit</span>
-          <span class="badge">LangChain</span>
-          <span class="badge">Data Pipelines</span>
-          <span class="badge">GCP • Vertex AI</span>
-          <span class="badge">Git/GitHub</span>
+          <span class="badge">Python</span><span class="badge">R</span><span class="badge">SQL</span><span class="badge">Tableau</span><span class="badge">Streamlit</span><span class="badge">LangChain</span><span class="badge">Data Pipelines</span><span class="badge">GCP • Vertex AI</span><span class="badge">Git/GitHub</span>
         </div>
       </div>
       <aside class="card" style="padding:20px; display:flex; align-items:center; justify-content:center">
@@ -157,7 +117,7 @@
       </aside>
     </section>
 
-    <!-- Projects (dynamic from assets/projects.json) -->
+    <!-- PROJECTS (dynamic) -->
     <section class="section" id="projects">
       <div class="card" style="padding:18px">
         <h2>Projects</h2>
@@ -165,6 +125,7 @@
       </div>
     </section>
 
+    <!-- EXPERIENCE -->
     <section class="section" id="experience">
       <div class="card" style="padding:18px">
         <h2>Experience</h2>
@@ -189,6 +150,7 @@
       </div>
     </section>
 
+    <!-- EDUCATION -->
     <section class="section" id="education">
       <div class="card" style="padding:18px">
         <h2>Education</h2>
@@ -199,6 +161,7 @@
       </div>
     </section>
 
+    <!-- TRAINING -->
     <section class="section" id="training">
       <div class="card" style="padding:18px">
         <h2>Further Training</h2>
@@ -251,69 +214,29 @@
       </div>
     </section>
 
+    <!-- SKILLS -->
     <section class="section" id="skills">
       <div class="card" style="padding:18px">
         <h2>Skills</h2>
-        <!-- Icon-based skills with labels; text-only badges for items without official icons -->
         <div class="icon-badges" role="list">
-          <span class="icon-badge" role="listitem" title="Python" aria-label="Python">
-            <i class="devicon-python-plain colored" aria-hidden="true"></i>
-            <span class="label">Python</span>
-          </span>
-          <span class="icon-badge" role="listitem" title="R" aria-label="R">
-            <i class="devicon-r-plain colored" aria-hidden="true"></i>
-            <span class="label">R</span>
-          </span>
-          <span class="icon-badge" role="listitem" title="SQL (MySQL)" aria-label="SQL">
-            <i class="devicon-mysql-plain colored" aria-hidden="true"></i>
-            <span class="label">SQL</span>
-          </span>
-          <span class="icon-badge" role="listitem" title="Azure" aria-label="Azure">
-            <i class="devicon-azure-plain colored" aria-hidden="true"></i>
-            <span class="label">Azure</span>
-          </span>
-          <span class="icon-badge" role="listitem" title="Databricks" aria-label="Databricks">
-            <i class="devicon-databricks-original colored" aria-hidden="true"></i>
-            <span class="label">Databricks</span>
-          </span>
-          <span class="icon-badge" role="listitem" title="Tableau" aria-label="Tableau">
-            <i class="devicon-tableau-plain colored" aria-hidden="true"></i>
-            <span class="label">Tableau</span>
-          </span>
-          <span class="icon-badge" role="listitem" title="Streamlit" aria-label="Streamlit">
-            <i class="devicon-streamlit-plain colored" aria-hidden="true"></i>
-            <span class="label">Streamlit</span>
-          </span>
-          <span class="icon-badge" role="listitem" title="Google Cloud" aria-label="Google Cloud">
-            <i class="devicon-googlecloud-plain colored" aria-hidden="true"></i>
-            <span class="label">Google Cloud</span>
-          </span>
-          <span class="icon-badge" role="listitem" title="Git" aria-label="Git">
-            <i class="devicon-git-plain colored" aria-hidden="true"></i>
-            <span class="label">Git</span>
-          </span>
-          <span class="icon-badge" role="listitem" title="GitHub" aria-label="GitHub">
-            <i class="devicon-github-original" aria-hidden="true"></i>
-            <span class="label">GitHub</span>
-          </span>
-
-          <!-- No official icons: use the name as the icon -->
-          <span class="icon-badge text-only" role="listitem" title="LangChain" aria-label="LangChain">
-            <span class="pseudo-icon">LangChain</span>
-            <span class="label">LangChain</span>
-          </span>
-          <span class="icon-badge text-only" role="listitem" title="Data Pipelines" aria-label="Data Pipelines">
-            <span class="pseudo-icon">Data&nbsp;Pipelines</span>
-            <span class="label">Data Pipelines</span>
-          </span>
-          <span class="icon-badge text-only" role="listitem" title="Vertex AI" aria-label="Vertex AI">
-            <span class="pseudo-icon">Vertex&nbsp;AI</span>
-            <span class="label">Vertex AI</span>
-          </span>
+          <span class="icon-badge" role="listitem" title="Python"><i class="devicon-python-plain colored"></i><span class="label">Python</span></span>
+          <span class="icon-badge" role="listitem" title="R"><i class="devicon-r-plain colored"></i><span class="label">R</span></span>
+          <span class="icon-badge" role="listitem" title="SQL"><i class="devicon-mysql-plain colored"></i><span class="label">SQL</span></span>
+          <span class="icon-badge" role="listitem" title="Azure"><i class="devicon-azure-plain colored"></i><span class="label">Azure</span></span>
+          <span class="icon-badge" role="listitem" title="Databricks"><i class="devicon-databricks-original colored"></i><span class="label">Databricks</span></span>
+          <span class="icon-badge" role="listitem" title="Tableau"><i class="devicon-tableau-plain colored"></i><span class="label">Tableau</span></span>
+          <span class="icon-badge" role="listitem" title="Streamlit"><i class="devicon-streamlit-plain colored"></i><span class="label">Streamlit</span></span>
+          <span class="icon-badge" role="listitem" title="Google Cloud"><i class="devicon-googlecloud-plain colored"></i><span class="label">Google Cloud</span></span>
+          <span class="icon-badge" role="listitem" title="Git"><i class="devicon-git-plain colored"></i><span class="label">Git</span></span>
+          <span class="icon-badge" role="listitem" title="GitHub"><i class="devicon-github-original"></i><span class="label">GitHub</span></span>
+          <span class="icon-badge text-only" role="listitem" title="LangChain"><span class="pseudo-icon">LangChain</span><span class="label">LangChain</span></span>
+          <span class="icon-badge text-only" role="listitem" title="Data Pipelines"><span class="pseudo-icon">Data&nbsp;Pipelines</span><span class="label">Data Pipelines</span></span>
+          <span class="icon-badge text-only" role="listitem" title="Vertex AI"><span class="pseudo-icon">Vertex&nbsp;AI</span><span class="label">Vertex AI</span></span>
         </div>
       </div>
     </section>
 
+    <!-- CONTACT -->
     <section class="section card" style="padding:18px" id="contact">
       <h2>Contact</h2>
       <p class="muted">6300 Zug, Switzerland • Phone: <a href="tel:+41765672985">+41 76 567 29 85</a>. Email: <a href="#" id="em"></a>. Connect on <a href="https://www.linkedin.com/in/kened-kqiraj" target="_blank" rel="noreferrer">LinkedIn</a> or view my <a href="https://github.com/kennedkqiraj" target="_blank" rel="noreferrer">GitHub</a>.</p>
@@ -323,9 +246,7 @@
       </div>
     </section>
 
-    <footer class="container">
-      <p>© <span id="year"></span> Kened Kqiraj. Built with semantic HTML + CSS.</p>
-    </footer>
+    <footer class="container"><p>© <span id="year"></span> Kened Kqiraj. Built with semantic HTML + CSS.</p></footer>
   </main>
 
   <script>
@@ -352,7 +273,7 @@
       el.textContent = addr; el.href = 'mailto:'+addr;
     })();
 
-    // Avatar -> open LinkedIn in popup
+    // Avatar popup
     (function(){
       const a = document.getElementById('avatarLink');
       if(!a) return;
@@ -360,17 +281,19 @@
         e.preventDefault();
         const win = window.open(this.href, 'linkedinPopup',
           'width=1100,height=800,menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes');
-        if(!win) { window.location.href = this.href; } // fallback if popup blocked
+        if(!win) { window.location.href = this.href; }
       });
     })();
 
-    // Render Projects from external JSON (assets/projects.json)
+    // Render Projects from external JSON (cache-busted)
     (function(){
       const grid = document.getElementById('projectsGrid');
       if(!grid) return;
-      fetch('assets/projects.json')
+      const url = 'assets/projects.json?cb=' + Date.now();
+      fetch(url)
         .then(r => r.json())
         .then(data => {
+          grid.innerHTML = '';
           data.forEach(p => {
             const card = document.createElement('article');
             card.className = 'proj-card';
@@ -384,7 +307,7 @@
               </div>
               <div class="proj-body">
                 <h3 class="proj-title">${p.title}</h3>
-                ${p.desc ? `<p class="muted" style="margin:6px 0">${p.desc}${p.source ? ` — <a href="${p.source}" target="_blank" rel="noreferrer">Source</a>` : ''}</p>` : ''}
+                ${p.desc ? `<p class="muted" style="margin:6px 0">${p.desc}</p>` : ''}
                 ${Array.isArray(p.bullets) ? `<ul class="muted" style="margin:6px 0 0 18px">${p.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>` : ''}
                 ${Array.isArray(p.tags) ? `<div class="p-tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>` : ''}
               </div>`;
@@ -408,10 +331,7 @@
     "email": "mailto:kened.kqiraj@stud.hslu.ch",
     "telephone": "+41 76 567 29 85",
     "url": "https://kennedkqiraj.github.io/",
-    "sameAs": [
-      "https://github.com/kennedkqiraj",
-      "https://www.linkedin.com/in/kened-kqiraj"
-    ]
+    "sameAs": ["https://github.com/kennedkqiraj","https://www.linkedin.com/in/kened-kqiraj"]
   }
   </script>
 </body>
