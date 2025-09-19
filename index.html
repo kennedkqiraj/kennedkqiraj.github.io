@@ -13,6 +13,8 @@
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Devicon icon font -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%230a0a0a'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' font-size='40' fill='%23fff' font-family='sans-serif'%3EK%3C/text%3E%3C/svg%3E">
   <style>
     :root{ --bg:#0b0b0e; --panel:#111219; --text:#e8e8ea; --muted:#b6b6c2; --accent:#6ee7b7; --accent-2:#60a5fa; --border:#1d1e26; --shadow:0 10px 30px rgba(0,0,0,.35); --radius:18px; }
@@ -52,18 +54,26 @@
     .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; background:color-mix(in oklab, var(--panel) 80%, transparent); border:1px solid var(--border); padding:2px 6px; border-radius:6px}
     .visually-hidden{position:absolute; clip:rect(1px, 1px, 1px, 1px); padding:0; border:0; height:1px; width:1px; overflow:hidden;}
     .avatar{
-  width:100%;
-  max-width: clamp(300px, 40vw, 480px);
-  display:block;
-  margin:6px auto 12px;
-  aspect-ratio: auto;
-  border-radius:18px;
-  object-fit:cover;
-  border:1px solid var(--border);
-  box-shadow:var(--shadow);
-  cursor:pointer;
-}
+      width:100%;
+      max-width: clamp(300px, 40vw, 480px);
+      display:block;
+      margin:6px auto 12px;
+      aspect-ratio: auto;
+      border-radius:18px;
+      object-fit:cover;
+      border:1px solid var(--border);
+      box-shadow:var(--shadow);
+      cursor:pointer;
+    }
     .badges{display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 0}
+
+    /* Skills icon badges */
+    .icon-badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+    .icon-badge{display:inline-flex;align-items:center;justify-content:center;
+      width:56px;height:56px;border-radius:14px;border:1px solid var(--border);
+      background:var(--panel);box-shadow:var(--shadow)}
+    .icon-badge i{font-size:32px;line-height:1}
+    @media (max-width:520px){.icon-badge{width:48px;height:48px}.icon-badge i{font-size:28px}}
   </style>
 </head>
 <body>
@@ -106,9 +116,8 @@
       </div>
       <aside class="card" style="padding:20px; display:flex; align-items:center; justify-content:center">
         <a href="https://www.linkedin.com/in/kened-kqiraj" id="avatarLink" class="avatar-wrap" aria-label="Open LinkedIn profile">
-  <img src="assets/my_picture.png" alt="Portrait of Kened Kqiraj" class="avatar" loading="lazy">
-</a>
-
+          <img src="assets/my_picture.png" alt="Portrait of Kened Kqiraj" class="avatar" loading="lazy">
+        </a>
       </aside>
     </section>
 
@@ -201,10 +210,23 @@
     <section class="section" id="skills">
       <div class="card" style="padding:18px">
         <h2>Skills</h2>
-        <div class="badges">
-          <span class="badge">Python</span><span class="badge">R</span><span class="badge">SQL</span><span class="badge">Azure</span><span class="badge">Databricks</span>
-          <span class="badge">Tableau</span><span class="badge">Streamlit</span><span class="badge">LangChain</span>
-          <span class="badge">Data Pipelines</span><span class="badge">GCP • Vertex AI</span><span class="badge">Git/GitHub</span>
+        <!-- Icon-based skills -->
+        <div class="icon-badges" role="list">
+          <span class="icon-badge" role="listitem" title="Python" aria-label="Python"><i class="devicon-python-plain colored"></i></span>
+          <span class="icon-badge" role="listitem" title="R" aria-label="R"><i class="devicon-r-plain colored"></i></span>
+          <span class="icon-badge" role="listitem" title="SQL (MySQL)" aria-label="SQL"><i class="devicon-mysql-plain colored"></i></span>
+          <span class="icon-badge" role="listitem" title="Azure" aria-label="Azure"><i class="devicon-azure-plain colored"></i></span>
+          <span class="icon-badge" role="listitem" title="Databricks" aria-label="Databricks"><i class="devicon-databricks-original colored"></i></span>
+          <span class="icon-badge" role="listitem" title="Tableau" aria-label="Tableau"><i class="devicon-tableau-plain colored"></i></span>
+          <span class="icon-badge" role="listitem" title="Streamlit" aria-label="Streamlit"><i class="devicon-streamlit-plain colored"></i></span>
+          <span class="icon-badge" role="listitem" title="Google Cloud" aria-label="Google Cloud"><i class="devicon-googlecloud-plain colored"></i></span>
+          <span class="icon-badge" role="listitem" title="Git" aria-label="Git"><i class="devicon-git-plain colored"></i></span>
+          <span class="icon-badge" role="listitem" title="GitHub" aria-label="GitHub"><i class="devicon-github-original"></i></span>
+
+          <!-- Placeholders where Devicon has no official logos -->
+          <span class="icon-badge" role="listitem" title="LangChain" aria-label="LangChain">🔗</span>
+          <span class="icon-badge" role="listitem" title="Data Pipelines" aria-label="Data Pipelines">🔁</span>
+          <span class="icon-badge" role="listitem" title="Vertex AI" aria-label="Vertex AI">🪄</span>
         </div>
       </div>
     </section>
@@ -248,17 +270,16 @@
     })();
 
     // Avatar -> open LinkedIn in popup
-(function(){
-  const a = document.getElementById('avatarLink');
-  if(!a) return;
-  a.addEventListener('click', function(e){
-    e.preventDefault();
-    const win = window.open(this.href, 'linkedinPopup',
-      'width=1100,height=800,menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes');
-    if(!win) { window.location.href = this.href; } // fallback if popup blocked
-  });
-})();
-
+    (function(){
+      const a = document.getElementById('avatarLink');
+      if(!a) return;
+      a.addEventListener('click', function(e){
+        e.preventDefault();
+        const win = window.open(this.href, 'linkedinPopup',
+          'width=1100,height=800,menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes');
+        if(!win) { window.location.href = this.href; } // fallback if popup blocked
+      });
+    })();
   </script>
 
   <script type="application/ld+json">
