@@ -9,7 +9,7 @@
   <meta property="og:title" content="Kened Kqiraj — Data Science Portfolio" />
   <meta property="og:description" content="Projects, skills, and experience in Data Science, ML, and Analytics." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://dummyimage.com/1200x630/0a0a0a/ffffff&text=Kened+Kqiraj+—+Data+Science" />
+  <meta property="og:image" content="https://kennedkqiraj.github.io/assets/my_picture.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -87,7 +87,8 @@
     footer{margin-top:40px; padding-top:24px; border-top:1px solid var(--border); color:var(--muted); font-size:14px}
     .kbd{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; background:color-mix(in oklab, var(--panel) 80%, transparent); border:1px solid var(--border); padding:2px 6px; border-radius:6px}
     .visually-hidden{position:absolute; clip:rect(1px, 1px, 1px, 1px); padding:0; border:0; height:1px; width:1px; overflow:hidden;}
-  </style>
+  
+    .avatar{width:100%; max-width:240px; display:block; margin:6px auto 12px; aspect-ratio:1/1; border-radius:18px; object-fit:cover; border:1px solid var(--border); box-shadow:var(--shadow)}</style>
 </head>
 <body>
   <header class="nav">
@@ -96,14 +97,15 @@
         <span class="logo">K</span>
         <span>Kened Kqiraj</span>
       </a>
-      1
-        
+      <nav class="row">
+        <a class="link" href="#experience">Experience</a>
+        <a class="link" href="#contact">Contact</a>
       </nav>
       <div class="nav-actions">
         <button id="themeToggle" class="btn btn-ghost" aria-label="Toggle theme" title="Toggle theme">
           <span id="themeIcon" aria-hidden="true">🌙</span>
         </button>
-        <a class="btn btn-primary" href=\"assets/KenedKqirajCV.pdf.pdf\" download>
+        <a class="btn btn-primary" href="assets/KenedKqirajCV.pdf.pdf" download>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4" stroke="#0b0b0e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 15v3a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-3" stroke="#0b0b0e" stroke-width="2" stroke-linecap="round"/></svg>
           <span>Download CV</span>
         </a>
@@ -118,7 +120,6 @@
         <h1 class="hero-title">Data Scientist (MSc, Applied Information &amp; Data Science)</h1>
         <p class="hero-sub">Highly motivated Data Scientist with a strong foundation in data analysis, statistical modeling, visualization, and data engineering. Finalizing a Master’s thesis on automating rule extraction and interpretation from FTAs using NLP/LLMs. Actively pursuing full-time opportunities in Data Science and AI Engineering.</p>
         <div class="row" style="margin: 16px 0 8px">
-          <a class="btn btn-primary" href="#projects">See Projects</a>
           <a class="btn" href="https://github.com/kennedkqiraj" target="_blank" rel="noreferrer">GitHub</a>
           <a class="btn" href="https://www.linkedin.com/in/kened-kqiraj" target="_blank" rel="noreferrer">LinkedIn</a>
           <a class="btn" href="#contact">Email</a>
@@ -132,20 +133,32 @@
           <span class="badge">Git/GitHub</span><span class="badge">Docker</span>
         </div>
       </div>
+      <aside class="card" style="padding:20px; display:flex; align-items:center; justify-content:center">
+        <img src="assets/my_picture.png" alt="Portrait of Kened Kqiraj" class="avatar" loading="lazy">
+      </aside>
     </section>
 
-    <section class="section split" id="experience">
+    <section class="section" id="experience">
       <div class="card" style="padding:18px">
-        <h2>Education &amp; Certifications</h2>
-        <ul style="margin:0; padding-left:18px">
-          <li><strong>MSc, Applied Information &amp; Data Science</strong> — HSLU <span class="muted">(since Feb 2024)</span></li>
-          <li><strong>Bachelor of Accounting</strong> — University of Prishtina <span class="muted">(2016)</span></li>
-          <li>IBM WatsonX Challenge <span class="muted">(02/2025–05/2025)</span></li>
-          <li>IBM Coursera — LangChain &amp; Agents; RAG Applications <span class="muted">(07/2025)</span></li>
-          <li>DeepLearning.AI — Unsupervised, Recommenders, RL <span class="muted">(07/2025)</span></li>
-          <li>Big Data in the Cloud — Azure Block Seminar <span class="muted">(09/2025)</span></li>
-          <li>R‑Bootcamp (2024); Google Data Analytics, Tableau, Python for Data Analysis <span class="muted">(2023)</span></li>
-        </ul>
+        <h2>Experience</h2>
+        <div class="timeline">
+          <div class="t-item">
+            <div class="t-title">Internship — On AG <span class="muted">(Feb 2025 – Present)</span></div>
+            <ul class="muted" style="margin:6px 0 0 18px">
+              <li>Working on automation of tariff classification and preferential origin processes using Python, SQL, BigQuery, and LLMs.</li>
+              <li>Focus on data ingestion, transformation, and reporting.</li>
+              <li>Google Cloud Platform, Vertex AI.</li>
+            </ul>
+          </div>
+          <div class="t-item">
+            <div class="t-title">Operations Specialist — The Brain Maze LLC (Part Time) <span class="muted">(Jul 2019 – Feb 2024)</span></div>
+            <ul class="muted" style="margin:6px 0 0 18px">
+              <li>Analysis and evaluation of the raw data.</li>
+              <li>Continues improvement of workflows.</li>
+              <li>Financial Reporting using Excel, and tax reporting.</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </section>
 
