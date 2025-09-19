@@ -67,13 +67,22 @@
     }
     .badges{display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 0}
 
-    /* Skills icon badges */
-    .icon-badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-    .icon-badge{display:inline-flex;align-items:center;justify-content:center;
-      width:56px;height:56px;border-radius:14px;border:1px solid var(--border);
-      background:var(--panel);box-shadow:var(--shadow)}
-    .icon-badge i{font-size:32px;line-height:1}
-    @media (max-width:520px){.icon-badge{width:48px;height:48px}.icon-badge i{font-size:28px}}
+    /* Skills icon badges (with labels) */
+    .icon-badges{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}
+    .icon-badge{
+      display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
+      padding:10px 8px; width:86px; border-radius:14px; border:1px solid var(--border);
+      background:var(--panel); box-shadow:var(--shadow); text-align:center
+    }
+    .icon-badge i{font-size:34px;line-height:1}
+    .icon-badge .label{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.1}
+    .icon-badge.text-only .pseudo-icon{
+      font-size:13px;font-weight:600;letter-spacing:.2px;line-height:1.1
+    }
+    @media (max-width:520px){
+      .icon-badge{width:76px;padding:8px 6px}
+      .icon-badge i{font-size:28px}
+    }
   </style>
 </head>
 <body>
@@ -210,23 +219,62 @@
     <section class="section" id="skills">
       <div class="card" style="padding:18px">
         <h2>Skills</h2>
-        <!-- Icon-based skills -->
+        <!-- Icon-based skills with labels; text-only badges for items without official icons -->
         <div class="icon-badges" role="list">
-          <span class="icon-badge" role="listitem" title="Python" aria-label="Python"><i class="devicon-python-plain colored"></i></span>
-          <span class="icon-badge" role="listitem" title="R" aria-label="R"><i class="devicon-r-plain colored"></i></span>
-          <span class="icon-badge" role="listitem" title="SQL (MySQL)" aria-label="SQL"><i class="devicon-mysql-plain colored"></i></span>
-          <span class="icon-badge" role="listitem" title="Azure" aria-label="Azure"><i class="devicon-azure-plain colored"></i></span>
-          <span class="icon-badge" role="listitem" title="Databricks" aria-label="Databricks"><i class="devicon-databricks-original colored"></i></span>
-          <span class="icon-badge" role="listitem" title="Tableau" aria-label="Tableau"><i class="devicon-tableau-plain colored"></i></span>
-          <span class="icon-badge" role="listitem" title="Streamlit" aria-label="Streamlit"><i class="devicon-streamlit-plain colored"></i></span>
-          <span class="icon-badge" role="listitem" title="Google Cloud" aria-label="Google Cloud"><i class="devicon-googlecloud-plain colored"></i></span>
-          <span class="icon-badge" role="listitem" title="Git" aria-label="Git"><i class="devicon-git-plain colored"></i></span>
-          <span class="icon-badge" role="listitem" title="GitHub" aria-label="GitHub"><i class="devicon-github-original"></i></span>
+          <span class="icon-badge" role="listitem" title="Python" aria-label="Python">
+            <i class="devicon-python-plain colored" aria-hidden="true"></i>
+            <span class="label">Python</span>
+          </span>
+          <span class="icon-badge" role="listitem" title="R" aria-label="R">
+            <i class="devicon-r-plain colored" aria-hidden="true"></i>
+            <span class="label">R</span>
+          </span>
+          <span class="icon-badge" role="listitem" title="SQL (MySQL)" aria-label="SQL">
+            <i class="devicon-mysql-plain colored" aria-hidden="true"></i>
+            <span class="label">SQL</span>
+          </span>
+          <span class="icon-badge" role="listitem" title="Azure" aria-label="Azure">
+            <i class="devicon-azure-plain colored" aria-hidden="true"></i>
+            <span class="label">Azure</span>
+          </span>
+          <span class="icon-badge" role="listitem" title="Databricks" aria-label="Databricks">
+            <i class="devicon-databricks-original colored" aria-hidden="true"></i>
+            <span class="label">Databricks</span>
+          </span>
+          <span class="icon-badge" role="listitem" title="Tableau" aria-label="Tableau">
+            <i class="devicon-tableau-plain colored" aria-hidden="true"></i>
+            <span class="label">Tableau</span>
+          </span>
+          <span class="icon-badge" role="listitem" title="Streamlit" aria-label="Streamlit">
+            <i class="devicon-streamlit-plain colored" aria-hidden="true"></i>
+            <span class="label">Streamlit</span>
+          </span>
+          <span class="icon-badge" role="listitem" title="Google Cloud" aria-label="Google Cloud">
+            <i class="devicon-googlecloud-plain colored" aria-hidden="true"></i>
+            <span class="label">Google Cloud</span>
+          </span>
+          <span class="icon-badge" role="listitem" title="Git" aria-label="Git">
+            <i class="devicon-git-plain colored" aria-hidden="true"></i>
+            <span class="label">Git</span>
+          </span>
+          <span class="icon-badge" role="listitem" title="GitHub" aria-label="GitHub">
+            <i class="devicon-github-original" aria-hidden="true"></i>
+            <span class="label">GitHub</span>
+          </span>
 
-          <!-- Placeholders where Devicon has no official logos -->
-          <span class="icon-badge" role="listitem" title="LangChain" aria-label="LangChain">🔗</span>
-          <span class="icon-badge" role="listitem" title="Data Pipelines" aria-label="Data Pipelines">🔁</span>
-          <span class="icon-badge" role="listitem" title="Vertex AI" aria-label="Vertex AI">🪄</span>
+          <!-- No official icons: use the name as the icon -->
+          <span class="icon-badge text-only" role="listitem" title="LangChain" aria-label="LangChain">
+            <span class="pseudo-icon">LangChain</span>
+            <span class="label">LangChain</span>
+          </span>
+          <span class="icon-badge text-only" role="listitem" title="Data Pipelines" aria-label="Data Pipelines">
+            <span class="pseudo-icon">Data&nbsp;Pipelines</span>
+            <span class="label">Data Pipelines</span>
+          </span>
+          <span class="icon-badge text-only" role="listitem" title="Vertex AI" aria-label="Vertex AI">
+            <span class="pseudo-icon">Vertex&nbsp;AI</span>
+            <span class="label">Vertex AI</span>
+          </span>
         </div>
       </div>
     </section>
