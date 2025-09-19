@@ -1,0 +1,21 @@
+[
+  {
+    "title": "Automated Categorization & Summarization (IBM Watsonx)",
+    "brand": "ibm",
+    "logo": "assets/ibm.png",
+    "bullets": [
+      "Develop a system to automatically categorize and summarize data.",
+      "Use LLMs to extract insights, including trending topics, common themes, sentiment analysis, and areas of disagreement or confusion.",
+      "Use of the IBM-s platform services like Intelligent Document Processing.",
+      "Orchestrated automated content workflows in IBM Watsonx Orchestrate by building an agent that triggered on new files in Cloud Object Storage, called Discovery/Watsonx.ai for semantic tagging and summarization, wrote results to a database, and updated article metadata."
+    ],
+    "tags": ["LLMs", "Watsonx.ai", "Discovery", "Cloud Object Storage", "Automation"]
+  },
+  {
+    "title": "Sentiment Analysis & Wordcloud on NZZ Comments",
+    "brand": "nzz",
+    "desc": "Interface for analyzing comments on NZZ articles — sentiment analysis and word cloud display, supervised by IBM Zürich.",
+    "source": "https://www.nzz.ch",
+    "tags": ["NLP", "Sentiment", "Wordcloud", "Python", "UI"]
+  }
+]
