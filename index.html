@@ -51,7 +51,18 @@
     footer{margin-top:40px; padding-top:24px; border-top:1px solid var(--border); color:var(--muted); font-size:14px}
     .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; background:color-mix(in oklab, var(--panel) 80%, transparent); border:1px solid var(--border); padding:2px 6px; border-radius:6px}
     .visually-hidden{position:absolute; clip:rect(1px, 1px, 1px, 1px); padding:0; border:0; height:1px; width:1px; overflow:hidden;}
-    .avatar{width:100%; max-width:240px; display:block; margin:6px auto 12px; aspect-ratio:auto; border-radius:18px; object-fit:cover; border:1px solid var(--border); box-shadow:var(--shadow)}
+    .avatar{
+  width:100%;
+  max-width: clamp(300px, 40vw, 480px);
+  display:block;
+  margin:6px auto 12px;
+  aspect-ratio: auto;
+  border-radius:18px;
+  object-fit:cover;
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+  cursor:pointer;
+}
     .badges{display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 0}
   </style>
 </head>
@@ -94,7 +105,10 @@
         </div>
       </div>
       <aside class="card" style="padding:20px; display:flex; align-items:center; justify-content:center">
-        <img src="assets/my_picture.png" alt="Portrait of Kened Kqiraj" class="avatar" loading="lazy">
+        <a href="https://www.linkedin.com/in/kened-kqiraj" id="avatarLink" class="avatar-wrap" aria-label="Open LinkedIn profile">
+  <img src="assets/my_picture.png" alt="Portrait of Kened Kqiraj" class="avatar" loading="lazy">
+</a>
+
       </aside>
     </section>
 
@@ -232,6 +246,19 @@
       const addr = user + '@' + domain;
       el.textContent = addr; el.href = 'mailto:'+addr;
     })();
+
+    // Avatar -> open LinkedIn in popup
+(function(){
+  const a = document.getElementById('avatarLink');
+  if(!a) return;
+  a.addEventListener('click', function(e){
+    e.preventDefault();
+    const win = window.open(this.href, 'linkedinPopup',
+      'width=1100,height=800,menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes');
+    if(!win) { window.location.href = this.href; } // fallback if popup blocked
+  });
+})();
+
   </script>
 
   <script type="application/ld+json">
