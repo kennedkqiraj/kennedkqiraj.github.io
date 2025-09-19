@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Kened Kqiraj — Data Science</title>
-  <meta name="description" content="Portfolio for Kened Kqiraj: experience, education, skills, and contact." />
+  <meta name="description" content="Portfolio for Kened Kqiraj: experience, education, skills, projects, and contact." />
   <meta name="author" content="Kened Kqiraj" />
   <meta property="og:title" content="Kened Kqiraj — Data Science" />
   <meta property="og:description" content="Data Science portfolio: experience, education, skills, projects, and contact." />
@@ -43,7 +43,7 @@
     .badge{--bgp:color-mix(in oklab, var(--panel) 80%, transparent); background:var(--bgp); border:1px solid var(--border); padding:6px 10px; border-radius:999px; font-size:13px}
     .section{margin-top:32px}
     .split{display:grid; grid-template-columns: 1fr; gap:18px}
-    @media(min-width:860px){.split{grid-template-columns: 1fr 1fr}}
+    @media(min-width:860px){.split{grid-template-columns: 1 fr 1fr}}
 
     /* Timeline layout fix */
     .timeline{position:relative; padding-left:28px}
@@ -68,7 +68,7 @@
       max-width: clamp(300px, 40vw, 480px);
       display:block;
       margin:6px auto 12px;
-      aspect-ratio: auto;
+      aspect-ratio:auto;
       border-radius:18px;
       object-fit:cover;
       border:1px solid var(--border);
@@ -77,14 +77,21 @@
     }
     .badges{display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 0}
 
-    /* Projects */
+    /* Projects — brandable cards */
     .projects-grid{display:grid; gap:18px; grid-template-columns:1fr}
     @media(min-width:860px){.projects-grid{grid-template-columns:1fr 1fr}}
-    .project .header{display:flex; align-items:center; justify-content:space-between; gap:10px}
-    .logo-badge{display:inline-flex; align-items:center; gap:8px; padding:6px 8px; border:1px solid var(--border); border-radius:12px; background:var(--panel)}
-    .logo-badge img{height:20px; width:auto; display:block}
+    .proj-card{border:1px solid var(--border); border-radius:18px; background:var(--panel); box-shadow:var(--shadow); overflow:hidden; position:relative}
+    .proj-banner{height:140px; background:linear-gradient(135deg,var(--brand,#6ee7b7),var(--brand-2,#60a5fa)); display:flex; align-items:flex-start; justify-content:space-between; padding:12px 14px}
+    .logo-chip{background:rgba(255,255,255,.92); color:#0b0b0e; border-radius:12px; padding:6px 10px; display:flex; gap:8px; align-items:center; border:1px solid rgba(0,0,0,.08)}
+    .logo-chip img{height:18px; width:auto}
+    .proj-body{padding:14px 16px}
+    .proj-title{margin:0 0 8px; font-weight:700; font-size:18px}
     .p-tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
     .tag{font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--border); color:var(--muted)}
+    /* Brand palettes */
+    .proj-card[data-brand="ibm"]{--brand:#0f62fe; --brand-2:#4589ff}
+    .proj-card[data-brand="nzz"]{--brand:#111111; --brand-2:#4b5563}
+    .proj-card[data-brand="on"]{--brand:#0b0b0e; --brand-2:#6b7280}
 
     /* Skills icon badges (with labels) */
     .icon-badges{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}
@@ -150,42 +157,11 @@
       </aside>
     </section>
 
-    <!-- Projects -->
+    <!-- Projects (dynamic from assets/projects.json) -->
     <section class="section" id="projects">
       <div class="card" style="padding:18px">
         <h2>Projects</h2>
-        <div class="projects-grid">
-          <article class="card project" style="padding:16px">
-            <div class="header">
-              <h3>Automated Categorization &amp; Summarization (IBM Watsonx)</h3>
-            </div>
-            <ul class="muted" style="margin:6px 0 0 18px">
-              <li>Develop a system to automatically categorize and summarize data.</li>
-              <li>Use LLMs to extract insights, including trending topics, common themes, sentiment analysis, and areas of disagreement or confusion.</li>
-              <li>Use of the IBM-s platform services like Intelligent Document Processing.</li>
-              <li>Orchestrated automated content workflows in IBM Watsonx Orchestrate by building an agent that triggered on new files in Cloud Object Storage, called Discovery/Watsonx.ai for semantic tagging and summarization, wrote results to a database, and updated article metadata.</li>
-            </ul>
-            <div class="p-tags">
-              <span class="tag">LLMs</span><span class="tag">Watsonx.ai</span><span class="tag">Discovery</span><span class="tag">Cloud Object Storage</span><span class="tag">Automation</span>
-            </div>
-          </article>
-
-          <article class="card project" style="padding:16px">
-            <div class="header">
-              <h3>Sentiment Analysis &amp; Wordcloud on NZZ Comments</h3>
-              <a class="logo-badge" href="https://www.nzz.ch" target="_blank" rel="noreferrer" title="Source: NZZ">
-                <img src="assets/nzz_logo.svg" alt="NZZ logo">
-                <span class="visually-hidden">Source: NZZ</span>
-              </a>
-            </div>
-            <p class="muted" style="margin:6px 0">
-              Interface for analyzing comments on NZZ articles — sentiment analysis and word cloud display, supervised by IBM Zürich.
-            </p>
-            <div class="p-tags">
-              <span class="tag">NLP</span><span class="tag">Sentiment</span><span class="tag">Wordcloud</span><span class="tag">Python</span>
-            </div>
-          </article>
-        </div>
+        <div id="projectsGrid" class="projects-grid"></div>
       </div>
     </section>
 
@@ -388,38 +364,38 @@
       });
     })();
 
-      // Render Projects from external JSON (assets/projects.json)
-  (function(){
-    const grid = document.getElementById('projectsGrid');
-    if(!grid) return;
-    fetch('assets/projects.json')
-      .then(r => r.json())
-      .then(data => {
-        data.forEach(p => {
-          const card = document.createElement('article');
-          card.className = 'proj-card';
-          card.dataset.brand = p.brand || '';
-          card.innerHTML = `
-            <div class="proj-banner">
-              <span class="logo-chip">
-                ${p.logo ? `<img src="${p.logo}" alt="${(p.brand || 'Logo').toUpperCase()}">` : ''}
-                <strong>${(p.brand || '').toUpperCase()}</strong>
-              </span>
-            </div>
-            <div class="proj-body">
-              <h3 class="proj-title">${p.title}</h3>
-              ${p.desc ? `<p class="muted" style="margin:6px 0">${p.desc}${p.source ? ` — <a href="${p.source}" target="_blank" rel="noreferrer">Source</a>` : ''}</p>` : ''}
-              ${Array.isArray(p.bullets) ? `<ul class="muted" style="margin:6px 0 0 18px">${p.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>` : ''}
-              ${Array.isArray(p.tags) ? `<div class="p-tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>` : ''}
-            </div>`;
-          grid.appendChild(card);
+    // Render Projects from external JSON (assets/projects.json)
+    (function(){
+      const grid = document.getElementById('projectsGrid');
+      if(!grid) return;
+      fetch('assets/projects.json')
+        .then(r => r.json())
+        .then(data => {
+          data.forEach(p => {
+            const card = document.createElement('article');
+            card.className = 'proj-card';
+            card.dataset.brand = p.brand || '';
+            card.innerHTML = `
+              <div class="proj-banner">
+                <span class="logo-chip">
+                  ${p.logo ? `<img src="${p.logo}" alt="${(p.brand || 'Logo').toUpperCase()}">` : ''}
+                  <strong>${(p.brand || '').toUpperCase()}</strong>
+                </span>
+              </div>
+              <div class="proj-body">
+                <h3 class="proj-title">${p.title}</h3>
+                ${p.desc ? `<p class="muted" style="margin:6px 0">${p.desc}${p.source ? ` — <a href="${p.source}" target="_blank" rel="noreferrer">Source</a>` : ''}</p>` : ''}
+                ${Array.isArray(p.bullets) ? `<ul class="muted" style="margin:6px 0 0 18px">${p.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>` : ''}
+                ${Array.isArray(p.tags) ? `<div class="p-tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>` : ''}
+              </div>`;
+            grid.appendChild(card);
+          });
+        })
+        .catch(err => {
+          grid.innerHTML = `<p class="muted">Could not load projects.json.</p>`;
+          console.error(err);
         });
-      })
-      .catch(err => {
-        grid.innerHTML = `<p class="muted">Could not load projects.json.</p>`;
-        console.error(err);
-      });
-  })();
+    })();
   </script>
 
   <script type="application/ld+json">
