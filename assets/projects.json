@@ -25,25 +25,25 @@
     ]
   },
   {
-    "title": "GenAI Email Automation — RAG + LLM (Llama)",
+    "title": "GenAI Email Automation — RAG + Llama",
     "brand": "personal",
     "logo": "",
-    "desc": "Built a chatbot that drafts replies to customer emails using Retrieval-Augmented Generation: retrieves prior conversations/knowledge, embeds content, and uses a Llama-based model to generate context-aware answers.",
+    "desc": "Drafts customer-reply emails by pulling context from past threads and internal docs. A RAG pipeline retrieves the right snippets; a Llama-based model generates tone-aware drafts with a human in the loop.",
     "bullets": [
-      "Ingest previous customer email threads and internal knowledge; chunk and embed for retrieval.",
-      "For each incoming email, retrieve the most relevant history and articles to build a focused context window.",
-      "Generate draft replies with a Llama-based LLM; tuned prompts for tone and formatting.",
+      "Indexed prior email threads and internal knowledge; chunked and embedded for fast retrieval.",
+      "For each inbound email, retrieved top-K relevant history to assemble a focused context window.",
+      "Generated drafts via prompt templates with tone and format controls.",
       "Human-in-the-loop review/approve workflow before sending.",
-      "Basic logging of queries, retrieved chunks, and outputs for iterative improvement."
+      "Logged queries, retrieved chunks, and outputs for iterative improvement."
     ],
     "tags": [
       "RAG",
+      "Llama",
       "LLM",
       "Embeddings",
-      "Llama",
-      "Email Automation",
       "Retrieval",
       "Vector DB",
+      "Email Automation",
       "Python"
     ]
   }
