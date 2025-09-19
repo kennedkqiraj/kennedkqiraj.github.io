@@ -13,6 +13,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Devicon icon font -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%230a0a0a'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' font-size='40' fill='%23fff' font-family='sans-serif'%3EK%3C/text%3E%3C/svg%3E">
   <style>
@@ -55,7 +56,7 @@
     .visually-hidden{position:absolute; clip:rect(1px, 1px, 1px, 1px); padding:0; border:0; height:1px; width:1px; overflow:hidden;}
     .avatar{width:100%; max-width: clamp(300px, 40vw, 480px); display:block; margin:6px auto 12px; border-radius:18px; object-fit:cover; border:1px solid var(--border); box-shadow:var(--shadow); cursor:pointer;}
 
-    /* Projects — brandable */
+    /* Projects — brandable (dynamic from JSON) */
     .projects-grid{display:grid; gap:18px; grid-template-columns:1fr}
     @media(min-width:860px){.projects-grid{grid-template-columns:1fr 1fr}}
     .proj-card{border:1px solid var(--border); border-radius:18px; background:var(--panel); box-shadow:var(--shadow); overflow:hidden; position:relative}
@@ -66,16 +67,33 @@
     .proj-title{margin:0 0 8px; font-weight:700; font-size:18px}
     .p-tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
     .tag{font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--border); color:var(--muted)}
+    /* ensure overlays (like watermarks) sit behind content */
+    .proj-card .proj-banner, .proj-card .proj-body { position:relative; z-index:1; }
+
     /* Brand palettes */
     .proj-card[data-brand="ibm"]{--brand:#0f62fe; --brand-2:#4589ff}
     .proj-card[data-brand="nzz"]{--brand:#111111; --brand-2:#4b5563}
     .proj-card[data-brand="on"]{--brand:#0b0b0e; --brand-2:#6b7280}
-    /* IBM watermark across project body */
-    .proj-card[data-brand="ibm"] .proj-body::after{
+
+    /* === IBM covers the WHOLE card (gradient + watermark) === */
+    .proj-card[data-brand="ibm"]{
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      border-color: rgba(255,255,255,.18);
+      color:#fff;
+    }
+    .proj-card[data-brand="ibm"] .proj-banner{ background:transparent; }
+    .proj-card[data-brand="ibm"] .proj-title{ color:#fff; }
+    .proj-card[data-brand="ibm"] .muted{ color:rgba(255,255,255,.92); }
+    .proj-card[data-brand="ibm"] .tag{
+      background: rgba(255,255,255,.10);
+      border-color: rgba(255,255,255,.35);
+      color:#fff;
+    }
+    .proj-card[data-brand="ibm"]::after{
       content:"";
-      position:absolute; inset:0;
-      background: url('assets/ibm.png') center/ 420px auto no-repeat;
-      opacity:.08;             /* low contrast */
+      position:absolute; inset:0; z-index:0;
+      background: url('assets/ibm.png') center/480px auto no-repeat;
+      opacity:.08;
       filter: grayscale(1) contrast(.9) brightness(1.2);
       pointer-events:none;
     }
