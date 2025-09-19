@@ -76,13 +76,12 @@
 
     /* === IBM light lilac background across the WHOLE card === */
     .proj-card[data-brand="ibm"]{
-      /* soft lilac/neutral layered background */
       background:
         radial-gradient(1100px 700px at 120% -10%, rgba(129,140,248,.10), transparent 50%),
         radial-gradient(900px 600px at -20% 120%, rgba(168,85,247,.10), transparent 60%),
         linear-gradient(135deg, #f3f1ff 0%, #eeeaff 45%, #e9efff 100%);
       border-color: rgba(17,18,25,.10);
-      color:#111217; /* dark text on light bg */
+      color:#111217;
     }
     .proj-card[data-brand="ibm"] .proj-banner{ background:transparent; }
     .proj-card[data-brand="ibm"] .proj-title{ color:#111217; }
@@ -92,14 +91,43 @@
       border-color: rgba(17,18,25,.12);
       color:#111217;
     }
-    /* Very light IBM watermark */
     .proj-card[data-brand="ibm"]::after{
       content:"";
       position:absolute; inset:0; z-index:0;
       background: url('assets/ibm.png') center/520px auto no-repeat;
-      opacity:.06;            /* lighter & less contrast */
+      opacity:.06;
       filter: grayscale(1) contrast(.85) brightness(1.15);
       pointer-events:none;
+    }
+
+    /* Skills icon badges (icon on top, name below) */
+    .icon-badges{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:12px;
+    }
+    .icon-badge{
+      display:inline-flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      min-width:84px;
+      padding:10px 8px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:var(--panel);
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+    .icon-badge i{ font-size:34px; line-height:1; }
+    .icon-badge .label{ font-size:12px; color:var(--muted); margin-top:6px; line-height:1.1; }
+    .icon-badge.text-only .pseudo-icon{
+      font-size:13px; font-weight:600; letter-spacing:.2px; line-height:1.1;
+    }
+    @media (max-width:520px){
+      .icon-badge{ min-width:72px; padding:8px 6px; }
+      .icon-badge i{ font-size:28px; }
     }
   </style>
 </head>
