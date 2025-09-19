@@ -69,11 +69,11 @@
     .tag{font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--border); color:var(--muted)}
     .proj-card .proj-banner, .proj-card .proj-body { position:relative; z-index:1; }
 
-    /* Brand palettes (for reference if banner-only) */
+    /* Brand palettes */
     .proj-card[data-brand="ibm"]{--brand:#0f62fe; --brand-2:#4589ff}
+    .proj-card[data-brand="llama"]{--brand:#1e6fff; --brand-2:#60a5fa}
     .proj-card[data-brand="nzz"]{--brand:#111111; --brand-2:#4b5563}
     .proj-card[data-brand="on"]{--brand:#0b0b0e; --brand-2:#6b7280}
-    .proj-card[data-brand="llama"]{--brand:#7c3aed; --brand-2:#22d3ee}
 
     /* === IBM light lilac background across the WHOLE card === */
     .proj-card[data-brand="ibm"]{
@@ -101,12 +101,12 @@
       pointer-events:none;
     }
 
-    /* === LLAMA light background across the WHOLE card (like IBM) === */
+    /* === LLAMA (GenAI) — soft light BLUE background + subtle watermark === */
     .proj-card[data-brand="llama"]{
       background:
-        radial-gradient(1100px 700px at 120% -10%, rgba(124,58,237,.10), transparent 50%),
-        radial-gradient(900px 600px at -20% 120%, rgba(34,211,238,.10), transparent 60%),
-        linear-gradient(135deg, #f7f3ff 0%, #f0f6ff 45%, #eef7ff 100%);
+        radial-gradient(1100px 700px at 120% -10%, rgba(37,99,235,.12), transparent 50%),
+        radial-gradient(900px 600px at -20% 120%, rgba(59,130,246,.10), transparent 60%),
+        linear-gradient(135deg, #f4f9ff 0%, #eaf3ff 45%, #e6f0ff 100%);
       border-color: rgba(17,18,25,.10);
       color:#111217;
     }
