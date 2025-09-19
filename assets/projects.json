@@ -1,26 +1,27 @@
 [
   {
-    "title": "Comments Analytics for NZZ with IBM Watsonx",
+    "title": "Comments Analytics for NZZ (IBM watsonx)",
     "brand": "ibm",
     "logo": "assets/ibm.png",
-    "desc": "Interface for analyzing comments on NZZ articles — automatic categorization, summarization, sentiment analysis, and word cloud display, built on IBM Watsonx and supervised by IBM Zürich.",
+    "desc": "Auto-categorizes, summarizes, and gauges sentiment in reader comments—surfacing trending topics and points of disagreement. Built on IBM watsonx with guidance from IBM Zürich.",
     "bullets": [
-      "Develop a system to automatically categorize and summarize data.",
-      "Use LLMs to extract insights, including trending topics, common themes, sentiment analysis, and areas of disagreement or confusion.",
-      "Use of the IBM-s platform services like Intelligent Document Processing.",
-      "Orchestrated automated content workflows in IBM Watsonx Orchestrate by building an agent that triggered on new files in Cloud Object Storage, called Discovery/Watsonx.ai for semantic tagging and summarization, wrote results to a database, and updated article metadata."
+      "Auto-tag & summarize comment streams",
+      "Insights: topics, themes, sentiment, controversy",
+      "Word-clouds for quick visual scanning",
+      "Orchestration: IBM Cloud Object Storage → watsonx Orchestrate → Discovery / watsonx.ai → database & updated metadata",
+      "Uses Intelligent Document Processing; simple analyst-friendly UI"
     ],
     "tags": [
       "LLMs",
-      "Watsonx.ai",
+      "watsonx.ai",
       "Discovery",
-      "Cloud Object Storage",
-      "Automation",
+      "Orchestrate",
+      "IBM Cloud Object Storage",
       "NLP",
       "Sentiment",
-      "Wordcloud",
       "Python",
-      "UI"
+      "Word-clouds",
+      "Automation"
     ]
   }
 ]
