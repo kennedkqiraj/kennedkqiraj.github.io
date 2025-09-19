@@ -387,6 +387,39 @@
         if(!win) { window.location.href = this.href; } // fallback if popup blocked
       });
     })();
+
+      // Render Projects from external JSON (assets/projects.json)
+  (function(){
+    const grid = document.getElementById('projectsGrid');
+    if(!grid) return;
+    fetch('assets/projects.json')
+      .then(r => r.json())
+      .then(data => {
+        data.forEach(p => {
+          const card = document.createElement('article');
+          card.className = 'proj-card';
+          card.dataset.brand = p.brand || '';
+          card.innerHTML = `
+            <div class="proj-banner">
+              <span class="logo-chip">
+                ${p.logo ? `<img src="${p.logo}" alt="${(p.brand || 'Logo').toUpperCase()}">` : ''}
+                <strong>${(p.brand || '').toUpperCase()}</strong>
+              </span>
+            </div>
+            <div class="proj-body">
+              <h3 class="proj-title">${p.title}</h3>
+              ${p.desc ? `<p class="muted" style="margin:6px 0">${p.desc}${p.source ? ` — <a href="${p.source}" target="_blank" rel="noreferrer">Source</a>` : ''}</p>` : ''}
+              ${Array.isArray(p.bullets) ? `<ul class="muted" style="margin:6px 0 0 18px">${p.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>` : ''}
+              ${Array.isArray(p.tags) ? `<div class="p-tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>` : ''}
+            </div>`;
+          grid.appendChild(card);
+        });
+      })
+      .catch(err => {
+        grid.innerHTML = `<p class="muted">Could not load projects.json.</p>`;
+        console.error(err);
+      });
+  })();
   </script>
 
   <script type="application/ld+json">
