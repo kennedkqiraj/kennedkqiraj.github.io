@@ -69,10 +69,11 @@
     .tag{font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--border); color:var(--muted)}
     .proj-card .proj-banner, .proj-card .proj-body { position:relative; z-index:1; }
 
-    /* Brand palettes */
+    /* Brand palettes (for reference if banner-only) */
     .proj-card[data-brand="ibm"]{--brand:#0f62fe; --brand-2:#4589ff}
     .proj-card[data-brand="nzz"]{--brand:#111111; --brand-2:#4b5563}
     .proj-card[data-brand="on"]{--brand:#0b0b0e; --brand-2:#6b7280}
+    .proj-card[data-brand="llama"]{--brand:#7c3aed; --brand-2:#22d3ee}
 
     /* === IBM light lilac background across the WHOLE card === */
     .proj-card[data-brand="ibm"]{
@@ -95,6 +96,32 @@
       content:"";
       position:absolute; inset:0; z-index:0;
       background: url('assets/ibm.png') center/520px auto no-repeat;
+      opacity:.06;
+      filter: grayscale(1) contrast(.85) brightness(1.15);
+      pointer-events:none;
+    }
+
+    /* === LLAMA light background across the WHOLE card (like IBM) === */
+    .proj-card[data-brand="llama"]{
+      background:
+        radial-gradient(1100px 700px at 120% -10%, rgba(124,58,237,.10), transparent 50%),
+        radial-gradient(900px 600px at -20% 120%, rgba(34,211,238,.10), transparent 60%),
+        linear-gradient(135deg, #f7f3ff 0%, #f0f6ff 45%, #eef7ff 100%);
+      border-color: rgba(17,18,25,.10);
+      color:#111217;
+    }
+    .proj-card[data-brand="llama"] .proj-banner{ background:transparent; }
+    .proj-card[data-brand="llama"] .proj-title{ color:#111217; }
+    .proj-card[data-brand="llama"] .muted{ color:#4b4f5c; }
+    .proj-card[data-brand="llama"] .tag{
+      background: rgba(17,18,25,.05);
+      border-color: rgba(17,18,25,.12);
+      color:#111217;
+    }
+    .proj-card[data-brand="llama"]::after{
+      content:"";
+      position:absolute; inset:0; z-index:0;
+      background: url('assets/llama.png') center/520px auto no-repeat;
       opacity:.06;
       filter: grayscale(1) contrast(.85) brightness(1.15);
       pointer-events:none;
