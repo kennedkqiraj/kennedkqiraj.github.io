@@ -13,7 +13,6 @@
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Devicon icon font -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%230a0a0a'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' font-size='40' fill='%23fff' font-family='sans-serif'%3EK%3C/text%3E%3C/svg%3E">
   <style>
@@ -69,18 +68,18 @@
     .tag{font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--border); color:var(--muted)}
     .proj-card .proj-banner, .proj-card .proj-body { position:relative; z-index:1; }
 
-    /* Brand palettes */
+    /* Brand palette variables for banner gradient */
     .proj-card[data-brand="ibm"]{--brand:#0f62fe; --brand-2:#4589ff}
     .proj-card[data-brand="llama"]{--brand:#1e6fff; --brand-2:#60a5fa}
     .proj-card[data-brand="nzz"]{--brand:#111111; --brand-2:#4b5563}
     .proj-card[data-brand="on"]{--brand:#0b0b0e; --brand-2:#6b7280}
 
-    /* === IBM light lilac background across the WHOLE card === */
+    /* === IBM full-card background + WATERMARK (more visible) === */
     .proj-card[data-brand="ibm"]{
       background:
-        radial-gradient(1100px 700px at 120% -10%, rgba(129,140,248,.10), transparent 50%),
-        radial-gradient(900px 600px at -20% 120%, rgba(168,85,247,.10), transparent 60%),
-        linear-gradient(135deg, #f3f1ff 0%, #eeeaff 45%, #e9efff 100%);
+        radial-gradient(1100px 700px at 120% -10%, rgba(129,140,248,.06), transparent 50%),
+        radial-gradient(900px 600px at -20% 120%, rgba(168,85,247,.05), transparent 60%),
+        linear-gradient(135deg, #f7f6ff 0%, #f1efff 45%, #edf2ff 100%);
       border-color: rgba(17,18,25,.10);
       color:#111217;
     }
@@ -95,19 +94,18 @@
     .proj-card[data-brand="ibm"]::after{
       content:"";
       position:absolute; inset:0; z-index:0;
-      background: url('assets/ibm.png') center/520px auto no-repeat;
-      opacity:.06;
-      filter: grayscale(1) contrast(.85) brightness(1.15);
+      background: url('assets/ibm.png') center/760px auto no-repeat;
+      opacity:.22;
+      filter: grayscale(1) contrast(.95) brightness(1.05);
       pointer-events:none;
     }
 
-    /* === LLAMA (GenAI) — soft light BLUE background + stronger watermark === */
+    /* === LLAMA (GenAI) full-card background + WATERMARK (more visible) === */
     .proj-card[data-brand="llama"]{
-      /* lighten the gradients so the image shows more */
       background:
-        radial-gradient(1100px 700px at 120% -10%, rgba(37,99,235,.08), transparent 50%),
-        radial-gradient(900px 600px at -20% 120%, rgba(59,130,246,.06), transparent 60%),
-        linear-gradient(135deg, #f4f9ff 0%, #eaf3ff 45%, #e6f0ff 100%);
+        radial-gradient(1100px 700px at 120% -10%, rgba(37,99,235,.06), transparent 50%),
+        radial-gradient(900px 600px at -20% 120%, rgba(59,130,246,.05), transparent 60%),
+        linear-gradient(135deg, #f6fbff 0%, #eef6ff 45%, #e9f3ff 100%);
       border-color: rgba(17,18,25,.10);
       color:#111217;
     }
@@ -122,41 +120,25 @@
     .proj-card[data-brand="llama"]::after{
       content:"";
       position:absolute; inset:0; z-index:0;
-      /* bigger and more opaque so it appears more */
-      background: url('assets/llama.png') center/640px auto no-repeat;
-      opacity:.14;
-      filter: grayscale(1) contrast(.95) brightness(1.1);
+      background: url('assets/llama.png') center/760px auto no-repeat;
+      opacity:.22;
+      filter: grayscale(1) contrast(.95) brightness(1.05);
       pointer-events:none;
     }
 
     /* Skills icon badges (icon on top, name below) */
-    .icon-badges{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      margin-top:12px;
-    }
+    .icon-badges{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}
     .icon-badge{
-      display:inline-flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      min-width:84px;
-      padding:10px 8px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background:var(--panel);
-      box-shadow:var(--shadow);
-      text-align:center;
+      display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
+      min-width:84px;padding:10px 8px;border-radius:14px;border:1px solid var(--border);
+      background:var(--panel);box-shadow:var(--shadow);text-align:center
     }
     .icon-badge i{ font-size:34px; line-height:1; }
     .icon-badge .label{ font-size:12px; color:var(--muted); margin-top:6px; line-height:1.1; }
-    .icon-badge.text-only .pseudo-icon{
-      font-size:13px; font-weight:600; letter-spacing:.2px; line-height:1.1;
-    }
+    .icon-badge.text-only .pseudo-icon{ font-size:13px; font-weight:600; letter-spacing:.2px; line-height:1.1 }
     @media (max-width:520px){
-      .icon-badge{ min-width:72px; padding:8px 6px; }
-      .icon-badge i{ font-size:28px; }
+      .icon-badge{ min-width:72px; padding:8px 6px }
+      .icon-badge i{ font-size:28px }
     }
   </style>
 </head>
