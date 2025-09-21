@@ -1,0 +1,60 @@
+[
+  {
+    "org": "IBM Switzerland",
+    "title": "IBM WatsonX Challenge",
+    "period": "02/2025 – 05/2025",
+    "bullets": [
+      "Auto-categorize and summarize data with LLMs",
+      "Extract insights: trends, themes, sentiment, disagreements",
+      "Used Intelligent Document Processing",
+      "Orchestrated workflows with watsonx Orchestrate + Discovery/watsonx.ai + COS → DB + metadata updates"
+    ],
+    "tags": ["LLMs", "Watsonx.ai", "Discovery", "Orchestrate", "IBM Cloud Object Storage", "Automation", "NLP"]
+  },
+  {
+    "org": "IBM Coursera",
+    "title": "Develop Generative AI Applications",
+    "period": "07/2025",
+    "bullets": [
+      "Prompt templates, chains, agents with LangChain",
+      "Model evaluation and comparison",
+      "GenAI app with Flask + structured JSON outputs"
+    ],
+    "tags": ["GenAI", "LangChain", "Prompting", "Flask"]
+  },
+  {
+    "org": "IBM Coursera",
+    "title": "Build RAG Applications",
+    "period": "07/2025",
+    "bullets": [
+      "Retrieval-Augmented Generation fundamentals",
+      "LangChain vs LlamaIndex",
+      "RAG apps in Python; Gradio interfaces"
+    ],
+    "tags": ["RAG", "LangChain", "LlamaIndex", "Python", "Gradio"]
+  },
+  {
+    "org": "DeepLearning.AI",
+    "title": "Unsupervised Learning, Recommenders, Reinforcement Learning",
+    "period": "07/2025",
+    "bullets": [
+      "Clustering, anomaly detection",
+      "Deep RL model",
+      "Recommenders: collaborative & content-based"
+    ],
+    "tags": ["Unsupervised", "Recommenders", "RL", "Deep Learning"]
+  },
+  {
+    "org": "BlockSeminar",
+    "title": "Big Data in the Cloud (Azure)",
+    "period": "09/2025",
+    "bullets": [
+      "Pipelines with Azure Data Factory",
+      "PySpark/SparkSQL in Databricks",
+      "SQL data modeling and integration",
+      "Azure Blob Storage for unstructured data",
+      "End-to-end cloud data engineering"
+    ],
+    "tags": ["Azure", "Databricks", "ADF", "PySpark", "SQL", "Blob Storage"]
+  }
+]
