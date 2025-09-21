@@ -101,11 +101,12 @@
       pointer-events:none;
     }
 
-    /* === LLAMA (GenAI) — soft light BLUE background + subtle watermark === */
+    /* === LLAMA (GenAI) — soft light BLUE background + stronger watermark === */
     .proj-card[data-brand="llama"]{
+      /* lighten the gradients so the image shows more */
       background:
-        radial-gradient(1100px 700px at 120% -10%, rgba(37,99,235,.12), transparent 50%),
-        radial-gradient(900px 600px at -20% 120%, rgba(59,130,246,.10), transparent 60%),
+        radial-gradient(1100px 700px at 120% -10%, rgba(37,99,235,.08), transparent 50%),
+        radial-gradient(900px 600px at -20% 120%, rgba(59,130,246,.06), transparent 60%),
         linear-gradient(135deg, #f4f9ff 0%, #eaf3ff 45%, #e6f0ff 100%);
       border-color: rgba(17,18,25,.10);
       color:#111217;
@@ -121,9 +122,10 @@
     .proj-card[data-brand="llama"]::after{
       content:"";
       position:absolute; inset:0; z-index:0;
-      background: url('assets/llama.png') center/520px auto no-repeat;
-      opacity:.06;
-      filter: grayscale(1) contrast(.85) brightness(1.15);
+      /* bigger and more opaque so it appears more */
+      background: url('assets/llama.png') center/640px auto no-repeat;
+      opacity:.14;
+      filter: grayscale(1) contrast(.95) brightness(1.1);
       pointer-events:none;
     }
 
