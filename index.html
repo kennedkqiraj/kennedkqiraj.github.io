@@ -4,15 +4,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Kened Kqiraj — Data Science</title>
-  <meta name="description" content="Portfolio for Kened Kqiraj: experience, education, skills, projects, and contact." />
+  <meta name="description" content="Portfolio for Kened Kqiraj: experience, education, skills, projects, chatbot, and contact." />
   <meta name="author" content="Kened Kqiraj" />
   <meta property="og:title" content="Kened Kqiraj — Data Science" />
-  <meta property="og:description" content="Data Science portfolio: experience, education, skills, projects, and contact." />
+  <meta property="og:description" content="Data Science portfolio: experience, education, skills, projects, chatbot, and contact." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://kennedkqiraj.github.io/assets/my_picture.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Devicon icon font -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%230a0a0a'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' font-size='40' fill='%23fff' font-family='sans-serif'%3EK%3C/text%3E%3C/svg%3E">
   <style>
@@ -42,7 +43,7 @@
     .badge{--bgp:color-mix(in oklab, var(--panel) 80%, transparent); background:var(--bgp); border:1px solid var(--border); padding:6px 10px; border-radius:999px; font-size:13px}
     .section{margin-top:32px}
     .split{display:grid; grid-template-columns: 1fr; gap:18px}
-    @media(min-width:860px){.split{grid-template-columns: 1fr 1fr}}
+    @media(min-width:860px){.split{grid-template-columns: 1 fr 1fr}}
 
     /* Timeline */
     .timeline{position:relative; padding-left:28px}
@@ -74,7 +75,7 @@
     .proj-card[data-brand="nzz"]{--brand:#111111; --brand-2:#4b5563}
     .proj-card[data-brand="on"]{--brand:#0b0b0e; --brand-2:#6b7280}
 
-    /* === IBM full-card background + WATERMARK (more visible) === */
+    /* IBM full-card background + watermark (visible) */
     .proj-card[data-brand="ibm"]{
       background:
         radial-gradient(1100px 700px at 120% -10%, rgba(129,140,248,.06), transparent 50%),
@@ -100,7 +101,7 @@
       pointer-events:none;
     }
 
-    /* === LLAMA (GenAI) full-card background + WATERMARK (more visible) === */
+    /* LLAMA (GenAI) full-card background + watermark (visible) */
     .proj-card[data-brand="llama"]{
       background:
         radial-gradient(1100px 700px at 120% -10%, rgba(37,99,235,.06), transparent 50%),
@@ -126,7 +127,7 @@
       pointer-events:none;
     }
 
-    /* Skills icon badges (icon on top, name below) */
+    /* Skills icon badges */
     .icon-badges{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}
     .icon-badge{
       display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
@@ -148,9 +149,11 @@
       <a href="#top" class="brand"><span class="logo">K</span><span>Kened Kqiraj</span></a>
       <nav class="row">
         <a class="link" href="#projects">Projects</a>
+        <a class="link" href="#chatbot">Chatbot</a>
         <a class="link" href="#experience">Experience</a>
         <a class="link" href="#education">Education</a>
         <a class="link" href="#skills">Skills</a>
+        <a class="link" href="#training">Further Training</a>
         <a class="link" href="#contact">Contact</a>
       </nav>
       <div class="nav-actions">
@@ -186,6 +189,21 @@
       </div>
     </section>
 
+    <!-- CHATBOT (iframe embed; replace src with your deployed app URL) -->
+    <section class="section" id="chatbot">
+      <div class="card" style="padding:0; overflow:hidden">
+        <h2 style="padding:18px 18px 0 18px">Chatbot</h2>
+        <p class="muted" style="padding:0 18px 6px 18px">Here is the chat bot that I created to write on my behalf — what would you like to know?</p>
+        <iframe
+          src="https://YOUR-HOSTED-RAG-CHATBOT-URL"
+          title="Kened's RAG Chatbot"
+          style="width:100%; height:760px; border:0; border-radius:18px;"
+          loading="lazy"
+          referrerpolicy="no-referrer"
+        ></iframe>
+      </div>
+    </section>
+
     <!-- EXPERIENCE -->
     <section class="section" id="experience">
       <div class="card" style="padding:18px">
@@ -194,8 +212,8 @@
           <div class="t-item">
             <div class="t-title">Internship — On AG <span class="muted">(Feb 2025 – Present)</span></div>
             <ul class="muted" style="margin:6px 0 0 18px">
-              <li>Working on automation of tariff classification and preferential origin processes using Python, SQL, BigQuery, and LLMs.</li>
-              <li>Focus on data ingestion, transformation, and reporting.</li>
+              <li>Automation of tariff classification and preferential origin processes using Python, SQL, BigQuery, and LLMs.</li>
+              <li>Data ingestion, transformation, and reporting.</li>
               <li>Google Cloud Platform, Vertex AI.</li>
             </ul>
           </div>
@@ -203,8 +221,8 @@
             <div class="t-title">Operations Specialist — The Brain Maze LLC (Part Time) <span class="muted">(Jul 2019 – Feb 2024)</span></div>
             <ul class="muted" style="margin:6px 0 0 18px">
               <li>Analysis and evaluation of the raw data.</li>
-              <li>Continues improvement of workflows.</li>
-              <li>Financial Reporting using Excel, and tax reporting.</li>
+              <li>Continuous improvement of workflows.</li>
+              <li>Financial reporting using Excel, and tax reporting.</li>
             </ul>
           </div>
         </div>
@@ -222,11 +240,13 @@
       </div>
     </section>
 
-    <!-- TRAINING -->
+    <!-- FURTHER TRAINING (static + dynamic JSON append) -->
     <section class="section" id="training">
       <div class="card" style="padding:18px">
         <h2>Further Training</h2>
-        <div class="timeline">
+
+        <!-- (Your existing static timeline entries can stay above) -->
+        <div class="timeline" id="trainingStatic">
           <div class="t-item">
             <div class="t-title">IBM Switzerland — IBM WatsonX Challenge <span class="muted">(02/2025 – 05/2025)</span></div>
             <ul class="muted" style="margin:6px 0 0 18px">
@@ -272,6 +292,9 @@
             </ul>
           </div>
         </div>
+
+        <!-- JSON-driven additions will be appended here -->
+        <div class="timeline" id="trainingJsonContainer"></div>
       </div>
     </section>
 
@@ -379,6 +402,27 @@
           grid.innerHTML = `<p class="muted">Could not load projects.json.</p>`;
           console.error(err);
         });
+    })();
+
+    // Render Further Training from assets/further_training.json (appends below static items)
+    (function(){
+      const wrap = document.getElementById('trainingJsonContainer');
+      if(!wrap) return;
+      fetch('assets/further_training.json?cb=' + Date.now())
+        .then(r => r.json())
+        .then(list => {
+          if(!Array.isArray(list) || list.length === 0){ return; }
+          list.forEach(t => {
+            const item = document.createElement('div');
+            item.className = 't-item';
+            item.innerHTML = `
+              <div class="t-title">${t.title} — <span class="muted">${t.org}</span> <span class="muted">(${t.period || ''})</span></div>
+              ${Array.isArray(t.bullets) ? `<ul class="muted" style="margin:6px 0 0 18px">${t.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>` : ''}
+            `;
+            wrap.appendChild(item);
+          });
+        })
+        .catch(console.error);
     })();
   </script>
 
