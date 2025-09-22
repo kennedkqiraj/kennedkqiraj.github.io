@@ -184,7 +184,7 @@ def hr_guardrail(user_text: str) -> Optional[str]:
     if any(re.search(p, q) for p in HR_SENSITIVE_PATTERNS):
         return (
             f"I’d love to discuss that live so we align quickly on role scope and expectations. "
-            f"Please call me at **{MY_PHONE}** or book a short intro via my calendar: **{MY_CALENDAR}**.\n\n"
+            f"Please call me at **{MY_PHONE}**\n\n"
             f"If it helps, feel free to email me at **{MY_EMAIL}** with a couple of time slots."
         )
     return None
