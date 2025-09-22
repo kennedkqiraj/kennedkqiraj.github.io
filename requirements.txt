@@ -1,4 +1,11 @@
-streamlit
-sentence-transformers
+# Streamlit Cloud friendly pins
+streamlit>=1.36
+requests>=2.31
+
+# embeddings stack
+sentence-transformers==2.7.0
+# prevent NumPy 2.x breaks with faiss wheels
+numpy<2.0
+
+# FAISS prebuilt wheel
 faiss-cpu==1.8.0.post1
-requests
