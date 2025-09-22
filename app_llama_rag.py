@@ -1,13 +1,6 @@
 # app_llama_rag.py
 # Streamlit + FAISS RAG over assets/projects.json and assets/further_training.json,
-# using a hosted Llama via Together AI (no local Ollama needed).
-#
-# Deploy steps (summary):
-# - Add requirements.txt (see chat)
-# - Push this file + assets/*.json to GitHub
-# - Deploy on Streamlit Community Cloud; set a secret:
-#     TOGETHER_API_KEY = your_key_here
-# - Open the app URL (or embed it in your site with an <iframe>)
+# using a hosted Llama via GROQ (free-tier friendly). No local Ollama needed.
 
 import os
 import json
@@ -29,7 +22,7 @@ st.set_page_config(
     layout="centered",
 )
 
-# If you prefer to load JSONs from GitHub raw URLs, set these to your raw links.
+# If you prefer to load JSONs from GitHub raw URLs, set these env vars to raw links.
 # Otherwise, the app will load from local files in /assets.
 PROJECTS_URL = os.getenv("PROJECTS_URL", "").strip() or None
 TRAINING_URL = os.getenv("TRAINING_URL", "").strip() or None
@@ -37,17 +30,15 @@ TRAINING_URL = os.getenv("TRAINING_URL", "").strip() or None
 LOCAL_CANDIDATES = [
     Path("assets"),
     Path(__file__).parent / "assets",
-    Path(".")
+    Path("."),
 ]
 
 EMBED_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 
-# Together AI (hosted Llama)
-TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
-TOGETHER_MODEL = os.getenv(
-    "TOGETHER_MODEL",
-    "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
-)
+# GROQ hosted Llama
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+# Good default: fast + inexpensive
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
 
 MAX_CTX_DOCS = 6
 TEMPERATURE = 0.3
@@ -86,9 +77,9 @@ def chunk_text(text: str, chunk_size: int = 700, overlap: int = 120) -> List[str
     return chunks
 
 def doc_from_project(p: Dict[str, Any]) -> str:
-    title = p.get("title","")
-    brand = p.get("brand","")
-    desc = p.get("desc","")
+    title = p.get("title", "")
+    brand = p.get("brand", "")
+    desc = p.get("desc", "")
     bullets = " • ".join(p.get("bullets", []))
     tags = ", ".join(p.get("tags", []))
     return normalize_space(f"""
@@ -99,9 +90,9 @@ def doc_from_project(p: Dict[str, Any]) -> str:
     """)
 
 def doc_from_training(t: Dict[str, Any]) -> str:
-    org = t.get("org","")
-    title = t.get("title","")
-    period = t.get("period","")
+    org = t.get("org", "")
+    title = t.get("title", "")
+    period = t.get("period", "")
     bullets = " • ".join(t.get("bullets", []))
     tags = ", ".join(t.get("tags", []))
     return normalize_space(f"""
@@ -116,7 +107,7 @@ def get_embedder():
     return SentenceTransformer(EMBED_MODEL_NAME)
 
 @st.cache_resource(show_spinner=True)
-def build_index(projects: List[Dict[str,Any]], training: List[Dict[str,Any]]) -> Tuple[faiss.IndexFlatIP, List[str]]:
+def build_index(projects: List[Dict[str, Any]], training: List[Dict[str, Any]]) -> Tuple[faiss.IndexFlatIP, List[str]]:
     docs: List[str] = []
 
     # Projects
@@ -157,34 +148,36 @@ def retrieve(query: str, index: faiss.IndexFlatIP, docs: List[str], k: int = MAX
             seen.add(key)
     return uniq
 
-# -------------------- LLM (Together AI) --------------------
+# -------------------- LLM (Groq) --------------------
 def llm_call(prompt: str) -> str:
-    if not TOGETHER_API_KEY:
-        return ("Hosted LLM missing: set TOGETHER_API_KEY secret in Streamlit Cloud.\n"
-                "App → Settings → Secrets → TOGETHER_API_KEY=...")
+    if not GROQ_API_KEY:
+        return ("Hosted LLM missing: set GROQ_API_KEY secret in Streamlit Cloud.\n"
+                "App → Settings → Secrets → GROQ_API_KEY=...")
 
     try:
         r = requests.post(
-            "https://api.together.xyz/v1/chat/completions",
+            "https://api.groq.com/openai/v1/chat/completions",
             headers={
-                "Authorization": f"Bearer {TOGETHER_API_KEY}",
-                "Content-Type": "application/json"
+                "Authorization": f"Bearer {GROQ_API_KEY}",
+                "Content-Type": "application/json",
             },
             json={
-                "model": TOGETHER_MODEL,
+                "model": GROQ_MODEL,
                 "messages": [
-                    {"role": "system",
-                     "content": (
-                         "You are Kened Kqiraj's portfolio assistant. "
-                         "Answer ONLY using the provided context. "
-                         "Be concise, specific, and professional. "
-                         "A tiny, tasteful hint of sarcasm is okay; avoid snark. "
-                         "If unknown from context, say so briefly."
-                     )},
-                    {"role": "user", "content": prompt}
+                    {
+                        "role": "system",
+                        "content": (
+                            "You are Kened Kqiraj's portfolio assistant. "
+                            "Answer ONLY using the provided context. "
+                            "Be concise, specific, and professional. "
+                            "A tiny, tasteful hint of sarcasm is okay; avoid snark. "
+                            "If unknown from context, say so briefly."
+                        ),
+                    },
+                    {"role": "user", "content": prompt},
                 ],
                 "temperature": TEMPERATURE,
-                "max_tokens": MAX_TOKENS
+                "max_tokens": MAX_TOKENS,
             },
             timeout=120,
         )
@@ -205,7 +198,7 @@ def build_prompt(question: str, contexts: List[str]) -> str:
 
 # -------------------- UI --------------------
 st.title("🦙 RAG Chatbot")
-st.caption("Hosted Llama via Together AI • Answers about projects & further training from JSON.")
+st.caption("Groq Llama • Answers about projects & further training from JSON.")
 
 # Load JSON data (URL or local)
 projects = load_json_from(PROJECTS_URL, LOCAL_CANDIDATES, "projects.json") or \
@@ -216,12 +209,16 @@ training = load_json_from(TRAINING_URL, LOCAL_CANDIDATES, "further_training.json
 if not projects and not training:
     st.warning("Could not load JSON data. Ensure `assets/projects.json` and `assets/further_training.json` exist, "
                "or set PROJECTS_URL/TRAINING_URL to raw GitHub URLs.")
+
 index, DOCS = build_index(projects, training)
 
 # Friendly first message
 if "history" not in st.session_state:
     st.session_state.history = [
-        {"role":"assistant","content":"Here is the chat bot that I created to write on my behalf — what would you like to know?"}
+        {
+            "role": "assistant",
+            "content": "Here is the chat bot that I created to write on my behalf — what would you like to know?",
+        }
     ]
 
 for m in st.session_state.history:
@@ -230,7 +227,7 @@ for m in st.session_state.history:
 
 q = st.chat_input("Ask about a project, stack, or training…")
 if q:
-    st.session_state.history.append({"role":"user","content":q})
+    st.session_state.history.append({"role": "user", "content": q})
     with st.chat_message("user"):
         st.markdown(q)
 
@@ -239,12 +236,18 @@ if q:
             ctxs = retrieve(q, index, DOCS, k=MAX_CTX_DOCS)
             prompt = build_prompt(q, ctxs)
             ans = llm_call(prompt)
-            if SARCASM and ans and "LLM error" not in ans and "missing" not in ans:
+            if SARCASM and ans and "LLM error" not in ans and "missing" not in ans.lower():
                 ans += "\n\n*There you go—just the essentials.*"
             st.markdown(ans)
-            st.session_state.history.append({"role":"assistant","content":ans})
+            st.session_state.history.append({"role": "assistant", "content": ans})
 
 # Optional: small debug panel
 with st.expander("🔍 RAG context (debug)"):
     st.write("First few doc chunks:", DOCS[:5])
-    st.write({"projects_loaded": len(projects), "training_loaded": len(training), "model": TOGETHER_MODEL})
+    st.write(
+        {
+            "projects_loaded": len(projects),
+            "training_loaded": len(training),
+            "model": GROQ_MODEL,
+        }
+    )
