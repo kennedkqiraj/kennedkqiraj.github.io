@@ -1,26 +1,32 @@
 # app_llama_rag.py
 # Streamlit RAG over assets/projects.json and assets/further_training.json
 # Uses Sentence-Transformers + NumPy cosine retrieval (no FAISS) + Groq Llama
-# Tone: warm, confident, speaks in FIRST PERSON as Kened. No debug expander.
+# HR-aware: deflects sensitive/negotiation questions with a friendly CTA.
+# Voice: warm, confident, persuasive, FIRST PERSON (I / me / my).
 
 import os
 import json
 import re
 import textwrap
 from pathlib import Path
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any, Tuple, Optional
 
 import streamlit as st
 import numpy as np
 import requests
 from sentence_transformers import SentenceTransformer
 
-# -------------------- App Config --------------------
+# -------------------- App & Profile Config --------------------
 st.set_page_config(
     page_title="I’m Kened’s assistant — how may I help you?",
     page_icon="💬",
     layout="centered",
 )
+
+# Contact / CTA configuration (edit these!)
+MY_PHONE = os.getenv("MY_PHONE", "+41 76 567 29 85")
+MY_EMAIL = os.getenv("MY_EMAIL", "kened.kqiraj@stud.hslu.ch")
+MY_CALENDAR = os.getenv("MY_CALENDAR", "https://cal.com/your-handle")  # put your real calendar link here
 
 # Optional: load JSON from raw GitHub URLs via env vars (otherwise local files)
 PROJECTS_URL = os.getenv("PROJECTS_URL", "").strip() or None
@@ -42,8 +48,19 @@ MAX_CTX_DOCS = 6
 TEMPERATURE = 0.25
 MAX_TOKENS = 550
 
+# Optional profile facts to help with simple HR questions we DO want to answer
+PROFILE = {
+    "location": "Zug, Switzerland",
+    "roles_open": ["Data Scientist", "AI Engineer"],
+    "work_mode": ["On-site", "Hybrid", "Remote"],
+    "status": "Open to full-time roles",
+    # Add simple facts you’re happy to answer directly:
+    "start_timing": "Flexible start; currently interning at On AG.",
+    "languages": ["English", "German (basic)", "Albanian"],
+}
+
 # -------------------- Data helpers --------------------
-def load_json_from(url: str | None, fallbacks: List[Path], filename: str) -> List[Dict[str, Any]]:
+def load_json_from(url: Optional[str], fallbacks: List[Path], filename: str) -> List[Dict[str, Any]]:
     """Load JSON from URL (if provided) else from local fallback paths."""
     if url:
         try:
@@ -145,6 +162,33 @@ def retrieve(query: str, emb_mat: np.ndarray, docs: List[str], k: int = MAX_CTX_
             seen.add(key)
     return out
 
+# -------------------- HR Guardrail & CTA --------------------
+HR_SENSITIVE_PATTERNS = [
+    # salary / comp / rate
+    r"\b(salary|compensation|pay|rate|wage|stipend|hourly|day rate|expected pay|desired salary|range)\b",
+    # equity/bonus
+    r"\b(equity|bonus|stock|rsu|options)\b",
+    # contract terms
+    r"\b(contract|notice period|termination|non[- ]?compete|non[- ]?solicit|probation)\b",
+    # visas & sponsorship
+    r"\b(visa|sponsor|sponsorship|work authorization|work permit)\b",
+    # relocation
+    r"\b(relocate|relocation|move countries?)\b",
+    # benefits details
+    r"\b(benefits?|pension|healthcare|insurance|vacation|holidays?)\b",
+]
+
+def hr_guardrail(user_text: str) -> Optional[str]:
+    """Returns a deflection message if the question is sensitive; otherwise None."""
+    q = user_text.lower()
+    if any(re.search(p, q) for p in HR_SENSITIVE_PATTERNS):
+        return (
+            f"I’d love to discuss that live so we align quickly on role scope and expectations. "
+            f"Please call me at **{MY_PHONE}** or book a short intro via my calendar: **{MY_CALENDAR}**.\n\n"
+            f"If it helps, feel free to email me at **{MY_EMAIL}** with a couple of time slots."
+        )
+    return None
+
 # -------------------- LLM (Groq) --------------------
 def llm_call(prompt: str) -> str:
     if not GROQ_API_KEY:
@@ -166,11 +210,15 @@ def llm_call(prompt: str) -> str:
                         "content": (
                             "You are Kened Kqiraj’s personal portfolio assistant. "
                             "You speak in FIRST PERSON as Kened (use 'I', 'me', 'my'). "
-                            "Be warm, concise, and confident; professional with a light friendly tone. "
-                            "Answer ONLY from the provided context (projects.json and further_training.json). "
-                            "If something isn’t in context, say briefly that you don’t have that detail. "
-                            "Do NOT mention being an AI or a chatbot. "
-                            "Keep answers crisp; prefer bullet points for lists."
+                            "Your goal is to help the visitor understand why I’m a strong hire. "
+                            "Be warm, concise, and confident; professional with a friendly tone. "
+                            "Answer ONLY from the provided context (projects.json and further_training.json) "
+                            "and the short profile facts I provide in this message:\n\n"
+                            f"PROFILE FACTS: {PROFILE}\n\n"
+                            "Important: If a question asks about salary, compensation, sponsorship, contract terms, "
+                            "benefits, or similar negotiation topics, DO NOT provide specifics. "
+                            "Instead, politely ask them to call me or book time via my calendar.\n"
+                            "Prefer bullet points for lists; highlight impact and results."
                         ),
                     },
                     {"role": "user", "content": prompt},
@@ -188,16 +236,17 @@ def llm_call(prompt: str) -> str:
 
 def build_prompt(question: str, contexts: List[str]) -> str:
     system = textwrap.dedent("""
-    Use only the context bullets below to answer.
+    Use only the context bullets below (plus the short profile facts) to answer.
     If the answer isn't in context, say you don't have that detail.
     Write as Kened in the first person.
+    Keep the answer focused and persuasive for hiring.
     """).strip()
     ctx = "\n".join(f"- {c}" for c in contexts)
     user = f"Question: {question}\n\nContext:\n{ctx}\n\nAnswer:"
     return f"{system}\n\n{user}"
 
 # -------------------- UI --------------------
-# Stylish header (looks nicer in the popup)
+# Stylish header (nice in popup)
 st.markdown(
     """
     <div style="
@@ -209,7 +258,7 @@ st.markdown(
       <div style="font-size:24px">💬</div>
       <div>
         <div style="font-weight:800;font-size:20px;line-height:1.2">I’m Kened’s assistant — how may I help you?</div>
-        <div style="color:#9aa3b2;font-size:13px">Groq Llama • Answers about my projects & training (from JSON)</div>
+        <div style="color:#9aa3b2;font-size:13px">Groq Llama • Answers about my projects & training</div>
       </div>
     </div>
     """,
@@ -246,8 +295,16 @@ if q:
 
     with st.chat_message("assistant"):
         with st.spinner("Thinking…"):
-            ctxs = retrieve(q, EMB, DOCS, k=MAX_CTX_DOCS)
-            prompt = build_prompt(q, ctxs)
-            ans = llm_call(prompt)
+
+            # 1) Guardrail for sensitive HR/negotiation topics
+            deflection = hr_guardrail(q)
+            if deflection:
+                ans = deflection
+            else:
+                # 2) RAG context + LLM
+                ctxs = retrieve(q, EMB, DOCS, k=MAX_CTX_DOCS)
+                prompt = build_prompt(q, ctxs)
+                ans = llm_call(prompt)
+
             st.markdown(ans)
             st.session_state.history.append({"role": "assistant", "content": ans})
