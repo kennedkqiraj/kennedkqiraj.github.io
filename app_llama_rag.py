@@ -1,7 +1,7 @@
 # app_llama_rag.py
 # Streamlit RAG over assets/projects.json and assets/further_training.json
-# Uses: Sentence-Transformers + NumPy cosine retrieval (no FAISS) + Groq Llama
-# Deploy: Add GROQ_API_KEY in Streamlit "Secrets"
+# Uses Sentence-Transformers + NumPy cosine retrieval (no FAISS) + Groq Llama
+# Tone: warm, confident, speaks in FIRST PERSON as Kened. No debug expander.
 
 import os
 import json
@@ -17,8 +17,8 @@ from sentence_transformers import SentenceTransformer
 
 # -------------------- App Config --------------------
 st.set_page_config(
-    page_title="Kened • RAG Chatbot",
-    page_icon="🦙",
+    page_title="I’m Kened’s assistant — how may I help you?",
+    page_icon="💬",
     layout="centered",
 )
 
@@ -39,9 +39,8 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
 
 MAX_CTX_DOCS = 6
-TEMPERATURE = 0.3
-MAX_TOKENS = 450
-SARCASM = True  # mild, professional
+TEMPERATURE = 0.25
+MAX_TOKENS = 550
 
 # -------------------- Data helpers --------------------
 def load_json_from(url: str | None, fallbacks: List[Path], filename: str) -> List[Dict[str, Any]]:
@@ -81,7 +80,7 @@ def doc_from_project(p: Dict[str, Any]) -> str:
     bullets = " • ".join(p.get("bullets", []))
     tags = ", ".join(p.get("tags", []))
     return normalize_space(f"""
-        [PROJECT] Title: {title} | Brand: {brand}
+        [PROJECT] Title: {title} | Company/Brand: {brand}
         Description: {desc}
         Bullets: {bullets}
         Tags: {tags}
@@ -106,10 +105,7 @@ def get_embedder():
 
 @st.cache_resource(show_spinner=True)
 def build_index(projects: List[Dict[str, Any]], training: List[Dict[str, Any]]) -> Tuple[np.ndarray, List[str]]:
-    """
-    Returns (embedding_matrix, docs). Embeddings are L2-normalized so
-    cosine similarity is a simple dot product.
-    """
+    """Returns (embedding_matrix, docs). Embeddings are L2-normalized."""
     docs: List[str] = []
 
     # Projects
@@ -168,11 +164,13 @@ def llm_call(prompt: str) -> str:
                     {
                         "role": "system",
                         "content": (
-                            "You are Kened Kqiraj's portfolio assistant. "
-                            "Answer ONLY using the provided context. "
-                            "Be concise, specific, and professional. "
-                            "A tiny, tasteful hint of sarcasm is okay; avoid snark. "
-                            "If unknown from context, say so briefly."
+                            "You are Kened Kqiraj’s personal portfolio assistant. "
+                            "You speak in FIRST PERSON as Kened (use 'I', 'me', 'my'). "
+                            "Be warm, concise, and confident; professional with a light friendly tone. "
+                            "Answer ONLY from the provided context (projects.json and further_training.json). "
+                            "If something isn’t in context, say briefly that you don’t have that detail. "
+                            "Do NOT mention being an AI or a chatbot. "
+                            "Keep answers crisp; prefer bullet points for lists."
                         ),
                     },
                     {"role": "user", "content": prompt},
@@ -190,16 +188,33 @@ def llm_call(prompt: str) -> str:
 
 def build_prompt(question: str, contexts: List[str]) -> str:
     system = textwrap.dedent("""
-    Use the context bullets below to answer the user's question.
-    Do NOT invent facts. If the answer isn't in context, say you don't have that detail.
+    Use only the context bullets below to answer.
+    If the answer isn't in context, say you don't have that detail.
+    Write as Kened in the first person.
     """).strip()
     ctx = "\n".join(f"- {c}" for c in contexts)
     user = f"Question: {question}\n\nContext:\n{ctx}\n\nAnswer:"
     return f"{system}\n\n{user}"
 
 # -------------------- UI --------------------
-st.title("🦙 RAG Chatbot")
-st.caption("Groq Llama • Answers about projects & further training from JSON.")
+# Stylish header (looks nicer in the popup)
+st.markdown(
+    """
+    <div style="
+      display:flex;align-items:center;gap:12px;
+      padding:14px 16px;margin:8px 0 2px;border-radius:14px;
+      background:linear-gradient(135deg, rgba(96,165,250,.18), rgba(110,231,183,.15));
+      border:1px solid rgba(255,255,255,.08)
+    ">
+      <div style="font-size:24px">💬</div>
+      <div>
+        <div style="font-weight:800;font-size:20px;line-height:1.2">I’m Kened’s assistant — how may I help you?</div>
+        <div style="color:#9aa3b2;font-size:13px">Groq Llama • Answers about my projects & training (from JSON)</div>
+      </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 # Load JSON data (URL or local)
 projects = load_json_from(PROJECTS_URL, LOCAL_CANDIDATES, "projects.json") or \
@@ -208,23 +223,22 @@ training = load_json_from(TRAINING_URL, LOCAL_CANDIDATES, "further_training.json
            load_json_from(TRAINING_URL, LOCAL_CANDIDATES, "assets/further_training.json")
 
 if not projects and not training:
-    st.warning("Could not load JSON data. Ensure `assets/projects.json` and `assets/further_training.json` exist, "
-               "or set PROJECTS_URL/TRAINING_URL to raw GitHub URLs.")
+    st.warning("I can’t find my data (projects / further training). Please ensure both JSON files exist or set the URLs.")
 
 EMB, DOCS = build_index(projects, training)
 
-# Friendly first message
+# Warm first message
 if "history" not in st.session_state:
     st.session_state.history = [
         {"role": "assistant",
-         "content": "Here is the chat bot that I created to write on my behalf — what would you like to know?"}
+         "content": "Hi! I’m Kened’s assistant. Ask me about my projects, stack, experience, or training."}
     ]
 
 for m in st.session_state.history:
     with st.chat_message(m["role"]):
         st.markdown(m["content"])
 
-q = st.chat_input("Ask about a project, stack, or training…")
+q = st.chat_input("Type your question…")
 if q:
     st.session_state.history.append({"role": "user", "content": q})
     with st.chat_message("user"):
@@ -235,14 +249,5 @@ if q:
             ctxs = retrieve(q, EMB, DOCS, k=MAX_CTX_DOCS)
             prompt = build_prompt(q, ctxs)
             ans = llm_call(prompt)
-            if SARCASM and ans and "llm error" not in ans.lower() and "missing" not in ans.lower():
-                ans += "\n\n*There you go—just the essentials.*"
             st.markdown(ans)
             st.session_state.history.append({"role": "assistant", "content": ans})
-
-# Optional debug
-with st.expander("🔍 RAG context (debug)"):
-    st.write("First few doc chunks:", DOCS[:5])
-    st.write({"projects_loaded": len(projects),
-              "training_loaded": len(training),
-              "model": GROQ_MODEL})
