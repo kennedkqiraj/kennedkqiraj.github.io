@@ -1,6 +1,7 @@
 # app_llama_rag.py
-# Streamlit + FAISS RAG over assets/projects.json and assets/further_training.json,
-# using a hosted Llama via GROQ (free-tier friendly). No local Ollama needed.
+# Streamlit RAG over assets/projects.json and assets/further_training.json
+# Uses: Sentence-Transformers + NumPy cosine retrieval (no FAISS) + Groq Llama
+# Deploy: Add GROQ_API_KEY in Streamlit "Secrets"
 
 import os
 import json
@@ -11,19 +12,17 @@ from typing import List, Dict, Any, Tuple
 
 import streamlit as st
 import numpy as np
-import faiss
 import requests
 from sentence_transformers import SentenceTransformer
 
-# -------------------- Config --------------------
+# -------------------- App Config --------------------
 st.set_page_config(
     page_title="Kened • RAG Chatbot",
     page_icon="🦙",
     layout="centered",
 )
 
-# If you prefer to load JSONs from GitHub raw URLs, set these env vars to raw links.
-# Otherwise, the app will load from local files in /assets.
+# Optional: load JSON from raw GitHub URLs via env vars (otherwise local files)
 PROJECTS_URL = os.getenv("PROJECTS_URL", "").strip() or None
 TRAINING_URL = os.getenv("TRAINING_URL", "").strip() or None
 
@@ -35,9 +34,8 @@ LOCAL_CANDIDATES = [
 
 EMBED_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 
-# GROQ hosted Llama
+# Groq hosted Llama
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-# Good default: fast + inexpensive
 GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
 
 MAX_CTX_DOCS = 6
@@ -45,9 +43,9 @@ TEMPERATURE = 0.3
 MAX_TOKENS = 450
 SARCASM = True  # mild, professional
 
-# -------------------- Data loading helpers --------------------
+# -------------------- Data helpers --------------------
 def load_json_from(url: str | None, fallbacks: List[Path], filename: str) -> List[Dict[str, Any]]:
-    """Load JSON from a URL (if provided) or from local fallback paths."""
+    """Load JSON from URL (if provided) else from local fallback paths."""
     if url:
         try:
             import urllib.request
@@ -101,13 +99,17 @@ def doc_from_training(t: Dict[str, Any]) -> str:
         Tags: {tags}
     """)
 
-# -------------------- Embeddings & Index --------------------
+# -------------------- Embeddings & Retrieval (NumPy) --------------------
 @st.cache_resource(show_spinner=False)
 def get_embedder():
     return SentenceTransformer(EMBED_MODEL_NAME)
 
 @st.cache_resource(show_spinner=True)
-def build_index(projects: List[Dict[str, Any]], training: List[Dict[str, Any]]) -> Tuple[faiss.IndexFlatIP, List[str]]:
+def build_index(projects: List[Dict[str, Any]], training: List[Dict[str, Any]]) -> Tuple[np.ndarray, List[str]]:
+    """
+    Returns (embedding_matrix, docs). Embeddings are L2-normalized so
+    cosine similarity is a simple dot product.
+    """
     docs: List[str] = []
 
     # Projects
@@ -128,25 +130,24 @@ def build_index(projects: List[Dict[str, Any]], training: List[Dict[str, Any]]) 
         docs = ["No documents loaded."]
 
     embedder = get_embedder()
-    vecs = embedder.encode(docs, show_progress_bar=False, normalize_embeddings=True)
-    index = faiss.IndexFlatIP(vecs.shape[1])
-    index.add(np.array(vecs, dtype="float32"))
-    return index, docs
+    emb_mat = embedder.encode(docs, show_progress_bar=False, normalize_embeddings=True)
+    return emb_mat.astype("float32"), docs
 
-def retrieve(query: str, index: faiss.IndexFlatIP, docs: List[str], k: int = MAX_CTX_DOCS) -> List[str]:
+def retrieve(query: str, emb_mat: np.ndarray, docs: List[str], k: int = MAX_CTX_DOCS) -> List[str]:
     embedder = get_embedder()
-    qv = embedder.encode([query], normalize_embeddings=True)
-    D, I = index.search(np.array(qv, dtype="float32"), k)
-    hits = [docs[i] for i in I[0] if 0 <= i < len(docs)]
+    qv = embedder.encode([query], normalize_embeddings=True).astype("float32")[0]
+    scores = emb_mat @ qv  # cosine similarity since vectors normalized
+    topk_idx = np.argsort(-scores)[:k]
+    hits = [docs[i] for i in topk_idx]
     # dedupe while preserving order
     seen = set()
-    uniq = []
+    out = []
     for h in hits:
         key = h[:160]
         if key not in seen:
-            uniq.append(h)
+            out.append(h)
             seen.add(key)
-    return uniq
+    return out
 
 # -------------------- LLM (Groq) --------------------
 def llm_call(prompt: str) -> str:
@@ -210,15 +211,13 @@ if not projects and not training:
     st.warning("Could not load JSON data. Ensure `assets/projects.json` and `assets/further_training.json` exist, "
                "or set PROJECTS_URL/TRAINING_URL to raw GitHub URLs.")
 
-index, DOCS = build_index(projects, training)
+EMB, DOCS = build_index(projects, training)
 
 # Friendly first message
 if "history" not in st.session_state:
     st.session_state.history = [
-        {
-            "role": "assistant",
-            "content": "Here is the chat bot that I created to write on my behalf — what would you like to know?",
-        }
+        {"role": "assistant",
+         "content": "Here is the chat bot that I created to write on my behalf — what would you like to know?"}
     ]
 
 for m in st.session_state.history:
@@ -233,21 +232,17 @@ if q:
 
     with st.chat_message("assistant"):
         with st.spinner("Thinking…"):
-            ctxs = retrieve(q, index, DOCS, k=MAX_CTX_DOCS)
+            ctxs = retrieve(q, EMB, DOCS, k=MAX_CTX_DOCS)
             prompt = build_prompt(q, ctxs)
             ans = llm_call(prompt)
-            if SARCASM and ans and "LLM error" not in ans and "missing" not in ans.lower():
+            if SARCASM and ans and "llm error" not in ans.lower() and "missing" not in ans.lower():
                 ans += "\n\n*There you go—just the essentials.*"
             st.markdown(ans)
             st.session_state.history.append({"role": "assistant", "content": ans})
 
-# Optional: small debug panel
+# Optional debug
 with st.expander("🔍 RAG context (debug)"):
     st.write("First few doc chunks:", DOCS[:5])
-    st.write(
-        {
-            "projects_loaded": len(projects),
-            "training_loaded": len(training),
-            "model": GROQ_MODEL,
-        }
-    )
+    st.write({"projects_loaded": len(projects),
+              "training_loaded": len(training),
+              "model": GROQ_MODEL})
