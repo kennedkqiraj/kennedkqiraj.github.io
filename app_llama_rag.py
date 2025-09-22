@@ -1,12 +1,18 @@
 # app_llama_rag.py
-# Chatbot that uses RAG over assets/projects.json AND assets/further_training.json
-# Requires: streamlit, sentence-transformers, faiss-cpu, requests (for Ollama)
-# Run:  streamlit run app_llama_rag.py
-# Make sure an Ollama Llama model is available, e.g.:
-#   ollama pull llama3.1:8b
-#   (or adjust OLLAMA_MODEL below)
+# Streamlit + FAISS RAG over assets/projects.json and assets/further_training.json,
+# using a hosted Llama via Together AI (no local Ollama needed).
+#
+# Deploy steps (summary):
+# - Add requirements.txt (see chat)
+# - Push this file + assets/*.json to GitHub
+# - Deploy on Streamlit Community Cloud; set a secret:
+#     TOGETHER_API_KEY = your_key_here
+# - Open the app URL (or embed it in your site with an <iframe>)
 
-import os, json, re, textwrap, time
+import os
+import json
+import re
+import textwrap
 from pathlib import Path
 from typing import List, Dict, Any, Tuple
 
@@ -17,11 +23,16 @@ import requests
 from sentence_transformers import SentenceTransformer
 
 # -------------------- Config --------------------
-st.set_page_config(page_title="Kened • RAG Chatbot", page_icon="🦙", layout="centered")
+st.set_page_config(
+    page_title="Kened • RAG Chatbot",
+    page_icon="🦙",
+    layout="centered",
+)
 
-# Use local files or raw GitHub URLs
-PROJECTS_URL: str | None = None  # e.g. "https://raw.githubusercontent.com/kennedkqiraj/kennedkqiraj.github.io/main/assets/projects.json"
-TRAINING_URL: str | None = None  # e.g. "https://raw.githubusercontent.com/kennedkqiraj/kennedkqiraj.github.io/main/assets/further_training.json"
+# If you prefer to load JSONs from GitHub raw URLs, set these to your raw links.
+# Otherwise, the app will load from local files in /assets.
+PROJECTS_URL = os.getenv("PROJECTS_URL", "").strip() or None
+TRAINING_URL = os.getenv("TRAINING_URL", "").strip() or None
 
 LOCAL_CANDIDATES = [
     Path("assets"),
@@ -30,18 +41,22 @@ LOCAL_CANDIDATES = [
 ]
 
 EMBED_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
-OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.1:8b")  # change if you prefer a different size
+
+# Together AI (hosted Llama)
+TOGETHER_API_KEY = os.getenv("TOGETHER_API_KEY")
+TOGETHER_MODEL = os.getenv(
+    "TOGETHER_MODEL",
+    "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
+)
 
 MAX_CTX_DOCS = 6
-MAX_TOKENS = 450  # approximate for small answers; Ollama ignores if too high
 TEMPERATURE = 0.3
+MAX_TOKENS = 450
+SARCASM = True  # mild, professional
 
-# Mild sarcasm toggle
-SARCASM = True
-
-# -------------------- Helpers --------------------
+# -------------------- Data loading helpers --------------------
 def load_json_from(url: str | None, fallbacks: List[Path], filename: str) -> List[Dict[str, Any]]:
+    """Load JSON from a URL (if provided) or from local fallback paths."""
     if url:
         try:
             import urllib.request
@@ -55,21 +70,19 @@ def load_json_from(url: str | None, fallbacks: List[Path], filename: str) -> Lis
             return json.loads(p.read_text(encoding="utf-8"))
     return []
 
-@st.cache_resource(show_spinner=False)
-def get_embedder():
-    return SentenceTransformer(EMBED_MODEL_NAME)
-
 def normalize_space(s: str) -> str:
     return re.sub(r"\s+", " ", s).strip()
 
 def chunk_text(text: str, chunk_size: int = 700, overlap: int = 120) -> List[str]:
     words = text.split()
+    if not words:
+        return []
     chunks = []
     i = 0
     while i < len(words):
         chunk = words[i : i + chunk_size]
         chunks.append(" ".join(chunk))
-        i += (chunk_size - overlap)
+        i += max(1, chunk_size - overlap)
     return chunks
 
 def doc_from_project(p: Dict[str, Any]) -> str:
@@ -97,22 +110,30 @@ def doc_from_training(t: Dict[str, Any]) -> str:
         Tags: {tags}
     """)
 
+# -------------------- Embeddings & Index --------------------
 @st.cache_resource(show_spinner=False)
+def get_embedder():
+    return SentenceTransformer(EMBED_MODEL_NAME)
+
+@st.cache_resource(show_spinner=True)
 def build_index(projects: List[Dict[str,Any]], training: List[Dict[str,Any]]) -> Tuple[faiss.IndexFlatIP, List[str]]:
     docs: List[str] = []
-    # flatten projects
+
+    # Projects
     for p in projects:
         base = doc_from_project(p)
-        for ch in chunk_text(base, 120, 20):  # small logical chunks; content is short anyway
-            docs.append(ch)
-    # flatten training
+        for ch in chunk_text(base, 120, 20):
+            if ch:
+                docs.append(ch)
+
+    # Training
     for t in training:
         base = doc_from_training(t)
         for ch in chunk_text(base, 120, 20):
-            docs.append(ch)
+            if ch:
+                docs.append(ch)
 
     if not docs:
-        # create a dummy entry to avoid FAISS errors
         docs = ["No documents loaded."]
 
     embedder = get_embedder()
@@ -126,65 +147,78 @@ def retrieve(query: str, index: faiss.IndexFlatIP, docs: List[str], k: int = MAX
     qv = embedder.encode([query], normalize_embeddings=True)
     D, I = index.search(np.array(qv, dtype="float32"), k)
     hits = [docs[i] for i in I[0] if 0 <= i < len(docs)]
-    # dedupe lightly while preserving order
+    # dedupe while preserving order
     seen = set()
     uniq = []
     for h in hits:
-        key = h[:120]
+        key = h[:160]
         if key not in seen:
             uniq.append(h)
             seen.add(key)
     return uniq
 
+# -------------------- LLM (Together AI) --------------------
 def llm_call(prompt: str) -> str:
-    # Ollama REST API
-    payload = {
-        "model": OLLAMA_MODEL,
-        "prompt": prompt,
-        "temperature": TEMPERATURE,
-        "num_predict": MAX_TOKENS,
-    }
-    # stream response
-    r = requests.post(f"{OLLAMA_HOST}/api/generate", json=payload, stream=True, timeout=120)
-    r.raise_for_status()
-    out = []
-    for line in r.iter_lines():
-        if not line:
-            continue
-        try:
-            obj = json.loads(line.decode("utf-8"))
-        except Exception:
-            continue
-        if "response" in obj:
-            out.append(obj["response"])
-    return "".join(out).strip()
+    if not TOGETHER_API_KEY:
+        return ("Hosted LLM missing: set TOGETHER_API_KEY secret in Streamlit Cloud.\n"
+                "App → Settings → Secrets → TOGETHER_API_KEY=...")
+
+    try:
+        r = requests.post(
+            "https://api.together.xyz/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {TOGETHER_API_KEY}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "model": TOGETHER_MODEL,
+                "messages": [
+                    {"role": "system",
+                     "content": (
+                         "You are Kened Kqiraj's portfolio assistant. "
+                         "Answer ONLY using the provided context. "
+                         "Be concise, specific, and professional. "
+                         "A tiny, tasteful hint of sarcasm is okay; avoid snark. "
+                         "If unknown from context, say so briefly."
+                     )},
+                    {"role": "user", "content": prompt}
+                ],
+                "temperature": TEMPERATURE,
+                "max_tokens": MAX_TOKENS
+            },
+            timeout=120,
+        )
+        r.raise_for_status()
+        data = r.json()
+        return data["choices"][0]["message"]["content"].strip()
+    except Exception as e:
+        return f"LLM error: {e}"
 
 def build_prompt(question: str, contexts: List[str]) -> str:
     system = textwrap.dedent("""
-    You are Kened Kqiraj's portfolio assistant. Answer using ONLY the provided context.
-    Be concise, specific, and helpful. It's okay to include a tiny bit of playful sarcasm,
-    but keep it professional and subtle. If something is unknown, say so briefly.
-    Then stop.
+    Use the context bullets below to answer the user's question.
+    Do NOT invent facts. If the answer isn't in context, say you don't have that detail.
     """).strip()
-
-    ctx = "\n\n".join(f"- {c}" for c in contexts)
+    ctx = "\n".join(f"- {c}" for c in contexts)
     user = f"Question: {question}\n\nContext:\n{ctx}\n\nAnswer:"
-
     return f"{system}\n\n{user}"
 
 # -------------------- UI --------------------
 st.title("🦙 RAG Chatbot")
-st.caption("Backed by Llama via Ollama • Answers about projects & further training (JSON).")
+st.caption("Hosted Llama via Together AI • Answers about projects & further training from JSON.")
 
-# Load data
+# Load JSON data (URL or local)
 projects = load_json_from(PROJECTS_URL, LOCAL_CANDIDATES, "projects.json") or \
            load_json_from(PROJECTS_URL, LOCAL_CANDIDATES, "assets/projects.json")
 training = load_json_from(TRAINING_URL, LOCAL_CANDIDATES, "further_training.json") or \
            load_json_from(TRAINING_URL, LOCAL_CANDIDATES, "assets/further_training.json")
 
+if not projects and not training:
+    st.warning("Could not load JSON data. Ensure `assets/projects.json` and `assets/further_training.json` exist, "
+               "or set PROJECTS_URL/TRAINING_URL to raw GitHub URLs.")
 index, DOCS = build_index(projects, training)
 
-# Chat
+# Friendly first message
 if "history" not in st.session_state:
     st.session_state.history = [
         {"role":"assistant","content":"Here is the chat bot that I created to write on my behalf — what would you like to know?"}
@@ -201,18 +235,16 @@ if q:
         st.markdown(q)
 
     with st.chat_message("assistant"):
-        with st.spinner("Thinking (summoning the llama)…"):
+        with st.spinner("Thinking…"):
             ctxs = retrieve(q, index, DOCS, k=MAX_CTX_DOCS)
             prompt = build_prompt(q, ctxs)
-            try:
-                ans = llm_call(prompt)
-            except Exception as e:
-                ans = f"LLM error: {e}\n\nMake sure Ollama is running and the model `{OLLAMA_MODEL}` is pulled."
-        if SARCASM and ans:
-            ans += "\n\n*There you go—no fluff, just the good bits.*"
-        st.markdown(ans)
-        st.session_state.history.append({"role":"assistant","content":ans})
+            ans = llm_call(prompt)
+            if SARCASM and ans and "LLM error" not in ans and "missing" not in ans:
+                ans += "\n\n*There you go—just the essentials.*"
+            st.markdown(ans)
+            st.session_state.history.append({"role":"assistant","content":ans})
 
-# Debug expander (optional)
+# Optional: small debug panel
 with st.expander("🔍 RAG context (debug)"):
-    st.write(DOCS[:5])
+    st.write("First few doc chunks:", DOCS[:5])
+    st.write({"projects_loaded": len(projects), "training_loaded": len(training), "model": TOGETHER_MODEL})
