@@ -54,7 +54,7 @@
     .visually-hidden{position:absolute; clip:rect(1px, 1px, 1px, 1px); padding:0; border:0; height:1px; width:1px; overflow:hidden;}
     .avatar{width:100%; max-width: clamp(300px, 40vw, 480px); display:block; margin:6px auto 12px; border-radius:18px; object-fit:cover; border:1px solid var(--border); box-shadow:var(--shadow); cursor:pointer;}
 
-    /* Projects (brand cards; subset for brevity) */
+    /* Projects grid */
     .projects-grid{display:grid; gap:18px; grid-template-columns:1fr}
     @media(min-width:860px){.projects-grid{grid-template-columns:1fr 1fr}}
     .proj-card{border:1px solid var(--border); border-radius:18px; background:var(--panel); box-shadow:var(--shadow); overflow:hidden; position:relative}
@@ -66,30 +66,30 @@
     .p-tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
     .tag{font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--border); color:var(--muted)}
 
-    /* Brand palettes + watermarks for IBM & Llama */
+    /* === Brand palettes (SUBTLE watermarks, reverted) === */
     .proj-card[data-brand="ibm"]{
       background:
-        radial-gradient(1100px 700px at 120% -10%, rgba(129,140,248,.06), transparent 50%),
-        radial-gradient(900px 600px at -20% 120%, rgba(168,85,247,.05), transparent 60%),
-        linear-gradient(135deg, #f7f6ff 0%, #f1efff 45%, #edf2ff 100%);
+        radial-gradient(1100px 700px at 120% -10%, rgba(129,140,248,.04), transparent 50%),
+        radial-gradient(900px 600px at -20% 120%, rgba(168,85,247,.035), transparent 60%),
+        linear-gradient(135deg, #f8f9ff 0%, #f2f5ff 45%, #eef4ff 100%);
       border-color: rgba(17,18,25,.10); color:#111217;
     }
     .proj-card[data-brand="ibm"]::after{
       content:""; position:absolute; inset:0; z-index:0;
-      background: url('assets/ibm.png') center/760px auto no-repeat;
-      opacity:.22; filter: grayscale(1) contrast(.95) brightness(1.05); pointer-events:none;
+      background: url('assets/ibm.png') center/640px auto no-repeat;
+      opacity:.12; filter: grayscale(1) contrast(.9) brightness(1.0); pointer-events:none;
     }
     .proj-card[data-brand="llama"]{
       background:
-        radial-gradient(1100px 700px at 120% -10%, rgba(37,99,235,.06), transparent 50%),
-        radial-gradient(900px 600px at -20% 120%, rgba(59,130,246,.05), transparent 60%),
-        linear-gradient(135deg, #f6fbff 0%, #eef6ff 45%, #e9f3ff 100%);
+        radial-gradient(1100px 700px at 120% -10%, rgba(37,99,235,.04), transparent 50%),
+        radial-gradient(900px 600px at -20% 120%, rgba(59,130,246,.035), transparent 60%),
+        linear-gradient(135deg, #f7fbff 0%, #f0f7ff 45%, #ebf4ff 100%);
       border-color: rgba(17,18,25,.10); color:#111217;
     }
     .proj-card[data-brand="llama"]::after{
       content:""; position:absolute; inset:0; z-index:0;
-      background: url('assets/llama.png') center/760px auto no-repeat;
-      opacity:.22; filter: grayscale(1) contrast(.95) brightness(1.05); pointer-events:none;
+      background: url('assets/llama.png') center/640px auto no-repeat;
+      opacity:.12; filter: grayscale(1) contrast(.9) brightness(1.0); pointer-events:none;
     }
 
     /* Skills icons */
@@ -99,7 +99,7 @@
     .icon-badge .label{font-size:12px;color:var(--muted);margin-top:6px}
     .icon-badge.text-only .pseudo-icon{font-size:13px;font-weight:600;letter-spacing:.2px}
 
-    /* Floating Chat button + modal */
+    /* === Chatbot popup === */
     .chat-fab{
       position:fixed; right:20px; bottom:24px; z-index:9999;
       background:linear-gradient(135deg,var(--accent),var(--accent-2));
@@ -117,13 +117,13 @@
     }
     .chat-head{
       display:flex; align-items:center; justify-content:space-between;
-      padding:12px 14px; border-bottom:1px solid var(--border); background:color-mix(in oklab, var(--panel) 90%, transparent)
+      padding:12px 14px; border-bottom:1px solid var(--border);
+      background:color-mix(in oklab, var(--panel) 90%, transparent)
     }
     .chat-title{font-weight:700}
     .chat-close{background:transparent; border:none; color:var(--muted); font-size:22px; cursor:pointer}
     .chat-body{flex:1}
     .chat-body iframe{width:100%; height:100%; border:0}
-    .sr-only{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}
   </style>
 </head>
 <body>
@@ -165,7 +165,7 @@
       </aside>
     </section>
 
-    <!-- PROJECTS (rendered from assets/projects.json) -->
+    <!-- PROJECTS (from JSON) -->
     <section class="section" id="projects">
       <div class="card" style="padding:18px">
         <h2>Projects</h2>
@@ -213,18 +213,6 @@
     <section class="section" id="training">
       <div class="card" style="padding:18px">
         <h2>Further Training</h2>
-        <div class="timeline" id="trainingStatic">
-          <div class="t-item">
-            <div class="t-title">IBM Switzerland — IBM WatsonX Challenge <span class="muted">(02/2025 – 05/2025)</span></div>
-            <ul class="muted" style="margin:6px 0 0 18px">
-              <li>Develop a system to automatically categorize and summarize data.</li>
-              <li>Use LLMs to extract insights, including trending topics, common themes, sentiment analysis, and areas of disagreement or confusion.</li>
-              <li>Use of the IBM-s platform services like Intelligent Document Processing.</li>
-              <li>Orchestrated automated content workflows in IBM Watsonx Orchestrate by building an agent that triggered on new files in Cloud Object Storage, called Discovery/Watsonx.ai for semantic tagging and summarization, wrote results to a database, and updated article metadata.</li>
-            </ul>
-          </div>
-          <!-- ... (other static items you already had) ... -->
-        </div>
         <div class="timeline" id="trainingJsonContainer"></div>
       </div>
     </section>
@@ -279,8 +267,7 @@
           src=""
           title="Kened's RAG Chatbot"
           loading="lazy"
-          referrerpolicy="no-referrer"
-          class="chat-iframe"></iframe>
+          referrerpolicy="no-referrer"></iframe>
       </div>
     </div>
   </div>
@@ -309,7 +296,7 @@
       el.textContent = addr; el.href = 'mailto:'+addr;
     })();
 
-    // Avatar popup
+    // LinkedIn popup
     (function(){
       const a = document.getElementById('avatarLink');
       if(!a) return;
@@ -351,7 +338,7 @@
         .catch(err=>{ grid.innerHTML='<p class="muted">Could not load projects.json.</p>'; console.error(err); });
     })();
 
-    // Append Further Training from JSON (optional)
+    // Further Training from JSON (optional list)
     (function(){
       const wrap=document.getElementById('trainingJsonContainer');
       if(!wrap) return;
@@ -371,7 +358,7 @@
 
     // Chat popup logic
     (function(){
-      const STREAMLIT_URL = "https://YOUR-STREAMLIT-CHATBOT-URL/?embed=true"; // <-- change this
+      const STREAMLIT_URL = "https://YOUR-STREAMLIT-CHATBOT-URL/?embed=true"; // <-- replace with your app URL
       const modal = document.getElementById('chatModal');
       const openBtn = document.getElementById('openChat');
       const closeBtn = document.getElementById('closeChat');
@@ -381,7 +368,6 @@
         if(!frame.src || frame.src.includes('YOUR-STREAMLIT-CHATBOT-URL')) frame.src = STREAMLIT_URL;
         modal.style.display='flex';
         openBtn.setAttribute('aria-expanded','true');
-        // focus close for accessibility
         setTimeout(()=>closeBtn.focus(), 50);
       }
       function closeChat(){
