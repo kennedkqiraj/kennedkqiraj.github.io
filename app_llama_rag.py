@@ -26,7 +26,7 @@ st.set_page_config(
 # Contact / CTA configuration (edit these!)
 MY_PHONE = os.getenv("MY_PHONE", "+41 76 567 29 85")
 MY_EMAIL = os.getenv("MY_EMAIL", "kened.kqiraj@stud.hslu.ch")
-MY_CALENDAR = os.getenv("MY_CALENDAR", "https://cal.com/your-handle")  # put your real calendar link here
+
 
 # Optional: load JSON from raw GitHub URLs via env vars (otherwise local files)
 PROJECTS_URL = os.getenv("PROJECTS_URL", "").strip() or None
@@ -51,12 +51,12 @@ MAX_TOKENS = 550
 # Optional profile facts to help with simple HR questions we DO want to answer
 PROFILE = {
     "location": "Zug, Switzerland",
-    "roles_open": ["Data Scientist", "AI Engineer"],
+    "roles_open": ["Data Scientist", "AI Engineer", "Data Analyst"],
     "work_mode": ["On-site", "Hybrid", "Remote"],
     "status": "Open to full-time roles",
     # Add simple facts you’re happy to answer directly:
     "start_timing": "Flexible start; currently interning at On AG.",
-    "languages": ["English", "German (basic)", "Albanian"],
+    "languages": ["English", "German (Intermediate)", "Albanian"],
 }
 
 # -------------------- Data helpers --------------------
@@ -217,7 +217,7 @@ def llm_call(prompt: str) -> str:
                             f"PROFILE FACTS: {PROFILE}\n\n"
                             "Important: If a question asks about salary, compensation, sponsorship, contract terms, "
                             "benefits, or similar negotiation topics, DO NOT provide specifics. "
-                            "Instead, politely ask them to call me or book time via my calendar.\n"
+                            "Instead, politely ask them to call me or send me an E-Mail\n"
                             "Prefer bullet points for lists; highlight impact and results."
                         ),
                     },
