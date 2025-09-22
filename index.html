@@ -15,6 +15,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%230a0a0a'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' font-size='40' fill='%23fff' font-family='sans-serif'%3EK%3C/text%3E%3C/svg%3E">
+
   <style>
     :root{ --bg:#0b0b0e; --panel:#111219; --text:#e8e8ea; --muted:#b6b6c2; --accent:#6ee7b7; --accent-2:#60a5fa; --border:#1d1e26; --shadow:0 10px 30px rgba(0,0,0,.35); --radius:18px; }
     :root.light{ --bg:#f7f7fb; --panel:#ffffff; --text:#111217; --muted:#4b4f5c; --accent:#0ea5e9; --accent-2:#22c55e; --border:#e9e9f3; --shadow:0 20px 40px rgba(10,10,10,.08); }
@@ -43,8 +44,6 @@
     .section{margin-top:32px}
     .split{display:grid; grid-template-columns: 1fr; gap:18px}
     @media(min-width:860px){.split{grid-template-columns: 1fr 1fr}}
-
-    /* Timeline */
     .timeline{position:relative; padding-left:28px}
     .timeline::before{content:""; position:absolute; left:12px; top:6px; bottom:6px; width:2px; background:var(--border)}
     .t-item{position:relative; margin-bottom:14px}
@@ -55,7 +54,7 @@
     .visually-hidden{position:absolute; clip:rect(1px, 1px, 1px, 1px); padding:0; border:0; height:1px; width:1px; overflow:hidden;}
     .avatar{width:100%; max-width: clamp(300px, 40vw, 480px); display:block; margin:6px auto 12px; border-radius:18px; object-fit:cover; border:1px solid var(--border); box-shadow:var(--shadow); cursor:pointer;}
 
-    /* Projects */
+    /* Projects (brand cards; subset for brevity) */
     .projects-grid{display:grid; gap:18px; grid-template-columns:1fr}
     @media(min-width:860px){.projects-grid{grid-template-columns:1fr 1fr}}
     .proj-card{border:1px solid var(--border); border-radius:18px; background:var(--panel); box-shadow:var(--shadow); overflow:hidden; position:relative}
@@ -65,4 +64,350 @@
     .proj-body{padding:14px 16px; position:relative; overflow:hidden}
     .proj-title{margin:0 0 8px; font-weight:700; font-size:18px}
     .p-tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
-    .tag{font-size:12px; padding:4px 8px; border
+    .tag{font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--border); color:var(--muted)}
+
+    /* Brand palettes + watermarks for IBM & Llama */
+    .proj-card[data-brand="ibm"]{
+      background:
+        radial-gradient(1100px 700px at 120% -10%, rgba(129,140,248,.06), transparent 50%),
+        radial-gradient(900px 600px at -20% 120%, rgba(168,85,247,.05), transparent 60%),
+        linear-gradient(135deg, #f7f6ff 0%, #f1efff 45%, #edf2ff 100%);
+      border-color: rgba(17,18,25,.10); color:#111217;
+    }
+    .proj-card[data-brand="ibm"]::after{
+      content:""; position:absolute; inset:0; z-index:0;
+      background: url('assets/ibm.png') center/760px auto no-repeat;
+      opacity:.22; filter: grayscale(1) contrast(.95) brightness(1.05); pointer-events:none;
+    }
+    .proj-card[data-brand="llama"]{
+      background:
+        radial-gradient(1100px 700px at 120% -10%, rgba(37,99,235,.06), transparent 50%),
+        radial-gradient(900px 600px at -20% 120%, rgba(59,130,246,.05), transparent 60%),
+        linear-gradient(135deg, #f6fbff 0%, #eef6ff 45%, #e9f3ff 100%);
+      border-color: rgba(17,18,25,.10); color:#111217;
+    }
+    .proj-card[data-brand="llama"]::after{
+      content:""; position:absolute; inset:0; z-index:0;
+      background: url('assets/llama.png') center/760px auto no-repeat;
+      opacity:.22; filter: grayscale(1) contrast(.95) brightness(1.05); pointer-events:none;
+    }
+
+    /* Skills icons */
+    .icon-badges{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}
+    .icon-badge{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;min-width:84px;padding:10px 8px;border-radius:14px;border:1px solid var(--border);background:var(--panel);box-shadow:var(--shadow);text-align:center}
+    .icon-badge i{font-size:34px}
+    .icon-badge .label{font-size:12px;color:var(--muted);margin-top:6px}
+    .icon-badge.text-only .pseudo-icon{font-size:13px;font-weight:600;letter-spacing:.2px}
+
+    /* Floating Chat button + modal */
+    .chat-fab{
+      position:fixed; right:20px; bottom:24px; z-index:9999;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      color:#0b0b0e; border:none; border-radius:999px; padding:12px 16px;
+      box-shadow:0 10px 30px rgba(0,0,0,.25); font-weight:700; cursor:pointer
+    }
+    .chat-modal{
+      position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; z-index:9998;
+      align-items:center; justify-content:center; padding:20px
+    }
+    .chat-window{
+      width:min(920px, 96vw); height:min(80vh, 760px);
+      background:var(--panel); border:1px solid var(--border); border-radius:18px;
+      box-shadow:var(--shadow); overflow:hidden; display:flex; flex-direction:column
+    }
+    .chat-head{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 14px; border-bottom:1px solid var(--border); background:color-mix(in oklab, var(--panel) 90%, transparent)
+    }
+    .chat-title{font-weight:700}
+    .chat-close{background:transparent; border:none; color:var(--muted); font-size:22px; cursor:pointer}
+    .chat-body{flex:1}
+    .chat-body iframe{width:100%; height:100%; border:0}
+    .sr-only{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}
+  </style>
+</head>
+<body>
+  <!-- NAV -->
+  <header class="nav">
+    <div class="nav-inner">
+      <a href="#top" class="brand"><span class="logo">K</span><span>Kened Kqiraj</span></a>
+      <nav class="row">
+        <a class="link" href="#projects">Projects</a>
+        <a class="link" href="#experience">Experience</a>
+        <a class="link" href="#education">Education</a>
+        <a class="link" href="#skills">Skills</a>
+        <a class="link" href="#training">Further Training</a>
+        <a class="link" href="#contact">Contact</a>
+      </nav>
+      <div class="nav-actions">
+        <button id="themeToggle" class="btn btn-ghost" aria-label="Toggle theme" title="Toggle theme"><span id="themeIcon" aria-hidden="true">🌙</span></button>
+        <a class="btn btn-primary" href="assets/KenedKqirajCV.pdf.pdf" download>Download CV</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="container" id="top">
+    <!-- HERO -->
+    <section class="grid hero">
+      <div class="card" style="padding:24px">
+        <p class="badge">Based in 6300 Zug, Switzerland • Open to full-time roles</p>
+        <h1 class="hero-title">Data Scientist (MSc, Applied Information &amp; Data Science)</h1>
+        <p class="hero-sub">Highly motivated Data Scientist with a strong foundation in data analysis, statistical modeling, visualization, and data engineering. Completing a Master’s degree in Applied Information and Data Science and finalizing my thesis; actively pursuing full-time roles in Data Science and AI Engineering.</p>
+        <div class="badges">
+          <span class="badge">Python</span><span class="badge">R</span><span class="badge">SQL</span><span class="badge">Tableau</span><span class="badge">Streamlit</span><span class="badge">LangChain</span><span class="badge">Data Pipelines</span><span class="badge">GCP • Vertex AI</span><span class="badge">Git/GitHub</span>
+        </div>
+      </div>
+      <aside class="card" style="padding:20px; display:flex; align-items:center; justify-content:center">
+        <a href="https://www.linkedin.com/in/kened-kqiraj" id="avatarLink" class="avatar-wrap" aria-label="Open LinkedIn profile">
+          <img src="assets/my_picture.png" alt="Portrait of Kened Kqiraj" class="avatar" loading="lazy">
+        </a>
+      </aside>
+    </section>
+
+    <!-- PROJECTS (rendered from assets/projects.json) -->
+    <section class="section" id="projects">
+      <div class="card" style="padding:18px">
+        <h2>Projects</h2>
+        <div id="projectsGrid" class="projects-grid"></div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section class="section" id="experience">
+      <div class="card" style="padding:18px">
+        <h2>Experience</h2>
+        <div class="timeline">
+          <div class="t-item">
+            <div class="t-title">Internship — On AG <span class="muted">(Feb 2025 – Present)</span></div>
+            <ul class="muted" style="margin:6px 0 0 18px">
+              <li>Automation of tariff classification and preferential origin processes using Python, SQL, BigQuery, and LLMs.</li>
+              <li>Data ingestion, transformation, and reporting.</li>
+              <li>Google Cloud Platform, Vertex AI.</li>
+            </ul>
+          </div>
+          <div class="t-item">
+            <div class="t-title">Operations Specialist — The Brain Maze LLC (Part Time) <span class="muted">(Jul 2019 – Feb 2024)</span></div>
+            <ul class="muted" style="margin:6px 0 0 18px">
+              <li>Analysis and evaluation of the raw data.</li>
+              <li>Continuous improvement of workflows.</li>
+              <li>Financial reporting using Excel, and tax reporting.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section class="section" id="education">
+      <div class="card" style="padding:18px">
+        <h2>Education</h2>
+        <ul style="margin:0; padding-left:18px">
+          <li><strong>Master of Science in Applied Information and Data Science</strong> — Lucerne University of Applied Sciences and Arts (HSLU)</li>
+          <li><strong>Bachelor of Accounting</strong> — University of Prishtina (2016)</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FURTHER TRAINING -->
+    <section class="section" id="training">
+      <div class="card" style="padding:18px">
+        <h2>Further Training</h2>
+        <div class="timeline" id="trainingStatic">
+          <div class="t-item">
+            <div class="t-title">IBM Switzerland — IBM WatsonX Challenge <span class="muted">(02/2025 – 05/2025)</span></div>
+            <ul class="muted" style="margin:6px 0 0 18px">
+              <li>Develop a system to automatically categorize and summarize data.</li>
+              <li>Use LLMs to extract insights, including trending topics, common themes, sentiment analysis, and areas of disagreement or confusion.</li>
+              <li>Use of the IBM-s platform services like Intelligent Document Processing.</li>
+              <li>Orchestrated automated content workflows in IBM Watsonx Orchestrate by building an agent that triggered on new files in Cloud Object Storage, called Discovery/Watsonx.ai for semantic tagging and summarization, wrote results to a database, and updated article metadata.</li>
+            </ul>
+          </div>
+          <!-- ... (other static items you already had) ... -->
+        </div>
+        <div class="timeline" id="trainingJsonContainer"></div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section class="section" id="skills">
+      <div class="card" style="padding:18px">
+        <h2>Skills</h2>
+        <div class="icon-badges" role="list">
+          <span class="icon-badge" role="listitem" title="Python"><i class="devicon-python-plain colored"></i><span class="label">Python</span></span>
+          <span class="icon-badge" role="listitem" title="R"><i class="devicon-r-plain colored"></i><span class="label">R</span></span>
+          <span class="icon-badge" role="listitem" title="SQL"><i class="devicon-mysql-plain colored"></i><span class="label">SQL</span></span>
+          <span class="icon-badge" role="listitem" title="Azure"><i class="devicon-azure-plain colored"></i><span class="label">Azure</span></span>
+          <span class="icon-badge" role="listitem" title="Databricks"><i class="devicon-databricks-original colored"></i><span class="label">Databricks</span></span>
+          <span class="icon-badge" role="listitem" title="Tableau"><i class="devicon-tableau-plain colored"></i><span class="label">Tableau</span></span>
+          <span class="icon-badge" role="listitem" title="Streamlit"><i class="devicon-streamlit-plain colored"></i><span class="label">Streamlit</span></span>
+          <span class="icon-badge" role="listitem" title="Google Cloud"><i class="devicon-googlecloud-plain colored"></i><span class="label">Google Cloud</span></span>
+          <span class="icon-badge" role="listitem" title="Git"><i class="devicon-git-plain colored"></i><span class="label">Git</span></span>
+          <span class="icon-badge" role="listitem" title="GitHub"><i class="devicon-github-original"></i><span class="label">GitHub</span></span>
+          <span class="icon-badge text-only" role="listitem" title="LangChain"><span class="pseudo-icon">LangChain</span><span class="label">LangChain</span></span>
+          <span class="icon-badge text-only" role="listitem" title="Data Pipelines"><span class="pseudo-icon">Data&nbsp;Pipelines</span><span class="label">Data Pipelines</span></span>
+          <span class="icon-badge text-only" role="listitem" title="Vertex AI"><span class="pseudo-icon">Vertex&nbsp;AI</span><span class="label">Vertex AI</span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section card" style="padding:18px" id="contact">
+      <h2>Contact</h2>
+      <p class="muted">6300 Zug, Switzerland • Phone: <a href="tel:+41765672985">+41 76 567 29 85</a>. Email: <a href="#" id="em"></a>. Connect on <a href="https://www.linkedin.com/in/kened-kqiraj" target="_blank" rel="noreferrer">LinkedIn</a> or view my <a href="https://github.com/kennedkqiraj" target="_blank" rel="noreferrer">GitHub</a>.</p>
+      <div class="row" style="margin-top:6px">
+        <a class="btn" href="https://github.com/kennedkqiraj" target="_blank" rel="noreferrer">GitHub</a>
+        <a class="btn" href="mailto:kened.kqiraj@stud.hslu.ch">Email</a>
+      </div>
+    </section>
+
+    <footer class="container"><p>© <span id="year"></span> Kened Kqiraj. Built with semantic HTML + CSS.</p></footer>
+  </main>
+
+  <!-- FLOATING CHAT BUTTON -->
+  <button class="chat-fab" id="openChat" aria-haspopup="dialog" aria-controls="chatModal" aria-expanded="false">💬 Chat</button>
+
+  <!-- CHAT MODAL -->
+  <div class="chat-modal" id="chatModal" role="dialog" aria-modal="true" aria-labelledby="chatTitle">
+    <div class="chat-window">
+      <div class="chat-head">
+        <div class="chat-title" id="chatTitle">Hi, I’m Kened’s assistant — how can I help you?</div>
+        <button class="chat-close" id="closeChat" aria-label="Close chat">✕</button>
+      </div>
+      <div class="chat-body">
+        <iframe id="chatFrame"
+          src=""
+          title="Kened's RAG Chatbot"
+          loading="lazy"
+          referrerpolicy="no-referrer"
+          class="chat-iframe"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme persistence
+    const root = document.documentElement;
+    const saved = localStorage.getItem('theme');
+    if(saved){ saved === 'light' ? root.classList.add('light') : root.classList.remove('light'); }
+    else if(window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches){ root.classList.add('light'); }
+    const btn = document.getElementById('themeToggle');
+    const icon = document.getElementById('themeIcon');
+    function setIcon(){ icon.textContent = root.classList.contains('light') ? '🌞' : '🌙'; }
+    setIcon();
+    btn.addEventListener('click', ()=>{ root.classList.toggle('light'); localStorage.setItem('theme', root.classList.contains('light') ? 'light' : 'dark'); setIcon(); });
+
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Email obfuscation
+    (function(){
+      const user = 'kened.kqiraj';
+      const domain = 'stud.hslu.ch';
+      const el = document.getElementById('em');
+      const addr = user + '@' + domain;
+      el.textContent = addr; el.href = 'mailto:'+addr;
+    })();
+
+    // Avatar popup
+    (function(){
+      const a = document.getElementById('avatarLink');
+      if(!a) return;
+      a.addEventListener('click', function(e){
+        e.preventDefault();
+        const win = window.open(this.href, 'linkedinPopup',
+          'width=1100,height=800,menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes');
+        if(!win) { window.location.href = this.href; }
+      });
+    })();
+
+    // Render Projects from JSON
+    (function(){
+      const grid = document.getElementById('projectsGrid');
+      if(!grid) return;
+      fetch('assets/projects.json?cb='+Date.now())
+        .then(r=>r.json())
+        .then(data=>{
+          grid.innerHTML='';
+          data.forEach(p=>{
+            const card=document.createElement('article');
+            card.className='proj-card'; card.dataset.brand=p.brand||'';
+            card.innerHTML=`
+              <div class="proj-banner">
+                <span class="logo-chip">
+                  ${p.logo ? `<img src="${p.logo}" alt="${(p.brand||'Logo').toUpperCase()}">` : ''}
+                  <strong>${(p.brand||'').toUpperCase()}</strong>
+                </span>
+              </div>
+              <div class="proj-body">
+                <h3 class="proj-title">${p.title||''}</h3>
+                ${p.desc?`<p class="muted" style="margin:6px 0">${p.desc}</p>`:''}
+                ${Array.isArray(p.bullets)?`<ul class="muted" style="margin:6px 0 0 18px">${p.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>`:''}
+                ${Array.isArray(p.tags)?`<div class="p-tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>`:''}
+              </div>`;
+            grid.appendChild(card);
+          });
+        })
+        .catch(err=>{ grid.innerHTML='<p class="muted">Could not load projects.json.</p>'; console.error(err); });
+    })();
+
+    // Append Further Training from JSON (optional)
+    (function(){
+      const wrap=document.getElementById('trainingJsonContainer');
+      if(!wrap) return;
+      fetch('assets/further_training.json?cb='+Date.now())
+        .then(r=>r.json())
+        .then(list=>{
+          (list||[]).forEach(t=>{
+            const item=document.createElement('div'); item.className='t-item';
+            item.innerHTML=`
+              <div class="t-title">${t.title||''} — <span class="muted">${t.org||''}</span> <span class="muted">(${t.period||''})</span></div>
+              ${Array.isArray(t.bullets)?`<ul class="muted" style="margin:6px 0 0 18px">${t.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>`:''}
+            `;
+            wrap.appendChild(item);
+          });
+        }).catch(console.error);
+    })();
+
+    // Chat popup logic
+    (function(){
+      const STREAMLIT_URL = "https://YOUR-STREAMLIT-CHATBOT-URL/?embed=true"; // <-- change this
+      const modal = document.getElementById('chatModal');
+      const openBtn = document.getElementById('openChat');
+      const closeBtn = document.getElementById('closeChat');
+      const frame = document.getElementById('chatFrame');
+
+      function openChat(){
+        if(!frame.src || frame.src.includes('YOUR-STREAMLIT-CHATBOT-URL')) frame.src = STREAMLIT_URL;
+        modal.style.display='flex';
+        openBtn.setAttribute('aria-expanded','true');
+        // focus close for accessibility
+        setTimeout(()=>closeBtn.focus(), 50);
+      }
+      function closeChat(){
+        modal.style.display='none';
+        openBtn.setAttribute('aria-expanded','false');
+        openBtn.focus();
+      }
+      openBtn.addEventListener('click', openChat);
+      closeBtn.addEventListener('click', closeChat);
+      modal.addEventListener('click', (e)=>{ if(e.target===modal) closeChat(); });
+      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && modal.style.display==='flex') closeChat(); });
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Kened Kqiraj",
+    "jobTitle": "Data Scientist",
+    "address": {"@type": "PostalAddress", "addressLocality": "Zug", "addressCountry": "CH"},
+    "email": "mailto:kened.kqiraj@stud.hslu.ch",
+    "telephone": "+41 76 567 29 85",
+    "url": "https://kennedkqiraj.github.io/",
+    "sameAs": ["https://github.com/kennedkqiraj","https://www.linkedin.com/in/kened-kqiraj"]
+  }
+  </script>
+</body>
+</html>
