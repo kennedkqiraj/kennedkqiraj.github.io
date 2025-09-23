@@ -27,7 +27,6 @@ st.set_page_config(
 MY_PHONE = os.getenv("MY_PHONE", "+41 76 567 29 85")
 MY_EMAIL = os.getenv("MY_EMAIL", "kened.kqiraj@stud.hslu.ch")
 
-
 # Optional: load JSON from raw GitHub URLs via env vars (otherwise local files)
 PROJECTS_URL = os.getenv("PROJECTS_URL", "").strip() or None
 TRAINING_URL = os.getenv("TRAINING_URL", "").strip() or None
@@ -48,13 +47,12 @@ MAX_CTX_DOCS = 6
 TEMPERATURE = 0.25
 MAX_TOKENS = 550
 
-# Optional profile facts to help with simple HR questions we DO want to answer
+# Optional profile facts
 PROFILE = {
     "location": "Zug, Switzerland",
     "roles_open": ["Data Scientist", "AI Engineer", "Data Analyst"],
     "work_mode": ["On-site", "Hybrid", "Remote"],
     "status": "Open to full-time roles",
-    # Add simple facts you’re happy to answer directly:
     "start_timing": "Flexible start; currently interning at On AG.",
     "languages": ["English", "German (Intermediate)", "Albanian"],
 }
@@ -164,22 +162,15 @@ def retrieve(query: str, emb_mat: np.ndarray, docs: List[str], k: int = MAX_CTX_
 
 # -------------------- HR Guardrail & CTA --------------------
 HR_SENSITIVE_PATTERNS = [
-    # salary / comp / rate
     r"\b(salary|compensation|pay|rate|wage|stipend|hourly|day rate|expected pay|desired salary|range)\b",
-    # equity/bonus
     r"\b(equity|bonus|stock|rsu|options)\b",
-    # contract terms
     r"\b(contract|notice period|termination|non[- ]?compete|non[- ]?solicit|probation)\b",
-    # visas & sponsorship
     r"\b(visa|sponsor|sponsorship|work authorization|work permit)\b",
-    # relocation
     r"\b(relocate|relocation|move countries?)\b",
-    # benefits details
     r"\b(benefits?|pension|healthcare|insurance|vacation|holidays?)\b",
 ]
 
 def hr_guardrail(user_text: str) -> Optional[str]:
-    """Returns a deflection message if the question is sensitive; otherwise None."""
     q = user_text.lower()
     if any(re.search(p, q) for p in HR_SENSITIVE_PATTERNS):
         return (
@@ -247,7 +238,6 @@ def build_prompt(question: str, contexts: List[str]) -> str:
 
 # >>> PRESENT PROJECT LOGIC ----------------------------------------------------
 def is_present_projects_query(q: str) -> bool:
-    """Detect 'present/current projects' intent."""
     ql = q.lower()
     patterns = [
         r"\bpresent project(s)?\b",
@@ -260,7 +250,6 @@ def is_present_projects_query(q: str) -> bool:
     return any(re.search(p, ql) for p in patterns)
 
 def present_projects_only(projects: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    """Return only projects whose TITLE contains 'present' (case-insensitive)."""
     out = []
     for p in projects:
         title = (p.get("title") or "").lower()
@@ -269,8 +258,6 @@ def present_projects_only(projects: List[Dict[str, Any]]) -> List[Dict[str, Any]
     return out
 
 def build_present_prompt(question: str, present_ps: List[Dict[str, Any]]) -> str:
-    """Craft a more engaging description prompt using only the 'Present' projects."""
-    # collapse present projects into compact context docs
     contexts = [doc_from_project(p) for p in present_ps]
     system = textwrap.dedent("""
     You are Kened describing ONLY the projects whose title contains the word "Present".
@@ -285,6 +272,56 @@ def build_present_prompt(question: str, present_ps: List[Dict[str, Any]]) -> str
     user = f"Question: {question}\n\nContext (only 'Present' projects):\n{ctx}\n\nAnswer:"
     return f"{system}\n\n{user}"
 # -----------------------------------------------------------------------------
+
+# --- QA JSON LOGGING ----------------------------------------------------------
+from datetime import datetime, timezone
+import uuid
+
+if "session_id" not in st.session_state:
+    st.session_state.session_id = str(uuid.uuid4())
+
+def _qa_path() -> Path:
+    """
+    Prefer assets/qa.json next to the app.
+    Falls back to ./qa.json if assets doesn't exist.
+    """
+    for base in LOCAL_CANDIDATES:
+        try:
+            base.mkdir(parents=True, exist_ok=True)
+            # Write under assets if this is that directory
+            if base.name == "assets":
+                return base / "qa.json"
+        except Exception:
+            continue
+    return Path("./qa.json")
+
+def _load_qa(path: Path) -> list:
+    try:
+        if path.exists():
+            return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        pass
+    return []
+
+def _save_qa(path: Path, qa_list: list):
+    try:
+        path.write_text(json.dumps(qa_list, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception:
+        # Don't crash chat if file is read-only or storage is ephemeral
+        pass
+
+def log_qa(question: str, answer: str):
+    """Append a Q&A record to qa.json (best-effort)."""
+    path = _qa_path()
+    qa_list = _load_qa(path)
+    qa_list.append({
+        "when": datetime.now(timezone.utc).isoformat(),
+        "session_id": st.session_state.session_id,
+        "question": question,
+        "answer": answer
+    })
+    _save_qa(path, qa_list)
+# ------------------------------------------------------------------------------
 
 # -------------------- UI --------------------
 # Stylish header (nice in popup)
@@ -336,22 +373,24 @@ if q:
 
     with st.chat_message("assistant"):
         with st.spinner("Thinking…"):
-
             # 1) Guardrail for sensitive HR/negotiation topics
             deflection = hr_guardrail(q)
             if deflection:
                 ans = deflection
             else:
-                # >>> Use 'Present' only when asked for present/current projects
+                # 2) If asking for present/current projects, limit to titles with "Present"
                 if is_present_projects_query(q):
                     pres = present_projects_only(projects)
                     prompt = build_present_prompt(q, pres)
                     ans = llm_call(prompt)
                 else:
-                    # 2) RAG context + LLM (normal path)
+                    # 3) RAG context + LLM (normal path)
                     ctxs = retrieve(q, EMB, DOCS, k=MAX_CTX_DOCS)
                     prompt = build_prompt(q, ctxs)
                     ans = llm_call(prompt)
 
             st.markdown(ans)
             st.session_state.history.append({"role": "assistant", "content": ans})
+
+            # --- Save to qa.json (best-effort)
+            log_qa(q, ans)
