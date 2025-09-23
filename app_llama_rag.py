@@ -245,6 +245,47 @@ def build_prompt(question: str, contexts: List[str]) -> str:
     user = f"Question: {question}\n\nContext:\n{ctx}\n\nAnswer:"
     return f"{system}\n\n{user}"
 
+# >>> PRESENT PROJECT LOGIC ----------------------------------------------------
+def is_present_projects_query(q: str) -> bool:
+    """Detect 'present/current projects' intent."""
+    ql = q.lower()
+    patterns = [
+        r"\bpresent project(s)?\b",
+        r"\bcurrent project(s)?\b",
+        r"\bongoing project(s)?\b",
+        r"\bwhat (are|am) you working on\b",
+        r"\bworking on now\b",
+        r"\bnowadays\b",
+    ]
+    return any(re.search(p, ql) for p in patterns)
+
+def present_projects_only(projects: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Return only projects whose TITLE contains 'present' (case-insensitive)."""
+    out = []
+    for p in projects:
+        title = (p.get("title") or "").lower()
+        if "present" in title:
+            out.append(p)
+    return out
+
+def build_present_prompt(question: str, present_ps: List[Dict[str, Any]]) -> str:
+    """Craft a more engaging description prompt using only the 'Present' projects."""
+    # collapse present projects into compact context docs
+    contexts = [doc_from_project(p) for p in present_ps]
+    system = textwrap.dedent("""
+    You are Kened describing ONLY the projects whose title contains the word "Present".
+    Make it engaging and concise for a hiring audience:
+    - Start with a one-sentence hook (impact/outcome).
+    - Then give 3–5 punchy bullets: what I'm building, stack, why it matters.
+    - Keep it first-person, confident, concrete.
+    Do NOT mention other projects unless explicitly asked.
+    If nothing is available, say I don't have a project marked as present.
+    """).strip()
+    ctx = "\n".join(f"- {c}" for c in contexts) if contexts else "- (no present projects found)"
+    user = f"Question: {question}\n\nContext (only 'Present' projects):\n{ctx}\n\nAnswer:"
+    return f"{system}\n\n{user}"
+# -----------------------------------------------------------------------------
+
 # -------------------- UI --------------------
 # Stylish header (nice in popup)
 st.markdown(
@@ -301,10 +342,16 @@ if q:
             if deflection:
                 ans = deflection
             else:
-                # 2) RAG context + LLM
-                ctxs = retrieve(q, EMB, DOCS, k=MAX_CTX_DOCS)
-                prompt = build_prompt(q, ctxs)
-                ans = llm_call(prompt)
+                # >>> Use 'Present' only when asked for present/current projects
+                if is_present_projects_query(q):
+                    pres = present_projects_only(projects)
+                    prompt = build_present_prompt(q, pres)
+                    ans = llm_call(prompt)
+                else:
+                    # 2) RAG context + LLM (normal path)
+                    ctxs = retrieve(q, EMB, DOCS, k=MAX_CTX_DOCS)
+                    prompt = build_prompt(q, ctxs)
+                    ans = llm_call(prompt)
 
             st.markdown(ans)
             st.session_state.history.append({"role": "assistant", "content": ans})
