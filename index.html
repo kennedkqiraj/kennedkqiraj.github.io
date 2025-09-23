@@ -66,6 +66,14 @@
     .p-tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
     .tag{font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--border); color:var(--muted)}
 
+    /* ✅ Force **black text** inside all project cards (titles, desc, bullets) */
+    .proj-card{ color:#111217; }
+    .proj-card .proj-title{ color:#111217; }
+    .proj-card .proj-body p,
+    .proj-card .proj-body li,
+    .proj-card .proj-body .muted{ color:#111217 !important; }
+    .proj-card .p-tags .tag{ color:#111217; border-color:rgba(17,18,25,.22); }
+
     /* === IBM — lavender background & visible texture === */
     .proj-card[data-brand="ibm"]{
       --ibm-base: #A192AE;
@@ -131,42 +139,30 @@
         radial-gradient(1200px 800px at 120% -10%, rgba(0,120,212,.10), transparent 55%),
         radial-gradient(900px 600px at -20% 120%, rgba(45,156,219,.08), transparent 60%),
         linear-gradient(135deg, #f6fbff 0%, #eef7ff 40%, #e9f4ff 100%);
-    border-color: rgba(17,18,25,.10);
-    color:#111217;
-}
-.proj-card[data-brand="azure"]::after{
-  content:"";
-  position:absolute; inset:0; z-index:0;
-  background: url('assets/azure.png') center/640px auto no-repeat;
-  opacity:.14; filter:grayscale(0) contrast(.95) brightness(1.0);
-  pointer-events:none;
-}
+      border-color: rgba(17,18,25,.10);
+      color:#111217;
+    }
+    .proj-card[data-brand="azure"]::after{
+      content:"";
+      position:absolute; inset:0; z-index:0;
+      background: url('assets/azure.png') center/640px auto no-repeat;
+      opacity:.14; filter:grayscale(0) contrast(.95) brightness(1.0);
+      pointer-events:none;
+    }
 
-
-    /* === On AG — use image background + light concrete palette (screenshot) === */
+    /* === On AG — image background + light concrete palette === */
     .proj-card[data-brand="on"]{
-      /* palette sampled from the photo (neutral/warm light concrete) */
-      --on-warm-100:#FAFAF9;  /* warm white */
-      --on-warm-200:#F1F1EF;  /* light concrete */
-      --on-warm-300:#E5E5E2;  /* mid concrete */
-      --on-ink:#111217;       /* dark text */
-
-      /* base gradient to align the overall tone with the screenshot */
-      background:
-        linear-gradient(135deg, var(--on-warm-100) 0%, var(--on-warm-200) 45%, var(--on-warm-300) 100%);
+      --on-warm-100:#FAFAF9; --on-warm-200:#F1F1EF; --on-warm-300:#E5E5E2; --on-ink:#111217;
+      background: linear-gradient(135deg, var(--on-warm-100) 0%, var(--on-warm-200) 45%, var(--on-warm-300) 100%);
       border-color: rgba(17,18,25,.08);
       color: var(--on-ink);
       position: relative; overflow: hidden;
     }
-    /* background IMAGE layer */
     .proj-card[data-brand="on"]::before{
       content:""; position:absolute; inset:0; z-index:0;
       background: url('assets/on_background.png') center/cover no-repeat;
-      /* keep the photo visible but not overpowering the text */
-      opacity:.55;                /* increase/decrease if you want more/less photo */
-      filter: brightness(1.02) contrast(0.98) saturate(1.02);
+      opacity:.55; filter: brightness(1.02) contrast(0.98) saturate(1.02);
     }
-    /* subtle white glaze + vignette for legibility, matching the store’s soft light */
     .proj-card[data-brand="on"]::after{
       content:""; position:absolute; inset:0; z-index:0;
       background:
@@ -175,15 +171,12 @@
       pointer-events:none;
     }
     .proj-card[data-brand="on"] .proj-banner{
-      /* light steel/white header to match fixtures in the photo */
       background: linear-gradient(135deg,
         color-mix(in oklab, var(--on-warm-300) 40%, white) 0%,
         color-mix(in oklab, var(--on-warm-200) 30%, white) 100%);
       color:#0b0b0e;
     }
-    .proj-card[data-brand="on"] .logo-chip{
-      background: rgba(255,255,255,.9); color:#0b0b0e;
-    }
+    .proj-card[data-brand="on"] .logo-chip{ background: rgba(255,255,255,.9); color:#0b0b0e; }
     .proj-card[data-brand="on"] .proj-body,
     .proj-card[data-brand="on"] .proj-banner { position: relative; z-index: 1; }
 
