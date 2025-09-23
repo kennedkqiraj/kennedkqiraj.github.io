@@ -2,7 +2,7 @@
   {
     "title": "Preferential Origin Automation — On AG",
     "brand": "on",
-    "logo": "assets/on_logo.png"
+    "logo": "assets/on_logo.png",
     "desc": "End-to-end automation of preferential origin assessment: extract rules from FTAs with NLP, embed and store in ChromaDB for fast retrieval, and run an app workflow to determine origin per product.",
     "bullets": [
       "Rule extraction from FTA PDFs using NLP models; clean, segment, and normalize clauses.",
