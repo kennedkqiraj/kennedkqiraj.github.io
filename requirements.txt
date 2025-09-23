@@ -2,3 +2,4 @@ streamlit>=1.36
 requests>=2.31
 sentence-transformers==2.7.0
 numpy<2.0
+google-cloud-firestore>=2.16.0
