@@ -94,7 +94,7 @@
           transparent 4px,
           transparent 18px
         );
-      opacity:.22; /* higher than before so the background shows more */
+      opacity:.22;
       filter: contrast(0.95) brightness(1.03);
       mix-blend-mode: multiply;
       pointer-events:none;
@@ -106,24 +106,50 @@
       );
     }
     .proj-card[data-brand="ibm"] .proj-body,
-    .proj-card[data-brand="ibm"] .proj-banner {
-      position: relative;
-      z-index: 1; /* keep content above background layers */
-    }
+    .proj-card[data-brand="ibm"] .proj-banner { position: relative; z-index: 1; }
 
-    /* === LLaMA palette (unchanged) === */
+    /* === LLaMA / GenAI Email Automation — Meta blue background & texture === */
     .proj-card[data-brand="llama"]{
+      /* Gradient inspired by the Meta blue in your screenshot */
+      --llama-base: #0A66FF;   /* deep blue */
+      --llama-100: #F4F8FF;
+      --llama-200: #E9F2FF;
+      --llama-300: #DCEBFF;
+
       background:
-        radial-gradient(1100px 700px at 120% -10%, rgba(37,99,235,.04), transparent 50%),
-        radial-gradient(900px 600px at -20% 120%, rgba(59,130,246,.035), transparent 60%),
-        linear-gradient(135deg, #f7fbff 0%, #f0f7ff 45%, #ebf4ff 100%);
-      border-color: rgba(17,18,25,.10); color:#111217;
+        radial-gradient(1100px 700px at 120% -10%, color-mix(in oklab, var(--llama-base) 18%, transparent), transparent 55%),
+        radial-gradient(900px 600px at -20% 120%, color-mix(in oklab, var(--llama-base) 16%, transparent), transparent 65%),
+        linear-gradient(135deg, var(--llama-100) 0%, var(--llama-200) 40%, var(--llama-300) 100%);
+      border-color: rgba(17,18,25,.10);
+      color:#111217;
+      position: relative;
+      overflow: hidden;
     }
     .proj-card[data-brand="llama"]::after{
-      content:""; position:absolute; inset:0; z-index:0;
-      background: url('assets/llama.png') center/640px auto no-repeat;
-      opacity:.12; filter: grayscale(1) contrast(.9) brightness(1.0); pointer-events:none;
+      content:"";
+      position:absolute; inset:0; z-index:0;
+      background:
+        url('assets/llama.png') center/900px auto no-repeat,
+        repeating-linear-gradient(
+          12deg,
+          color-mix(in oklab, var(--llama-base) 16%, transparent) 0px,
+          color-mix(in oklab, var(--llama-base) 16%, transparent) 4px,
+          transparent 4px,
+          transparent 18px
+        );
+      opacity:.22; /* make background more visible */
+      filter: contrast(0.96) brightness(1.02);
+      mix-blend-mode: multiply;
+      pointer-events:none;
     }
+    .proj-card[data-brand="llama"] .proj-banner{
+      background: linear-gradient(135deg,
+        color-mix(in oklab, var(--llama-base) 28%, white) 0%,
+        color-mix(in oklab, var(--llama-base) 18%, white) 100%
+      );
+    }
+    .proj-card[data-brand="llama"] .proj-body,
+    .proj-card[data-brand="llama"] .proj-banner { position: relative; z-index: 1; }
 
     /* Skills icons */
     .icon-badges{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}
