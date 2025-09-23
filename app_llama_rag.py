@@ -180,6 +180,36 @@ def hr_guardrail(user_text: str) -> Optional[str]:
         )
     return None
 
+# -------------------- Fun/Sarcasm Guardrail: "10 years" etc. -----------------
+FUTURE_Q_PATTERNS = [
+    r"\bwhere do you see yourself\b",
+    r"\b10\s*years\b",
+    r"\bfive\s*years\b",
+    r"\b5\s*years\b",
+    r"\bten\s*years\b",
+    r"\blong[- ]?term (plan|goal|vision)s?\b",
+    r"\bcareer (aspiration|goal)s?\b",
+    r"\bfuture (plan|goal|vision)s?\b",
+]
+
+def is_future_projection_query(q: str) -> bool:
+    ql = q.lower()
+    return any(re.search(p, ql) for p in FUTURE_Q_PATTERNS)
+
+def sarcastic_future_reply() -> str:
+    # respectful, playful, and gives no real info
+    lines = [
+        "Ah, the crystal-ball classic. In ten years I’ll be exactly ten years older, which so far is the most accurate forecast on record.",
+        "My long-term plan is simple: keep learning fast and shipping value. Specific prophecies are under NDA with Future-Me.",
+        "Let’s trade horoscopes for roadmaps—ask me about shipped work or outcomes and I’ll happily dive in.",
+    ]
+    # Join them as a short quip + two light bullets
+    return (
+        f"{lines[0]}\n\n"
+        f"- {lines[1]}\n"
+        f"- {lines[2]}"
+    )
+
 # -------------------- LLM (Groq) --------------------
 def llm_call(prompt: str) -> str:
     if not GROQ_API_KEY:
@@ -203,12 +233,14 @@ def llm_call(prompt: str) -> str:
                             "You speak in FIRST PERSON as Kened (use 'I', 'me', 'my'). "
                             "Your goal is to help the visitor understand why I’m a strong hire. "
                             "Be warm, concise, and confident; professional with a friendly tone. "
+                            "A touch of light, good-natured sarcasm is welcome when appropriate—"
+                            "keep it respectful and never hostile. "
                             "Answer ONLY from the provided context (projects.json and further_training.json) "
                             "and the short profile facts I provide in this message:\n\n"
                             f"PROFILE FACTS: {PROFILE}\n\n"
                             "Important: If a question asks about salary, compensation, sponsorship, contract terms, "
                             "benefits, or similar negotiation topics, DO NOT provide specifics. "
-                            "Instead, politely ask them to call me or send me an E-Mail\n"
+                            "Instead, politely ask them to call me or send me an E-Mail.\n"
                             "Prefer bullet points for lists; highlight impact and results."
                         ),
                     },
@@ -288,7 +320,6 @@ def _qa_path() -> Path:
     for base in LOCAL_CANDIDATES:
         try:
             base.mkdir(parents=True, exist_ok=True)
-            # Write under assets if this is that directory
             if base.name == "assets":
                 return base / "qa.json"
         except Exception:
@@ -373,24 +404,28 @@ if q:
 
     with st.chat_message("assistant"):
         with st.spinner("Thinking…"):
-            # 1) Guardrail for sensitive HR/negotiation topics
-            deflection = hr_guardrail(q)
-            if deflection:
-                ans = deflection
+            # 0) Sarcastic-but-respectful deflection for “10 years / future vision”
+            if is_future_projection_query(q):
+                ans = sarcastic_future_reply()
             else:
-                # 2) If asking for present/current projects, limit to titles with "Present"
-                if is_present_projects_query(q):
-                    pres = present_projects_only(projects)
-                    prompt = build_present_prompt(q, pres)
-                    ans = llm_call(prompt)
+                # 1) Guardrail for sensitive HR/negotiation topics
+                deflection = hr_guardrail(q)
+                if deflection:
+                    ans = deflection
                 else:
-                    # 3) RAG context + LLM (normal path)
-                    ctxs = retrieve(q, EMB, DOCS, k=MAX_CTX_DOCS)
-                    prompt = build_prompt(q, ctxs)
-                    ans = llm_call(prompt)
+                    # 2) If asking for present/current projects, limit to titles with "Present"
+                    if is_present_projects_query(q):
+                        pres = present_projects_only(projects)
+                        prompt = build_present_prompt(q, pres)
+                        ans = llm_call(prompt)
+                    else:
+                        # 3) RAG context + LLM (normal path)
+                        ctxs = retrieve(q, EMB, DOCS, k=MAX_CTX_DOCS)
+                        prompt = build_prompt(q, ctxs)
+                        ans = llm_call(prompt)
 
             st.markdown(ans)
             st.session_state.history.append({"role": "assistant", "content": ans})
 
-            # --- Save to qa.json (best-effort)
+            # Save to qa.json (best-effort)
             log_qa(q, ans)
