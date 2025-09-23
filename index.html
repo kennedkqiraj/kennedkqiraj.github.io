@@ -124,6 +124,37 @@
     .chat-close{background:transparent; border:none; color:var(--muted); font-size:22px; cursor:pointer}
     .chat-body{flex:1}
     .chat-body iframe{width:100%; height:100%; border:0}
+
+    /* --- Extra mobile polish (added) --- */
+
+    /* Prevent horizontal scroll on very small screens */
+    html, body { overflow-x: hidden; }
+
+    /* Make nav wrap better on small phones */
+    .nav-inner { gap: 10px; flex-wrap: wrap; }
+    .nav .row { display:flex; flex-wrap:wrap; gap:6px; }
+    .nav a.link { padding:8px 10px; }
+
+    /* Ensure the hero columns stack cleanly on narrow widths */
+    .hero { display:grid; grid-template-columns: 1fr; gap:18px; }
+
+    /* So long lines don’t overflow in cards */
+    .card { word-wrap: break-word; overflow-wrap: anywhere; }
+
+    /* Buttons: full width on tiny devices for easier tapping */
+    @media (max-width: 400px) {
+      .btn { width: 100%; justify-content: center; }
+    }
+
+    /* Touch targets + base font size */
+    :root { --tap: 44px; }
+    .btn, .nav a.link { min-height: var(--tap); }
+    body { font-size: 16px; } /* avoid too-small text on mobile */
+
+    /* Projects grid: keep single column until there’s room */
+    @media (max-width: 859px) {
+      .projects-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
