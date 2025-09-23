@@ -66,90 +66,113 @@
     .p-tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
     .tag{font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--border); color:var(--muted)}
 
-    /* === IBM section — stronger lavender background & more visible texture === */
+    /* === IBM — lavender background & visible texture === */
     .proj-card[data-brand="ibm"]{
-      --ibm-base: #A192AE;   /* lavender from screenshot */
-      --ibm-100: #F6F4FA;
-      --ibm-200: #EEEAF6;
-      --ibm-300: #E4DDF1;
-
+      --ibm-base: #A192AE;
+      --ibm-100: #F6F4FA; --ibm-200: #EEEAF6; --ibm-300: #E4DDF1;
       background:
         radial-gradient(1100px 700px at 120% -10%, color-mix(in oklab, var(--ibm-base) 18%, transparent), transparent 55%),
         radial-gradient(900px 600px at -20% 120%, color-mix(in oklab, var(--ibm-base) 16%, transparent), transparent 65%),
         linear-gradient(135deg, var(--ibm-100) 0%, var(--ibm-200) 40%, var(--ibm-300) 100%);
       border-color: rgba(17,18,25,.10);
       color:#111217;
-      position: relative;
-      overflow: hidden;
+      position: relative; overflow: hidden;
     }
     .proj-card[data-brand="ibm"]::after{
-      content:"";
-      position:absolute; inset:0; z-index:0;
+      content:""; position:absolute; inset:0; z-index:0;
       background:
         url('assets/ibm.png') center/900px auto no-repeat,
-        repeating-linear-gradient(
-          12deg,
+        repeating-linear-gradient(12deg,
           color-mix(in oklab, var(--ibm-base) 14%, transparent) 0px,
           color-mix(in oklab, var(--ibm-base) 14%, transparent) 4px,
           transparent 4px,
-          transparent 18px
-        );
-      opacity:.22;
-      filter: contrast(0.95) brightness(1.03);
-      mix-blend-mode: multiply;
-      pointer-events:none;
+          transparent 18px);
+      opacity:.22; filter: contrast(0.95) brightness(1.03); mix-blend-mode:multiply; pointer-events:none;
     }
     .proj-card[data-brand="ibm"] .proj-banner{
       background: linear-gradient(135deg,
         color-mix(in oklab, var(--ibm-base) 26%, white) 0%,
-        color-mix(in oklab, var(--ibm-base) 18%, white) 100%
-      );
+        color-mix(in oklab, var(--ibm-base) 18%, white) 100%);
     }
     .proj-card[data-brand="ibm"] .proj-body,
     .proj-card[data-brand="ibm"] .proj-banner { position: relative; z-index: 1; }
 
-    /* === LLaMA / GenAI Email Automation — Meta blue background & texture === */
+    /* === LLaMA / GenAI Email — Meta blue background & texture === */
     .proj-card[data-brand="llama"]{
-      /* Gradient inspired by the Meta blue in your screenshot */
-      --llama-base: #0A66FF;   /* deep blue */
-      --llama-100: #F4F8FF;
-      --llama-200: #E9F2FF;
-      --llama-300: #DCEBFF;
-
+      --llama-base: #0A66FF;
+      --llama-100: #F4F8FF; --llama-200: #E9F2FF; --llama-300: #DCEBFF;
       background:
         radial-gradient(1100px 700px at 120% -10%, color-mix(in oklab, var(--llama-base) 18%, transparent), transparent 55%),
         radial-gradient(900px 600px at -20% 120%, color-mix(in oklab, var(--llama-base) 16%, transparent), transparent 65%),
         linear-gradient(135deg, var(--llama-100) 0%, var(--llama-200) 40%, var(--llama-300) 100%);
-      border-color: rgba(17,18,25,.10);
-      color:#111217;
-      position: relative;
-      overflow: hidden;
+      border-color: rgba(17,18,25,.10); color:#111217;
+      position: relative; overflow: hidden;
     }
     .proj-card[data-brand="llama"]::after{
-      content:"";
-      position:absolute; inset:0; z-index:0;
+      content:""; position:absolute; inset:0; z-index:0;
       background:
         url('assets/llama.png') center/900px auto no-repeat,
-        repeating-linear-gradient(
-          12deg,
+        repeating-linear-gradient(12deg,
           color-mix(in oklab, var(--llama-base) 16%, transparent) 0px,
           color-mix(in oklab, var(--llama-base) 16%, transparent) 4px,
           transparent 4px,
-          transparent 18px
-        );
-      opacity:.22; /* make background more visible */
-      filter: contrast(0.96) brightness(1.02);
-      mix-blend-mode: multiply;
-      pointer-events:none;
+          transparent 18px);
+      opacity:.22; filter: contrast(0.96) brightness(1.02); mix-blend-mode:multiply; pointer-events:none;
     }
     .proj-card[data-brand="llama"] .proj-banner{
       background: linear-gradient(135deg,
         color-mix(in oklab, var(--llama-base) 28%, white) 0%,
-        color-mix(in oklab, var(--llama-base) 18%, white) 100%
-      );
+        color-mix(in oklab, var(--llama-base) 18%, white) 100%);
     }
     .proj-card[data-brand="llama"] .proj-body,
     .proj-card[data-brand="llama"] .proj-banner { position: relative; z-index: 1; }
+
+    /* === On AG — graphite/black textured background like your screenshot === */
+    .proj-card[data-brand="on"]{
+      --on-base: #1b1b1d;   /* deep graphite */
+      --on-ink:  #0f0f12;   /* near-black */
+      --on-100:  #2a2a2e;
+      --on-200:  #1f1f23;
+
+      background:
+        radial-gradient(1000px 640px at 120% -10%, color-mix(in oklab, var(--on-100) 55%, transparent), transparent 55%),
+        radial-gradient(800px 520px at -10% 120%, color-mix(in oklab, var(--on-200) 45%, transparent), transparent 65%),
+        linear-gradient(135deg, var(--on-ink) 0%, var(--on-base) 45%, #141417 100%);
+      border-color: rgba(255,255,255,.06);
+      color:#eaeaf0;
+      position: relative; overflow: hidden;
+    }
+    .proj-card[data-brand="on"]::after{
+      /* speckled + micro-check texture to mimic the surface in the photo */
+      content:""; position:absolute; inset:0; z-index:0;
+      background:
+        /* subtle diagonal micro-check */
+        repeating-linear-gradient(45deg,
+          rgba(255,255,255,.06) 0px,
+          rgba(255,255,255,.06) 1px,
+          transparent 1px,
+          transparent 6px),
+        /* random speckle via radial dots */
+        radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,.20) 40%, transparent 41%),
+        radial-gradient(1px 1px at 25% 35%, rgba(255,255,255,.18) 40%, transparent 41%),
+        radial-gradient(1px 1px at 40% 55%, rgba(255,255,255,.16) 40%, transparent 41%),
+        radial-gradient(1px 1px at 60% 45%, rgba(255,255,255,.18) 40%, transparent 41%),
+        radial-gradient(1px 1px at 75% 65%, rgba(255,255,255,.20) 40%, transparent 41%),
+        radial-gradient(1px 1px at 88% 30%, rgba(255,255,255,.14) 40%, transparent 41%);
+      opacity:.26; /* show the background more */
+      filter: contrast(0.95) brightness(1.0);
+      mix-blend-mode: overlay;
+      pointer-events:none;
+    }
+    .proj-card[data-brand="on"] .proj-banner{
+      background: linear-gradient(135deg, #1b1b1d 0%, #2a2a2e 100%);
+      color:#fff;
+    }
+    .proj-card[data-brand="on"] .logo-chip{
+      background: rgba(255,255,255,.9); color:#0b0b0e;
+    }
+    .proj-card[data-brand="on"] .proj-body,
+    .proj-card[data-brand="on"] .proj-banner { position: relative; z-index: 1; }
 
     /* Skills icons */
     .icon-badges{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}
