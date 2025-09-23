@@ -201,3 +201,199 @@
           <div class="t-item">
             <div class="t-title">Internship — On AG <span class="muted">(Feb 2025 – Present)</span></div>
             <ul class="muted" style="margin:6px 0 0 18px">
+              <li>Automation of tariff classification and preferential origin processes using Python, SQL, BigQuery, and LLMs.</li>
+              <li>Data ingestion, transformation, and reporting.</li>
+              <li>Google Cloud Platform, Vertex AI.</li>
+            </ul>
+          </div>
+          <div class="t-item">
+            <div class="t-title">Operations Specialist — The Brain Maze LLC (Part Time) <span class="muted">(Jul 2019 – Feb 2024)</span></div>
+            <ul class="muted" style="margin:6px 0 0 18px">
+              <li>Analysis and evaluation of the raw data.</li>
+              <li>Continuous improvement of workflows.</li>
+              <li>Financial reporting using Excel, and tax reporting.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section class="section" id="education">
+      <div class="card" style="padding:18px">
+        <h2>Education</h2>
+        <ul style="margin:0; padding-left:18px">
+          <li><strong>Master of Science in Applied Information and Data Science</strong> — Lucerne University of Applied Sciences and Arts (HSLU)</li>
+          <li><strong>Bachelor of Accounting</strong> — University of Prishtina (2016)</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FURTHER TRAINING -->
+    <section class="section" id="training">
+      <div class="card" style="padding:18px">
+        <h2>Further Training</h2>
+        <div class="timeline" id="trainingJsonContainer"></div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section class="section" id="skills">
+      <div class="card" style="padding:18px">
+        <h2>Skills</h2>
+        <div class="icon-badges" role="list">
+          <span class="icon-badge" role="listitem" title="Python"><i class="devicon-python-plain colored"></i><span class="label">Python</span></span>
+          <span class="icon-badge" role="listitem" title="R"><i class="devicon-r-plain colored"></i><span class="label">R</span></span>
+          <span class="icon-badge" role="listitem" title="SQL"><i class="devicon-mysql-plain colored"></i><span class="label">SQL</span></span>
+          <span class="icon-badge" role="listitem" title="Azure"><i class="devicon-azure-plain colored"></i><span class="label">Azure</span></span>
+          <span class="icon-badge" role="listitem" title="Databricks"><i class="devicon-databricks-original colored"></i><span class="label">Databricks</span></span>
+          <span class="icon-badge" role="listitem" title="Tableau"><i class="devicon-tableau-plain colored"></i><span class="label">Tableau</span></span>
+          <span class="icon-badge" role="listitem" title="Streamlit"><i class="devicon-streamlit-plain colored"></i><span class="label">Streamlit</span></span>
+          <span class="icon-badge" role="listitem" title="Google Cloud"><i class="devicon-googlecloud-plain colored"></i><span class="label">Google Cloud</span></span>
+          <span class="icon-badge" role="listitem" title="Git"><i class="devicon-git-plain colored"></i><span class="label">Git</span></span>
+          <span class="icon-badge" role="listitem" title="GitHub"><i class="devicon-github-original"></i><span class="label">GitHub</span></span>
+          <span class="icon-badge text-only" role="listitem" title="LangChain"><span class="pseudo-icon">LangChain</span><span class="label">LangChain</span></span>
+          <span class="icon-badge text-only" role="listitem" title="Data Pipelines"><span class="pseudo-icon">Data&nbsp;Pipelines</span><span class="label">Data Pipelines</span></span>
+          <span class="icon-badge text-only" role="listitem" title="Vertex AI"><span class="pseudo-icon">Vertex&nbsp;AI</span><span class="label">Vertex AI</span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section card" style="padding:18px" id="contact">
+      <h2>Contact</h2>
+      <p class="muted">6300 Zug, Switzerland • Phone: <a href="tel:+41765672985">+41 76 567 29 85</a>. Email: <a href="#" id="em"></a>. Connect on <a href="https://www.linkedin.com/in/kened-kqiraj" target="_blank" rel="noreferrer">LinkedIn</a> or view my <a href="https://github.com/kennedkqiraj" target="_blank" rel="noreferrer">GitHub</a>.</p>
+      <div class="row" style="margin-top:6px">
+        <a class="btn" href="https://github.com/kennedkqiraj" target="_blank" rel="noreferrer">GitHub</a>
+        <a class="btn" href="mailto:kened.kqiraj@stud.hslu.ch">Email</a>
+      </div>
+    </section>
+
+    <footer class="container"><p>© <span id="year"></span> Kened Kqiraj. Built with semantic HTML + CSS.</p></footer>
+  </main>
+
+  <script>
+    // Theme persistence
+    const root = document.documentElement;
+    const saved = localStorage.getItem('theme');
+    if(saved){ saved === 'light' ? root.classList.add('light') : root.classList.remove('light'); }
+    else if(window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches){ root.classList.add('light'); }
+    const btn = document.getElementById('themeToggle');
+    const icon = document.getElementById('themeIcon');
+    function setIcon(){ icon.textContent = root.classList.contains('light') ? '🌞' : '🌙'; }
+    setIcon();
+    btn.addEventListener('click', ()=>{ root.classList.toggle('light'); localStorage.setItem('theme', root.classList.contains('light') ? 'light' : 'dark'); setIcon(); });
+
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Email obfuscation
+    (function(){
+      const user = 'kened.kqiraj';
+      const domain = 'stud.hslu.ch';
+      const el = document.getElementById('em');
+      const addr = user + '@' + domain;
+      el.textContent = addr; el.href = 'mailto:'+addr;
+    })();
+
+    // LinkedIn popup
+    (function(){
+      const a = document.getElementById('avatarLink');
+      if(!a) return;
+      a.addEventListener('click', function(e){
+        e.preventDefault();
+        const win = window.open(this.href, 'linkedinPopup',
+          'width=1100,height=800,menubar=no,toolbar=no,location=no,status=no,scrollbars=yes,resizable=yes');
+        if(!win) { window.location.href = this.href; }
+      });
+    })();
+
+    // Render Projects from JSON
+    (function(){
+      const grid = document.getElementById('projectsGrid');
+      if(!grid) return;
+      fetch('assets/projects.json?cb='+Date.now())
+        .then(r=>r.json())
+        .then(data=>{
+          grid.innerHTML='';
+          data.forEach(p=>{
+            const card=document.createElement('article');
+            card.className='proj-card'; card.dataset.brand=p.brand||'';
+            card.innerHTML=`
+              <div class="proj-banner">
+                <span class="logo-chip">
+                  ${p.logo ? `<img src="${p.logo}" alt="${(p.brand||'Logo').toUpperCase()}">` : ''}
+                  <strong>${(p.brand||'').toUpperCase()}</strong>
+                </span>
+              </div>
+              <div class="proj-body">
+                <h3 class="proj-title">${p.title||''}</h3>
+                ${p.desc?`<p class="muted" style="margin:6px 0">${p.desc}</p>`:''}
+                ${Array.isArray(p.bullets)?`<ul class="muted" style="margin:6px 0 0 18px">${p.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>`:''}
+                ${Array.isArray(p.tags)?`<div class="p-tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>`:''}
+              </div>`;
+            grid.appendChild(card);
+          });
+        })
+        .catch(err=>{ grid.innerHTML='<p class="muted">Could not load projects.json.</p>'; console.error(err); });
+    })();
+
+    // Further Training from JSON (optional list)
+    (function(){
+      const wrap=document.getElementById('trainingJsonContainer');
+      if(!wrap) return;
+      fetch('assets/further_training.json?cb='+Date.now())
+        .then(r=>r.json())
+        .then(list=>{
+          (list||[]).forEach(t=>{
+            const item=document.createElement('div'); item.className='t-item';
+            item.innerHTML=`
+              <div class="t-title">${t.title||''} — <span class="muted">${t.org||''}</span> <span class="muted">(${t.period||''})</span></div>
+              ${Array.isArray(t.bullets)?`<ul class="muted" style="margin:6px 0 0 18px">${t.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>`:''}
+            `;
+            wrap.appendChild(item);
+          });
+        }).catch(console.error);
+    })();
+
+    // Chat popup logic
+    (function(){
+      const STREAMLIT_URL = "https://YOUR-STREAMLIT-CHATBOT-URL/?embed=true"; // <-- replace with your app URL
+      const modal = document.getElementById('chatModal');
+      const openBtn = document.getElementById('openChat');
+      const closeBtn = document.getElementById('closeChat');
+      const frame = document.getElementById('chatFrame');
+
+      function openChat(){
+        if(!frame.src || frame.src.includes('YOUR-STREAMLIT-CHATBOT-URL')) frame.src = STREAMLIT_URL;
+        modal.style.display='flex';
+        openBtn.setAttribute('aria-expanded','true');
+        setTimeout(()=>closeBtn.focus(), 50);
+      }
+      function closeChat(){
+        modal.style.display='none';
+        openBtn.setAttribute('aria-expanded','false');
+        openBtn.focus();
+      }
+      openBtn.addEventListener('click', openChat);
+      closeBtn.addEventListener('click', closeChat);
+      modal.addEventListener('click', (e)=>{ if(e.target===modal) closeChat(); });
+      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && modal.style.display==='flex') closeChat(); });
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Kened Kqiraj",
+    "jobTitle": "Data Scientist",
+    "address": {"@type": "PostalAddress", "addressLocality": "Zug", "addressCountry": "CH"},
+    "email": "mailto:kened.kqiraj@stud.hslu.ch",
+    "telephone": "+41 76 567 29 85",
+    "url": "https://kennedkqiraj.github.io/",
+    "sameAs": ["https://github.com/kennedkqiraj","https://www.linkedin.com/in/kened-kqiraj"]
+  }
+  </script>
+</body>
+</html>
