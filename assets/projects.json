@@ -9,21 +9,15 @@
       "Embeddings + ChromaDB: vectorize rules and save for low-latency semantic retrieval.",
       "Pipeline: identify applicable rule per HS code → read requirements → component analysis.",
       "Threshold calculation (value/weight/process rules) → final origin determination.",
-      "Explains decisions with Gemini for transparent, human-readable rationales."
+      "Explains decisions with Gemini for transparent, human-readable rationales.",
+      "Stack: Google Cloud, Flask API, Python, LLM-assisted validation."
     ],
     "tags": [
-      "Preferential Origin",
-      "FTA",
-      "NLP",
-      "Embeddings",
-      "ChromaDB",
-      "Gemini",
-      "Google Cloud",
-      "Flask",
-      "HS Code",
-      "Trade Compliance"
+      "Preferential Origin", "FTA", "NLP", "Embeddings", "ChromaDB",
+      "Gemini", "Google Cloud", "Flask", "HS Code", "Trade Compliance"
     ]
   },
+
   {
     "title": "Comments Analytics for NZZ (IBM watsonx)",
     "brand": "ibm",
@@ -37,18 +31,11 @@
       "Uses Intelligent Document Processing; simple analyst-friendly UI"
     ],
     "tags": [
-      "LLMs",
-      "watsonx.ai",
-      "Discovery",
-      "Orchestrate",
-      "IBM Cloud Object Storage",
-      "NLP",
-      "Sentiment",
-      "Python",
-      "Word-clouds",
-      "Automation"
+      "LLMs", "watsonx.ai", "Discovery", "Orchestrate", "IBM Cloud Object Storage",
+      "NLP", "Sentiment", "Python", "Word-clouds", "Automation"
     ]
   },
+
   {
     "title": "GenAI Email Automation — RAG + Llama",
     "brand": "llama",
@@ -62,14 +49,25 @@
       "Logged queries, retrieved chunks, and outputs for iterative improvement."
     ],
     "tags": [
-      "RAG",
-      "Llama",
-      "LLM",
-      "Embeddings",
-      "Retrieval",
-      "Vector DB",
-      "Email Automation",
-      "Python"
+      "RAG", "Llama", "LLM", "Embeddings", "Retrieval", "Vector DB", "Email Automation", "Python"
+    ]
+  },
+
+  {
+    "title": "Big Data in the Cloud — Azure (Block Seminar)",
+    "brand": "azure",
+    "logo": "assets/azure.png",
+    "desc": "Hands-on cloud data engineering on Azure: orchestrated ingestion with Data Factory, scalable processing in Databricks, and secure storage on Blob—end-to-end pipelines for real analytics.",
+    "bullets": [
+      "Orchestrated data pipelines with Azure Data Factory for automated ingestion & transforms.",
+      "Processed large datasets in Azure Databricks using PySpark and SparkSQL.",
+      "Designed and queried relational models with SQL for structured integration.",
+      "Implemented storage & access with Azure Blob Storage for scalable, secure data lakes.",
+      "Applied cloud big-data frameworks to solve real analytics tasks end-to-end."
+    ],
+    "tags": [
+      "Azure", "Data Factory", "Databricks", "PySpark", "SparkSQL",
+      "SQL", "Blob Storage", "Pipelines", "Cloud", "Big Data"
     ]
   }
 ]
