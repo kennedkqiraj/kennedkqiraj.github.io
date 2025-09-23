@@ -125,6 +125,24 @@
     .proj-card[data-brand="llama"] .proj-body,
     .proj-card[data-brand="llama"] .proj-banner { position: relative; z-index: 1; }
 
+    /* === Brand palette — AZURE === */
+    .proj-card[data-brand="azure"]{
+      background:
+        radial-gradient(1200px 800px at 120% -10%, rgba(0,120,212,.10), transparent 55%),
+        radial-gradient(900px 600px at -20% 120%, rgba(45,156,219,.08), transparent 60%),
+        linear-gradient(135deg, #f6fbff 0%, #eef7ff 40%, #e9f4ff 100%);
+    border-color: rgba(17,18,25,.10);
+    color:#111217;
+}
+.proj-card[data-brand="azure"]::after{
+  content:"";
+  position:absolute; inset:0; z-index:0;
+  background: url('assets/azure.png') center/640px auto no-repeat;
+  opacity:.14; filter:grayscale(0) contrast(.95) brightness(1.0);
+  pointer-events:none;
+}
+
+
     /* === On AG — use image background + light concrete palette (screenshot) === */
     .proj-card[data-brand="on"]{
       /* palette sampled from the photo (neutral/warm light concrete) */
