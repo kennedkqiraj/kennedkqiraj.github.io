@@ -66,19 +66,52 @@
     .p-tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
     .tag{font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--border); color:var(--muted)}
 
-    /* === Brand palettes (SUBTLE watermarks, reverted) === */
+    /* === IBM section — stronger lavender background & more visible texture === */
     .proj-card[data-brand="ibm"]{
+      --ibm-base: #A192AE;   /* lavender from screenshot */
+      --ibm-100: #F6F4FA;
+      --ibm-200: #EEEAF6;
+      --ibm-300: #E4DDF1;
+
       background:
-        radial-gradient(1100px 700px at 120% -10%, rgba(129,140,248,.04), transparent 50%),
-        radial-gradient(900px 600px at -20% 120%, rgba(168,85,247,.035), transparent 60%),
-        linear-gradient(135deg, #f8f9ff 0%, #f2f5ff 45%, #eef4ff 100%);
-      border-color: rgba(17,18,25,.10); color:#111217;
+        radial-gradient(1100px 700px at 120% -10%, color-mix(in oklab, var(--ibm-base) 18%, transparent), transparent 55%),
+        radial-gradient(900px 600px at -20% 120%, color-mix(in oklab, var(--ibm-base) 16%, transparent), transparent 65%),
+        linear-gradient(135deg, var(--ibm-100) 0%, var(--ibm-200) 40%, var(--ibm-300) 100%);
+      border-color: rgba(17,18,25,.10);
+      color:#111217;
+      position: relative;
+      overflow: hidden;
     }
     .proj-card[data-brand="ibm"]::after{
-      content:""; position:absolute; inset:0; z-index:0;
-      background: url('assets/ibm.png') center/640px auto no-repeat;
-      opacity:.12; filter: grayscale(1) contrast(.9) brightness(1.0); pointer-events:none;
+      content:"";
+      position:absolute; inset:0; z-index:0;
+      background:
+        url('assets/ibm.png') center/900px auto no-repeat,
+        repeating-linear-gradient(
+          12deg,
+          color-mix(in oklab, var(--ibm-base) 14%, transparent) 0px,
+          color-mix(in oklab, var(--ibm-base) 14%, transparent) 4px,
+          transparent 4px,
+          transparent 18px
+        );
+      opacity:.22; /* higher than before so the background shows more */
+      filter: contrast(0.95) brightness(1.03);
+      mix-blend-mode: multiply;
+      pointer-events:none;
     }
+    .proj-card[data-brand="ibm"] .proj-banner{
+      background: linear-gradient(135deg,
+        color-mix(in oklab, var(--ibm-base) 26%, white) 0%,
+        color-mix(in oklab, var(--ibm-base) 18%, white) 100%
+      );
+    }
+    .proj-card[data-brand="ibm"] .proj-body,
+    .proj-card[data-brand="ibm"] .proj-banner {
+      position: relative;
+      z-index: 1; /* keep content above background layers */
+    }
+
+    /* === LLaMA palette (unchanged) === */
     .proj-card[data-brand="llama"]{
       background:
         radial-gradient(1100px 700px at 120% -10%, rgba(37,99,235,.04), transparent 50%),
