@@ -1,5 +1,30 @@
 [
   {
+    "title": "Preferential Origin Automation — On AG",
+    "brand": "on",
+    "desc": "End-to-end automation of preferential origin assessment: extract rules from FTAs with NLP, embed and store in ChromaDB for fast retrieval, and run an app workflow to determine origin per product.",
+    "bullets": [
+      "Rule extraction from FTA PDFs using NLP models; clean, segment, and normalize clauses.",
+      "Embeddings + ChromaDB: vectorize rules and save for low-latency semantic retrieval.",
+      "Pipeline: identify applicable rule per HS code → read requirements → component analysis.",
+      "Threshold calculation (value/weight/process rules) → final origin determination.",
+      "Explains decisions with Gemini for transparent, human-readable rationales.",
+      "Stack: Google Cloud, Flask API, Python, LLM-assisted validation."
+    ],
+    "tags": [
+      "Preferential Origin",
+      "FTA",
+      "NLP",
+      "Embeddings",
+      "ChromaDB",
+      "Gemini",
+      "Google Cloud",
+      "Flask",
+      "HS Code",
+      "Trade Compliance"
+    ]
+  },
+  {
     "title": "Comments Analytics for NZZ (IBM watsonx)",
     "brand": "ibm",
     "logo": "assets/ibm.png",
