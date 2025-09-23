@@ -9,8 +9,7 @@
       "Embeddings + ChromaDB: vectorize rules and save for low-latency semantic retrieval.",
       "Pipeline: identify applicable rule per HS code → read requirements → component analysis.",
       "Threshold calculation (value/weight/process rules) → final origin determination.",
-      "Explains decisions with Gemini for transparent, human-readable rationales.",
-      "Stack: Google Cloud, Flask API, Python, LLM-assisted validation."
+      "Explains decisions with Gemini for transparent, human-readable rationales."
     ],
     "tags": [
       "Preferential Origin",
