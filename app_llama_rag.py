@@ -16,6 +16,15 @@ import numpy as np
 import requests
 from sentence_transformers import SentenceTransformer
 
+# NEW: persistence imports
+from datetime import datetime, timezone
+import uuid
+try:
+    from google.cloud import firestore  # pip install google-cloud-firestore
+    _FIRESTORE_AVAILABLE = True
+except Exception:
+    _FIRESTORE_AVAILABLE = False
+
 # -------------------- App & Profile Config --------------------
 st.set_page_config(
     page_title="I’m Kened’s assistant — how may I help you?",
@@ -27,6 +36,8 @@ st.set_page_config(
 MY_PHONE = os.getenv("MY_PHONE", "+41 76 567 29 85")
 MY_EMAIL = os.getenv("MY_EMAIL", "kened.kqiraj@stud.hslu.ch")
 
+# NEW: logging toggle (set SAVE_MESSAGES=0 to disable)
+SAVE_MESSAGES = os.getenv("SAVE_MESSAGES", "1").strip() == "1"
 
 # Optional: load JSON from raw GitHub URLs via env vars (otherwise local files)
 PROJECTS_URL = os.getenv("PROJECTS_URL", "").strip() or None
@@ -245,7 +256,40 @@ def build_prompt(question: str, contexts: List[str]) -> str:
     user = f"Question: {question}\n\nContext:\n{ctx}\n\nAnswer:"
     return f"{system}\n\n{user}"
 
+# -------------------- Persistence (Firestore) --------------------
+@st.cache_resource(show_spinner=False)
+def get_db():
+    """Create a Firestore client if available & allowed; else return None."""
+    if not SAVE_MESSAGES or not _FIRESTORE_AVAILABLE:
+        return None
+    try:
+        return firestore.Client()
+    except Exception:
+        return None
+
+def log_message(role: str, text: str, meta: Optional[dict] = None):
+    """Write one message to Firestore if enabled/available."""
+    db = get_db()
+    if not db:
+        return
+    try:
+        db.collection("chat_messages").add({
+            "project": "website-chat",
+            "session_id": st.session_state.get("session_id", ""),
+            "when": datetime.now(timezone.utc),
+            "role": role,
+            "text": text,
+            "meta": meta or {},
+        })
+    except Exception:
+        # Fail silently to avoid breaking UX
+        pass
+
 # -------------------- UI --------------------
+# create stable session id
+if "session_id" not in st.session_state:
+    st.session_state.session_id = str(uuid.uuid4())
+
 # Stylish header (nice in popup)
 st.markdown(
     """
@@ -289,7 +333,9 @@ for m in st.session_state.history:
 
 q = st.chat_input("Type your question…")
 if q:
+    # Save and display user question
     st.session_state.history.append({"role": "user", "content": q})
+    log_message("user", q)  # <--- NEW: persist
     with st.chat_message("user"):
         st.markdown(q)
 
@@ -308,3 +354,4 @@ if q:
 
             st.markdown(ans)
             st.session_state.history.append({"role": "assistant", "content": ans})
+            log_message("assistant", ans)  # <--- NEW: persist reply
