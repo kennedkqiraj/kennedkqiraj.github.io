@@ -292,7 +292,7 @@ def present_projects_only(projects: List[Dict[str, Any]]) -> List[Dict[str, Any]
 def build_present_prompt(question: str, present_ps: List[Dict[str, Any]]) -> str:
     contexts = [doc_from_project(p) for p in present_ps]
     system = textwrap.dedent("""
-    You are Kened describing ONLY the projects whose title contains the word "Present".
+    You are Keneds assistant describing ONLY the projects whose title contains the word "Present".
     Make it engaging and concise for a hiring audience:
     - Start with a one-sentence hook (impact/outcome).
     - Then give 3–5 punchy bullets: what I'm building, stack, why it matters.
