@@ -17,30 +17,31 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%230a0a0a'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' font-size='40' fill='%23fff' font-family='sans-serif'%3EK%3C/text%3E%3C/svg%3E">
 
   <style>
-    :root{ --bg:#0b0b0e; --panel:#111219; --text:#e8e8ea; --muted:#b6b6c2; --accent:#6ee7b7; --accent-2:#60a5fa; --border:#1d1e26; --shadow:0 10px 30px rgba(0,0,0,.35); --radius:18px; }
-    :root.light{ --bg:#f7f7fb; --panel:#ffffff; --text:#111217; --muted:#4b4f5c; --accent:#0ea5e9; --accent-2:#22c55e; --border:#e9e9f3; --shadow:0 20px 40px rgba(10,10,10,.08); }
+    :root{ --bg:#0b0b0e; --panel:#111219; --text:#e8e8ea; --muted:#b6b6c2; --accent:#6ee7b7; --accent-2:#60a5fa; --border:color-mix(in oklab, #1d1e26 70%, #6ee7b7 10%); --shadow:0 16px 48px rgba(0,0,0,.35); --radius:18px; }
+    :root.light{ --bg:#f7f7fb; --panel:#ffffff; --text:#111217; --muted:#4b4f5c; --accent:#0ea5e9; --accent-2:#22c55e; --border:#e3e8f5; --shadow:0 24px 56px rgba(10,10,10,.08); }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans; color:var(--text); background:radial-gradient(1200px 800px at 100% -10%, rgba(96,165,250,.15), transparent), radial-gradient(800px 600px at -10% 110%, rgba(110,231,183,.12), transparent), var(--bg); line-height:1.6;}
+    body{margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans; color:var(--text); background:radial-gradient(1200px 800px at 100% -10%, rgba(96,165,250,.15), transparent), radial-gradient(800px 600px at -10% 110%, rgba(110,231,183,.12), transparent), var(--bg); line-height:1.7; letter-spacing:-0.01em;}
     a{color:inherit; text-decoration:none}
-    .container{max-width:1100px; margin:0 auto; padding:24px 20px 56px}
+    .container{max-width:1180px; margin:0 auto; padding:30px 24px 64px}
     .nav{position:sticky; top:0; backdrop-filter:saturate(180%) blur(8px); background:color-mix(in oklab, var(--bg) 85%, transparent); border-bottom:1px solid var(--border); z-index:50}
-    .nav-inner{display:flex; align-items:center; justify-content:space-between; padding:14px 20px; max-width:1100px; margin:0 auto}
+    .nav-inner{display:flex; align-items:center; justify-content:space-between; padding:16px 20px; max-width:1180px; margin:0 auto}
     .brand{display:flex; align-items:center; gap:10px; font-weight:700}
     .brand .logo{width:34px; height:34px; border-radius:12px; background:linear-gradient(135deg, var(--accent), var(--accent-2)); display:grid; place-items:center; color:#0b0b0e; font-weight:800}
-    .nav a.link{padding:8px 10px; border-radius:10px; opacity:.9}
-    .nav a.link:hover{background:color-mix(in oklab, var(--panel) 80%, transparent)}
+    .nav a.link{padding:9px 12px; border-radius:12px; opacity:.92; font-weight:600; transition:background .2s ease, color .2s ease, transform .08s ease}
+    .nav a.link:hover{background:color-mix(in oklab, var(--panel) 85%, transparent); color:white; transform:translateY(-1px)}
     .nav-actions{display:flex; align-items:center; gap:8px}
-    .btn{display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; border:1px solid var(--border); background:var(--panel); box-shadow:var(--shadow); transition:transform .08s ease, background .2s ease}
-    .btn:hover{transform:translateY(-1px)}
-    .btn-primary{background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#0b0b0e; border-color:transparent; font-weight:700}
+    .btn{display:inline-flex; align-items:center; gap:8px; padding:11px 16px; border-radius:14px; border:1px solid var(--border); background:linear-gradient(180deg, color-mix(in oklab, var(--panel) 90%, transparent), color-mix(in oklab, var(--panel) 70%, transparent)); box-shadow:var(--shadow); transition:transform .08s ease, background .2s ease, box-shadow .2s ease}
+    .btn:hover{transform:translateY(-1px); box-shadow:0 18px 38px rgba(0,0,0,.32)}
+    .btn-primary{background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#0b0b0e; border-color:transparent; font-weight:800; letter-spacing:-0.01em}
     .btn-ghost{background:transparent; box-shadow:none}
     .grid{display:grid; gap:18px}
     @media(min-width:820px){ .hero{grid-template-columns: 1.2fr .8fr; align-items:center} }
-    .card{background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow)}
-    .hero-title{font-size:clamp(28px,4.4vw,52px); line-height:1.05; letter-spacing:-.02em; margin:0 0 8px}
-    .hero-sub{font-size:clamp(16px,2vw,20px); color:var(--muted); margin:0 0 18px}
-    .badge{--bgp:color-mix(in oklab, var(--panel) 80%, transparent); background:var(--bgp); border:1px solid var(--border); padding:6px 10px; border-radius:999px; font-size:13px}
+    .card{background:linear-gradient(180deg, color-mix(in oklab, var(--panel) 95%, transparent), color-mix(in oklab, var(--panel) 80%, transparent)); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); backdrop-filter:saturate(115%)}
+    .hero-title{font-size:clamp(30px,4.9vw,58px); line-height:1.04; letter-spacing:-.025em; margin:6px 0 10px}
+    .hero-sub{font-size:clamp(17px,2.1vw,22px); color:var(--muted); margin:0 0 20px; max-width:760px}
+    .badge{--bgp:color-mix(in oklab, var(--panel) 82%, transparent); background:var(--bgp); border:1px solid var(--border); padding:8px 12px; border-radius:999px; font-size:13px; display:inline-flex; align-items:center; gap:10px; letter-spacing:0}
+    .badge .dot{width:9px; height:9px; border-radius:50%; background:linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow:0 0 0 5px color-mix(in oklab, var(--panel) 82%, transparent); display:inline-block}
     .section{margin-top:32px}
     .split{display:grid; grid-template-columns: 1fr; gap:18px}
     @media(min-width:860px){.split{grid-template-columns: 1fr 1fr}}
@@ -57,8 +58,9 @@
     /* Projects grid */
     .projects-grid{display:grid; gap:18px; grid-template-columns:1fr}
     @media(min-width:860px){.projects-grid{grid-template-columns:1fr 1fr}}
-    .proj-card{border:1px solid var(--border); border-radius:18px; background:var(--panel); box-shadow:var(--shadow); overflow:hidden; position:relative}
-    .proj-banner{height:140px; background:linear-gradient(135deg,var(--brand,#6ee7b7),var(--brand-2,#60a5fa)); display:flex; align-items:flex-start; justify-content:space-between; padding:12px 14px}
+    .proj-card{border:1px solid var(--border); border-radius:18px; background:var(--panel); box-shadow:var(--shadow); overflow:hidden; position:relative; transition:transform .12s ease, box-shadow .18s ease}
+    .proj-card:hover{transform:translateY(-2px); box-shadow:0 22px 48px rgba(0,0,0,.32)}
+    .proj-banner{height:150px; background:linear-gradient(135deg,var(--brand,#6ee7b7),var(--brand-2,#60a5fa)); display:flex; align-items:flex-start; justify-content:space-between; padding:14px 16px}
     .logo-chip{background:rgba(255,255,255,.92); color:#0b0b0e; border-radius:12px; padding:6px 10px; display:flex; gap:8px; align-items:center; border:1px solid rgba(0,0,0,.08)}
     .logo-chip img{height:18px; width:auto}
     .proj-body{padding:14px 16px; position:relative; overflow:hidden}
@@ -181,10 +183,10 @@
     .proj-card[data-brand="on"] .proj-banner { position: relative; z-index: 1; }
 
     /* Skills icons */
-    .icon-badges{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}
-    .icon-badge{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;min-width:84px;padding:10px 8px;border-radius:14px;border:1px solid var(--border);background:var(--panel);box-shadow:var(--shadow);text-align:center}
-    .icon-badge i{font-size:34px}
-    .icon-badge .label{font-size:12px;color:var(--muted);margin-top:6px}
+    .icon-badges{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px}
+    .icon-badge{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;min-width:96px;padding:12px 12px;border-radius:15px;border:1px solid var(--border);background:linear-gradient(180deg, color-mix(in oklab, var(--panel) 90%, transparent), color-mix(in oklab, var(--panel) 70%, transparent));box-shadow:var(--shadow);text-align:center}
+    .icon-badge i{font-size:36px}
+    .icon-badge .label{font-size:13px;color:var(--muted);margin-top:7px}
     .icon-badge.text-only .pseudo-icon{font-size:13px;font-weight:600;letter-spacing:.2px}
 
     /* === Chatbot popup === */
@@ -252,7 +254,7 @@
     <!-- HERO -->
     <section class="grid hero">
       <div class="card" style="padding:24px">
-        <p class="badge">Based in 6300 Zug, Switzerland • Open to full-time roles</p>
+        <p class="badge"><span class="dot" aria-hidden="true"></span><span class="visually-hidden">Availability: </span>Based in 6300 Zug, Switzerland • Open to full-time roles in Data Science &amp; AI Engineering</p>
         <h1 class="hero-title">Data Scientist (MSc, Applied Information &amp; Data Science)</h1>
         <p class="hero-sub">Highly motivated Data Scientist with a strong foundation in data analysis, statistical modeling, visualization, and data engineering. Completing a Master’s degree in Applied Information and Data Science and finalizing my thesis; actively pursuing full-time roles in Data Science and AI Engineering.</p>
         
@@ -355,7 +357,7 @@
       </div>
     </section>
 
-    <footer class="container"><p>© <span id="year"></span> Kened Kqiraj. Built with semantic HTML + CSS.</p></footer>
+    <footer class="container"><p>© <span id="year"></span> Kened Kqiraj. Built with semantic HTML + CSS. Let’s collaborate — <a href="mailto:kened.kqiraj@stud.hslu.ch">email me</a> or connect on <a href="https://www.linkedin.com/in/kened-kqiraj" target="_blank" rel="noreferrer">LinkedIn</a>.</p></footer>
   </main>
 
   <script>
