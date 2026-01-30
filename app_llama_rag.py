@@ -1,6 +1,6 @@
-# app_llama_rag.py
+# app_openai_rag.py
 # Streamlit RAG over assets/projects.json and assets/further_training.json
-# Uses Sentence-Transformers + NumPy cosine retrieval (no FAISS) + Groq Llama
+# Uses Sentence-Transformers + NumPy cosine retrieval (no FAISS) + OpenAI Chat Completions
 # HR-aware: deflects sensitive/negotiation questions with a friendly CTA.
 # Voice: warm, confident, persuasive, FIRST PERSON (I / me / my).
 # Now with robust per-question JSONL logging (+ daily rotation) and a stronger prompt.
@@ -43,9 +43,9 @@ LOCAL_CANDIDATES = [
 
 EMBED_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 
-# Groq hosted Llama
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
+# -------------------- OpenAI Config --------------------
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
 MAX_CTX_DOCS = 6
 TEMPERATURE = 0.25
@@ -260,7 +260,7 @@ def log_question(question: str):
         "session_id": st.session_state.session_id,
         "question": question,
         "user_agent": st.session_state.get("_browser", None),  # may be None; Streamlit doesn't expose UA officially
-        "model": GROQ_MODEL,
+        "model": OPENAI_MODEL,
         "source": "streamlit_chat_input"
     }
     _append_jsonl(_questions_jsonl_path(), qrec)
@@ -277,7 +277,7 @@ def log_qa(question: str, answer: str):
     })
     _save_qa(path, qa_list)
 
-# -------------------- LLM (Groq) --------------------
+# -------------------- LLM (OpenAI) --------------------
 def _system_prompt() -> str:
     """Sophisticated, HR-aware, RAG-constrained system prompt."""
     return textwrap.dedent(f"""
@@ -336,19 +336,20 @@ def _system_prompt() -> str:
     """)
 
 def llm_call(prompt: str) -> str:
-    if not GROQ_API_KEY:
-        return ("Hosted LLM missing: set GROQ_API_KEY.\n"
-                "Example: setx GROQ_API_KEY YOUR_KEY (Windows) / export GROQ_API_KEY=YOUR_KEY (macOS/Linux)")
+    if not OPENAI_API_KEY:
+        return ("Hosted LLM missing: set OPENAI_API_KEY.\n"
+                "Streamlit Cloud: App → Settings → Secrets → add OPENAI_API_KEY.\n"
+                "Local: export OPENAI_API_KEY=...")
 
     try:
         r = requests.post(
-            "https://api.groq.com/openai/v1/chat/completions",
+            "https://api.openai.com/v1/chat/completions",
             headers={
-                "Authorization": f"Bearer {GROQ_API_KEY}",
+                "Authorization": f"Bearer {OPENAI_API_KEY}",
                 "Content-Type": "application/json",
             },
             json={
-                "model": GROQ_MODEL,
+                "model": OPENAI_MODEL,
                 "messages": [
                     {"role": "system", "content": _system_prompt()},
                     {"role": "user", "content": prompt},
@@ -379,10 +380,8 @@ def build_prompt(question: str, contexts: List[str]) -> str:
     """).strip()
 
     ctx = "\n".join(f"- {c}" for c in contexts) if contexts else "- (no context available)"
-
     user = f"Question: {question}\n\nContext:\n{ctx}\n\nAnswer:"
     return f"{system}\n\n{user}"
-
 
 # >>> PRESENT PROJECT LOGIC ----------------------------------------------------
 def is_present_projects_query(q: str) -> bool:
@@ -421,7 +420,6 @@ def build_present_prompt(question: str, present_ps: List[Dict[str, Any]]) -> str
     return f"{system}\n\n{user}"
 # -----------------------------------------------------------------------------
 
-
 # -------------------- UI --------------------
 st.markdown(
     """
@@ -434,7 +432,7 @@ st.markdown(
       <div style="font-size:24px">💬</div>
       <div>
         <div style="font-weight:800;font-size:20px;line-height:1.2">I’m Kened’s assistant — how may I help you?</div>
-        <div style="color:#9aa3b2;font-size:13px">Groq Llama • Answers about my projects & training</div>
+        <div style="color:#9aa3b2;font-size:13px">OpenAI • Answers about my projects & training</div>
       </div>
     </div>
     """,
@@ -453,12 +451,12 @@ if not projects and not training:
 EMB, DOCS = build_index(projects, training)
 
 # --- 🔥 WARMUP ON SERVER START (once per process) -----------------------------
-# Ensures the embedder, retrieval, and Groq LLM are hot to avoid cold start.
+# Ensures the embedder, retrieval, and OpenAI call are hot to avoid cold start.
 if "server_warmed" not in st.session_state:
     try:
         _ = get_embedder()                     # load SentenceTransformer into memory
         _ = retrieve("hello", EMB, DOCS, k=2)  # force an embedding/query pass
-        _ = llm_call("Say a short hello to confirm warmup.")  # ping Groq backend
+        _ = llm_call("Say a short hello to confirm warmup.")  # ping OpenAI backend
     except Exception:
         pass
     st.session_state.server_warmed = True
@@ -482,10 +480,11 @@ with st.sidebar:
     st.caption("Answer length & model")
     _max_words = st.slider("Max answer words", 80, 400, MAX_ANSWER_WORDS, step=10)
     MAX_ANSWER_WORDS = _max_words  # update live for this session
-    st.text_input("Groq model", value=GROQ_MODEL, key="model_name_sidebar")
+
+    st.text_input("OpenAI model", value=OPENAI_MODEL, key="model_name_sidebar")
     if st.button("Apply model"):
-        GROQ_MODEL = st.session_state.get("model_name_sidebar", GROQ_MODEL)
-        st.success(f"Model set to: {GROQ_MODEL}")
+        OPENAI_MODEL = st.session_state.get("model_name_sidebar", OPENAI_MODEL)
+        st.success(f"Model set to: {OPENAI_MODEL}")
 
     st.divider()
     st.subheader("🗂 Logs")
