@@ -209,7 +209,11 @@
     .chat-fab:active{transform:scale(0.96)}
     .chat-modal{
       position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; z-index:9998;
-      align-items:center; justify-content:center; padding:20px
+      flex-wrap:wrap; align-items:center; justify-content:center; padding:20px;
+      opacity:0; transition:opacity .2s ease
+    }
+    .chat-modal.active{
+      display:flex !important; opacity:1
     }
     .chat-window{
       width:min(920px, 96vw); height:min(80vh, 760px);
@@ -482,21 +486,30 @@
       const closeBtn = document.getElementById('closeChat');
       const frame = document.getElementById('chatFrame');
 
-      function openChat(){
-        if(!frame.src || frame.src.includes('YOUR-STREAMLIT-CHATBOT-URL')) frame.src = STREAMLIT_URL;
-        modal.style.display='flex';
-        openBtn.setAttribute('aria-expanded','true');
-        setTimeout(()=>closeBtn.focus(), 50);
+      if(!modal || !openBtn || !closeBtn || !frame) {
+        console.warn('Chat elements not found');
+        return;
       }
+
+      function openChat(){
+        if(!frame.src) frame.src = STREAMLIT_URL;
+        modal.classList.add('active');
+        openBtn.setAttribute('aria-expanded','true');
+        document.body.style.overflow = 'hidden';
+        setTimeout(()=>closeBtn.focus(), 100);
+      }
+      
       function closeChat(){
-        modal.style.display='none';
+        modal.classList.remove('active');
         openBtn.setAttribute('aria-expanded','false');
+        document.body.style.overflow = '';
         openBtn.focus();
       }
+      
       openBtn.addEventListener('click', openChat);
       closeBtn.addEventListener('click', closeChat);
       modal.addEventListener('click', (e)=>{ if(e.target===modal) closeChat(); });
-      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && modal.style.display==='flex') closeChat(); });
+      document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeChat(); });
     })();
   </script>
 
