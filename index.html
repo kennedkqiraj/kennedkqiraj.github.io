@@ -21,26 +21,30 @@
     :root.light{ --bg:#f7f7fb; --panel:#ffffff; --text:#111217; --muted:#4b4f5c; --accent:#0ea5e9; --accent-2:#22c55e; --border:#e3e8f5; --shadow:0 24px 56px rgba(10,10,10,.08); }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans; color:var(--text); background:radial-gradient(1200px 800px at 100% -10%, rgba(96,165,250,.15), transparent), radial-gradient(800px 600px at -10% 110%, rgba(110,231,183,.12), transparent), var(--bg); line-height:1.7; letter-spacing:-0.01em;}
-    a{color:inherit; text-decoration:none}
+    body{margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans; color:var(--text); background:radial-gradient(1200px 800px at 100% -10%, rgba(96,165,250,.15), transparent), radial-gradient(800px 600px at -10% 110%, rgba(110,231,183,.12), transparent), var(--bg); line-height:1.7; letter-spacing:-0.01em; scroll-behavior:smooth}
+    a{color:inherit; text-decoration:none; transition:color .2s ease}
     .container{max-width:1180px; margin:0 auto; padding:30px 24px 64px}
     .nav{position:sticky; top:0; backdrop-filter:saturate(180%) blur(8px); background:color-mix(in oklab, var(--bg) 85%, transparent); border-bottom:1px solid var(--border); z-index:50}
     .nav-inner{display:flex; align-items:center; justify-content:space-between; padding:16px 20px; max-width:1180px; margin:0 auto}
     .brand{display:flex; align-items:center; gap:10px; font-weight:700}
     .brand .logo{width:34px; height:34px; border-radius:12px; background:linear-gradient(135deg, var(--accent), var(--accent-2)); display:grid; place-items:center; color:#0b0b0e; font-weight:800}
-    .nav a.link{padding:9px 12px; border-radius:12px; opacity:.92; font-weight:600; transition:background .2s ease, color .2s ease, transform .08s ease}
-    .nav a.link:hover{background:color-mix(in oklab, var(--panel) 85%, transparent); color:white; transform:translateY(-1px)}
+    .nav a.link{padding:9px 12px; border-radius:12px; opacity:.92; font-weight:600; transition:background .2s ease, color .2s ease, transform .08s ease, opacity .2s ease}
+    .nav a.link:hover{background:color-mix(in oklab, var(--panel) 85%, transparent); color:var(--accent); transform:translateY(-1px); opacity:1}
     .nav-actions{display:flex; align-items:center; gap:8px}
-    .btn{display:inline-flex; align-items:center; gap:8px; padding:11px 16px; border-radius:14px; border:1px solid var(--border); background:linear-gradient(180deg, color-mix(in oklab, var(--panel) 90%, transparent), color-mix(in oklab, var(--panel) 70%, transparent)); box-shadow:var(--shadow); transition:transform .08s ease, background .2s ease, box-shadow .2s ease}
-    .btn:hover{transform:translateY(-1px); box-shadow:0 18px 38px rgba(0,0,0,.32)}
-    .btn-primary{background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#0b0b0e; border-color:transparent; font-weight:800; letter-spacing:-0.01em}
+    .btn{display:inline-flex; align-items:center; gap:8px; padding:11px 16px; border-radius:14px; border:1px solid var(--border); background:linear-gradient(180deg, color-mix(in oklab, var(--panel) 90%, transparent), color-mix(in oklab, var(--panel) 70%, transparent)); box-shadow:var(--shadow); transition:transform .12s cubic-bezier(.34,.1,.68,1), background .2s ease, box-shadow .2s ease; cursor:pointer}
+    .btn:hover{transform:translateY(-2px); box-shadow:0 20px 42px rgba(0,0,0,.28)}
+    .btn:active{transform:translateY(0)}
+    .btn-primary{background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#0b0b0e; border-color:transparent; font-weight:800; letter-spacing:-0.01em; box-shadow:0 8px 24px rgba(110,231,183,.28)}
+    .btn-primary:hover{box-shadow:0 12px 36px rgba(110,231,183,.38)}
     .btn-ghost{background:transparent; box-shadow:none}
     .grid{display:grid; gap:18px}
     @media(min-width:820px){ .hero{grid-template-columns: 1.2fr .8fr; align-items:center} }
-    .card{background:linear-gradient(180deg, color-mix(in oklab, var(--panel) 95%, transparent), color-mix(in oklab, var(--panel) 80%, transparent)); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); backdrop-filter:saturate(115%)}
+    .card{background:linear-gradient(180deg, color-mix(in oklab, var(--panel) 95%, transparent), color-mix(in oklab, var(--panel) 80%, transparent)); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); backdrop-filter:saturate(115%); transition:transform .2s ease, box-shadow .2s ease; animation:slideUp .5s ease-out}
+    @keyframes slideUp{from{opacity:0; transform:translateY(12px)}to{opacity:1; transform:translateY(0)}}
     .hero-title{font-size:clamp(30px,4.9vw,58px); line-height:1.04; letter-spacing:-.025em; margin:6px 0 10px}
     .hero-sub{font-size:clamp(17px,2.1vw,22px); color:var(--muted); margin:0 0 20px; max-width:760px}
-    .badge{--bgp:color-mix(in oklab, var(--panel) 82%, transparent); background:var(--bgp); border:1px solid var(--border); padding:8px 12px; border-radius:999px; font-size:13px; display:inline-flex; align-items:center; gap:10px; letter-spacing:0}
+    .badge{--bgp:color-mix(in oklab, var(--panel) 82%, transparent); background:var(--bgp); border:1px solid var(--border); padding:8px 12px; border-radius:999px; font-size:13px; display:inline-flex; align-items:center; gap:10px; letter-spacing:0; animation:slideUp .5s ease-out}
+    .badge:hover{border-color:var(--accent); background:color-mix(in oklab, var(--bgp) 90%, var(--accent) 8%)}
     .badge .dot{width:9px; height:9px; border-radius:50%; background:linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow:0 0 0 5px color-mix(in oklab, var(--panel) 82%, transparent); display:inline-block}
     .section{margin-top:32px}
     .split{display:grid; grid-template-columns: 1fr; gap:18px}
@@ -53,13 +57,14 @@
     .muted{color:var(--muted)}
     footer{margin-top:40px; padding-top:24px; border-top:1px solid var(--border); color:var(--muted); font-size:14px}
     .visually-hidden{position:absolute; clip:rect(1px, 1px, 1px, 1px); padding:0; border:0; height:1px; width:1px; overflow:hidden;}
-    .avatar{width:100%; max-width: clamp(300px, 40vw, 480px); display:block; margin:6px auto 12px; border-radius:18px; object-fit:cover; border:1px solid var(--border); box-shadow:var(--shadow); cursor:pointer;}
+    .avatar{width:100%; max-width: clamp(300px, 40vw, 480px); display:block; margin:6px auto 12px; border-radius:18px; object-fit:cover; border:1px solid var(--border); box-shadow:var(--shadow); cursor:pointer; transition:transform .3s cubic-bezier(.34,.1,.68,1), box-shadow .3s ease; animation:slideUp .6s ease-out}
+    .avatar:hover{transform:scale(1.02); box-shadow:0 24px 52px rgba(110,231,183,.24)}
 
     /* Projects grid */
     .projects-grid{display:grid; gap:18px; grid-template-columns:1fr}
     @media(min-width:860px){.projects-grid{grid-template-columns:1fr 1fr}}
-    .proj-card{border:1px solid var(--border); border-radius:18px; background:var(--panel); box-shadow:var(--shadow); overflow:hidden; position:relative; transition:transform .12s ease, box-shadow .18s ease}
-    .proj-card:hover{transform:translateY(-2px); box-shadow:0 22px 48px rgba(0,0,0,.32)}
+    .proj-card{border:1px solid var(--border); border-radius:18px; background:var(--panel); box-shadow:var(--shadow); overflow:hidden; position:relative; transition:transform .18s cubic-bezier(.34,.1,.68,1), box-shadow .18s ease; animation:slideUp .5s ease-out}
+    .proj-card:hover{transform:translateY(-6px); box-shadow:0 28px 56px rgba(0,0,0,.42)}
     .proj-banner{height:150px; background:linear-gradient(135deg,var(--brand,#6ee7b7),var(--brand-2,#60a5fa)); display:flex; align-items:flex-start; justify-content:space-between; padding:14px 16px}
     .logo-chip{background:rgba(255,255,255,.92); color:#0b0b0e; border-radius:12px; padding:6px 10px; display:flex; gap:8px; align-items:center; border:1px solid rgba(0,0,0,.08)}
     .logo-chip img{height:18px; width:auto}
@@ -184,7 +189,8 @@
 
     /* Skills icons */
     .icon-badges{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px}
-    .icon-badge{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;min-width:96px;padding:12px 12px;border-radius:15px;border:1px solid var(--border);background:linear-gradient(180deg, color-mix(in oklab, var(--panel) 90%, transparent), color-mix(in oklab, var(--panel) 70%, transparent));box-shadow:var(--shadow);text-align:center}
+    .icon-badge{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;min-width:96px;padding:12px 12px;border-radius:15px;border:1px solid var(--border);background:linear-gradient(180deg, color-mix(in oklab, var(--panel) 90%, transparent), color-mix(in oklab, var(--panel) 70%, transparent));box-shadow:var(--shadow);text-align:center;transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;animation:slideUp .5s ease-out}
+    .icon-badge:hover{transform:translateY(-4px); border-color:var(--accent); box-shadow:0 14px 32px rgba(110,231,183,.18)}
     .icon-badge i{font-size:36px}
     .icon-badge .label{font-size:13px;color:var(--muted);margin-top:7px}
     .icon-badge.text-only .pseudo-icon{font-size:13px;font-weight:600;letter-spacing:.2px}
@@ -194,8 +200,13 @@
       position:fixed; right:20px; bottom:24px; z-index:9999;
       background:linear-gradient(135deg,var(--accent),var(--accent-2));
       color:#0b0b0e; border:none; border-radius:999px; padding:12px 16px;
-      box-shadow:0 10px 30px rgba(0,0,0,.25); font-weight:700; cursor:pointer
+      box-shadow:0 10px 30px rgba(0,0,0,.25); font-weight:700; cursor:pointer;
+      transition:transform .18s cubic-bezier(.34,.1,.68,1), box-shadow .2s ease;
+      animation:float 3s ease-in-out infinite
     }
+    @keyframes float{0%,100%{transform:translateY(0px)}50%{transform:translateY(-8px)}}
+    .chat-fab:hover{transform:scale(1.1) translateY(-3px); box-shadow:0 14px 42px rgba(110,231,183,.32)}
+    .chat-fab:active{transform:scale(0.96)}
     .chat-modal{
       position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; z-index:9998;
       align-items:center; justify-content:center; padding:20px
@@ -211,7 +222,8 @@
       background:color-mix(in oklab, var(--panel) 90%, transparent)
     }
     .chat-title{font-weight:700}
-    .chat-close{background:transparent; border:none; color:var(--muted); font-size:22px; cursor:pointer}
+    .chat-close{background:transparent; border:none; color:var(--muted); font-size:22px; cursor:pointer; transition:color .2s ease}
+    .chat-close:hover{color:var(--text)}
     .chat-body{flex:1}
     .chat-body iframe{width:100%; height:100%; border:0}
 
@@ -244,7 +256,6 @@
       </nav>
       <div class="nav-actions">
         <button id="themeToggle" class="btn btn-ghost" aria-label="Toggle theme" title="Toggle theme"><span id="themeIcon" aria-hidden="true">🌙</span></button>
-        <a class="btn btn-primary" href="assets/KenedKqirajCV.pdf.pdf" download>Download CV</a>
       </div>
     </div>
   </header>
@@ -285,9 +296,8 @@
     <section class="section" id="experience">
       <div class="card" style="padding:18px">
         <h2>Experience</h2>
-
-          </div>
-                    <div class="t-item">
+        <div class="timeline">
+          <div class="t-item">
             <div class="t-title">Operations Specialist — The Brain Maze LLC <span class="muted">(Jul 2019 – Present)</span></div>
             <ul class="muted" style="margin:6px 0 0 18px">
               <li>Building and orchestrating a multi-stage AI automation pipeline leveraging LLMs for script generation, text-to-speech synthesis, and AI image creation within a scalable production workflow.</li>
@@ -295,7 +305,7 @@
               <li>Automating the full content production lifecycle using Large Language Models (LLMs), from script writing to voiceovers and AI-generated visuals, reducing manual production effort and increasing scalability.</li>
               <li>Improved reporting workflows to enhance transparency and commercial visibility.</li>
             </ul>
-                    <div class="timeline">
+          </div>
           <div class="t-item">
             <div class="t-title">Internship — On AG <span class="muted">(Feb 2025 – Jan 2026)</span></div>
             <ul class="muted" style="margin:6px 0 0 18px">
@@ -364,6 +374,21 @@
 
     <footer class="container"><p>© <span id="year"></span> Kened Kqiraj. Built with semantic HTML + CSS. Let’s collaborate — <a href="mailto:kened.kqiraj@hotmail.com">email me</a> or connect on <a href="https://www.linkedin.com/in/kened-kqiraj" target="_blank" rel="noreferrer">LinkedIn</a>.</p></footer>
   </main>
+
+  <!-- Chat Modal -->
+  <div id="chatModal" class="chat-modal">
+    <div class="chat-window">
+      <div class="chat-head">
+        <span class="chat-title">Chat with Kened's Assistant</span>
+        <button id="closeChat" class="chat-close" aria-label="Close chat">✕</button>
+      </div>
+      <div class="chat-body">
+        <iframe id="chatFrame" src="" title="Chat Assistant"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <button id="openChat" class="chat-fab" aria-label="Open chat assistant" aria-expanded="false">💬 Chat</button>
 
   <script>
     // Theme persistence
@@ -451,7 +476,7 @@
 
     // Chat popup logic
     (function(){
-      const STREAMLIT_URL = "http://localhost:8501/?embed=true";
+      const STREAMLIT_URL = "https://kennedkqiraj-kennedkqiraj-github-io-app-llama-rag-agxxmo.streamlit.app/?embed=true";
       const modal = document.getElementById('chatModal');
       const openBtn = document.getElementById('openChat');
       const closeBtn = document.getElementById('closeChat');
