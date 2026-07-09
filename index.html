@@ -12,61 +12,84 @@
   <meta property="og:image" content="https://kennedkqiraj.github.io/assets/my_picture.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Exo:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%230a0a0a'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' font-size='40' fill='%23fff' font-family='sans-serif'%3EK%3C/text%3E%3C/svg%3E">
 
   <style>
-    :root{ --bg:#0b0b0e; --panel:#111219; --text:#e8e8ea; --muted:#b6b6c2; --accent:#6ee7b7; --accent-2:#60a5fa; --border:color-mix(in oklab, #1d1e26 70%, #6ee7b7 10%); --shadow:0 16px 48px rgba(0,0,0,.35); --radius:18px; }
+    :root{ --bg:#06080d; --panel:#0d1017; --text:#e8e8ea; --muted:#b6b6c2; --accent:#00f0ff; --accent-2:#6ee7b7; --border:color-mix(in oklab, #131620 70%, #00f0ff 10%); --shadow:0 16px 48px rgba(0,0,0,.45); --radius:18px; --font-heading:'Exo',system-ui,sans-serif; --font-mono:'Roboto Mono',monospace; }
     :root.light{ --bg:#f7f7fb; --panel:#ffffff; --text:#111217; --muted:#4b4f5c; --accent:#0ea5e9; --accent-2:#22c55e; --border:#e3e8f5; --shadow:0 24px 56px rgba(10,10,10,.08); }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans; color:var(--text); background:radial-gradient(1200px 800px at 100% -10%, rgba(96,165,250,.15), transparent), radial-gradient(800px 600px at -10% 110%, rgba(110,231,183,.12), transparent), var(--bg); line-height:1.7; letter-spacing:-0.01em; scroll-behavior:smooth}
+    body{margin:0; font-family:var(--font-heading),system-ui,-apple-system,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans; color:var(--text); background:var(--bg); line-height:1.7; letter-spacing:-0.01em; scroll-behavior:smooth; position:relative}
+
+    /* Animated background blobs */
+    .blob{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;will-change:transform}
+    .blob-1{width:600px;height:600px;top:-10%;left:-5%;background:rgba(0,240,255,.12);animation:blobDrift1 18s ease-in-out infinite}
+    .blob-2{width:500px;height:500px;bottom:-10%;right:-8%;background:rgba(110,231,183,.10);animation:blobDrift2 22s ease-in-out infinite}
+    .blob-3{width:400px;height:400px;top:40%;left:50%;background:rgba(0,240,255,.08);animation:blobDrift3 26s ease-in-out infinite}
+    :root.light .blob{opacity:.3}
+    @keyframes blobDrift1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(80px,60px) scale(1.1)}66%{transform:translate(-40px,30px) scale(0.95)}}
+    @keyframes blobDrift2{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-60px,-40px) scale(1.05)}66%{transform:translate(50px,-20px) scale(0.9)}}
+    @keyframes blobDrift3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-70px,50px) scale(1.15)}}
+
+    /* Scanline overlay */
+    body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9990;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);opacity:1}
+    :root.light body::after{opacity:.4}
     a{color:inherit; text-decoration:none; transition:color .2s ease}
-    .container{max-width:1180px; margin:0 auto; padding:30px 24px 64px}
-    .nav{position:sticky; top:0; backdrop-filter:saturate(180%) blur(8px); background:color-mix(in oklab, var(--bg) 85%, transparent); border-bottom:1px solid var(--border); z-index:50}
+    .container{max-width:1180px; margin:0 auto; padding:30px 24px 64px; position:relative; z-index:1}
+    .nav{position:sticky; top:0; backdrop-filter:saturate(180%) blur(12px); background:color-mix(in oklab, var(--bg) 85%, transparent); border-bottom:1px solid var(--border); z-index:50}
     .nav-inner{display:flex; align-items:center; justify-content:space-between; padding:16px 20px; max-width:1180px; margin:0 auto}
-    .brand{display:flex; align-items:center; gap:10px; font-weight:700}
-    .brand .logo{width:34px; height:34px; border-radius:12px; background:linear-gradient(135deg, var(--accent), var(--accent-2)); display:grid; place-items:center; color:#0b0b0e; font-weight:800}
-    .nav a.link{padding:9px 12px; border-radius:12px; opacity:.92; font-weight:600; transition:background .2s ease, color .2s ease, transform .08s ease, opacity .2s ease}
-    .nav a.link:hover{background:color-mix(in oklab, var(--panel) 85%, transparent); color:var(--accent); transform:translateY(-1px); opacity:1}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:700; font-family:var(--font-heading)}
+    .brand .logo{width:34px; height:34px; border-radius:12px; background:linear-gradient(135deg, var(--accent), var(--accent-2)); display:grid; place-items:center; color:#06080d; font-weight:800; box-shadow:0 0 12px rgba(0,240,255,.3)}
+    .nav a.link{padding:9px 12px; border-radius:12px; opacity:.92; font-weight:600; position:relative; transition:background .2s ease, color .2s ease, transform .08s ease, opacity .2s ease, text-shadow .2s ease}
+    .nav a.link:hover{background:color-mix(in oklab, var(--panel) 85%, transparent); color:var(--accent); transform:translateY(-1px); opacity:1; text-shadow:0 0 8px rgba(0,240,255,.4)}
+    .nav a.link.active{color:var(--accent); opacity:1}
+    .nav a.link.active::after{content:"";position:absolute;bottom:2px;left:12px;right:12px;height:2px;background:var(--accent);border-radius:1px;box-shadow:0 0 6px rgba(0,240,255,.5)}
     .nav-actions{display:flex; align-items:center; gap:8px}
     .btn{display:inline-flex; align-items:center; gap:8px; padding:11px 16px; border-radius:14px; border:1px solid var(--border); background:linear-gradient(180deg, color-mix(in oklab, var(--panel) 90%, transparent), color-mix(in oklab, var(--panel) 70%, transparent)); box-shadow:var(--shadow); transition:transform .12s cubic-bezier(.34,.1,.68,1), background .2s ease, box-shadow .2s ease; cursor:pointer}
     .btn:hover{transform:translateY(-2px); box-shadow:0 20px 42px rgba(0,0,0,.28)}
     .btn:active{transform:translateY(0)}
-    .btn-primary{background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#0b0b0e; border-color:transparent; font-weight:800; letter-spacing:-0.01em; box-shadow:0 8px 24px rgba(110,231,183,.28)}
-    .btn-primary:hover{box-shadow:0 12px 36px rgba(110,231,183,.38)}
+    .btn-primary{background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#06080d; border-color:transparent; font-weight:800; letter-spacing:-0.01em; box-shadow:0 8px 24px rgba(0,240,255,.28)}
+    .btn-primary:hover{box-shadow:0 12px 36px rgba(0,240,255,.38)}
     .btn-ghost{background:transparent; box-shadow:none}
     .grid{display:grid; gap:18px}
     @media(min-width:820px){ .hero{grid-template-columns: 1.2fr .8fr; align-items:center} }
-    .card{background:linear-gradient(180deg, color-mix(in oklab, var(--panel) 95%, transparent), color-mix(in oklab, var(--panel) 80%, transparent)); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); backdrop-filter:saturate(115%); transition:transform .2s ease, box-shadow .2s ease; animation:slideUp .5s ease-out}
-    @keyframes slideUp{from{opacity:0; transform:translateY(12px)}to{opacity:1; transform:translateY(0)}}
-    .hero-title{font-size:clamp(30px,4.9vw,58px); line-height:1.04; letter-spacing:-.025em; margin:6px 0 10px}
+    .card{background:linear-gradient(180deg, color-mix(in oklab, var(--panel) 95%, transparent), color-mix(in oklab, var(--panel) 80%, transparent)); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); backdrop-filter:blur(12px) saturate(115%); transition:transform .2s ease, box-shadow .2s ease, border-color .3s ease}
+    .card:hover{border-color:color-mix(in oklab, var(--accent) 30%, var(--border)); box-shadow:0 0 20px rgba(0,240,255,.1), var(--shadow)}
+    .hero-title{font-size:clamp(30px,4.9vw,58px); line-height:1.04; letter-spacing:-.025em; margin:6px 0 10px; font-family:var(--font-heading); background:linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent)); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation:gradientShift 4s ease-in-out infinite}
+    @keyframes gradientShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
     .hero-sub{font-size:clamp(17px,2.1vw,22px); color:var(--muted); margin:0 0 20px; max-width:760px}
-    .badge{--bgp:color-mix(in oklab, var(--panel) 82%, transparent); background:var(--bgp); border:1px solid var(--border); padding:8px 12px; border-radius:999px; font-size:13px; display:inline-flex; align-items:center; gap:10px; letter-spacing:0; animation:slideUp .5s ease-out}
+    h2{font-family:var(--font-heading)}
+    .badge{--bgp:color-mix(in oklab, var(--panel) 82%, transparent); background:var(--bgp); border:1px solid var(--border); padding:8px 12px; border-radius:999px; font-size:13px; font-family:var(--font-mono); display:inline-flex; align-items:center; gap:10px; letter-spacing:0}
+    .badge .cursor{display:inline-block;width:2px;height:1em;background:var(--accent);margin-left:4px;animation:cursorBlink 1s step-end infinite}
+    @keyframes cursorBlink{0%,100%{opacity:1}50%{opacity:0}}
     .badge:hover{border-color:var(--accent); background:color-mix(in oklab, var(--bgp) 90%, var(--accent) 8%)}
-    .badge .dot{width:9px; height:9px; border-radius:50%; background:linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow:0 0 0 5px color-mix(in oklab, var(--panel) 82%, transparent); display:inline-block}
+    .badge .dot{width:9px; height:9px; border-radius:50%; background:linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow:0 0 0 5px color-mix(in oklab, var(--panel) 82%, transparent), 0 0 8px rgba(0,240,255,.4); display:inline-block}
     .section{margin-top:32px}
     .split{display:grid; grid-template-columns: 1fr; gap:18px}
     @media(min-width:860px){.split{grid-template-columns: 1fr 1fr}}
     .timeline{position:relative; padding-left:28px}
-    .timeline::before{content:""; position:absolute; left:12px; top:6px; bottom:6px; width:2px; background:var(--border)}
+    .timeline::before{content:""; position:absolute; left:12px; top:6px; bottom:6px; width:2px; background:var(--border); transition:background .3s ease}
+    .timeline.drawn::before{background:linear-gradient(180deg, var(--accent), var(--accent-2), var(--border))}
     .t-item{position:relative; margin-bottom:14px}
-    .t-item::before{content:""; position:absolute; left:-20px; top:0.9em; transform:translateY(-50%); width:10px; height:10px; border-radius:50%; background:linear-gradient(135deg, var(--accent), var(--accent-2));}
+    .t-item::before{content:""; position:absolute; left:-20px; top:0.9em; transform:translateY(-50%); width:10px; height:10px; border-radius:50%; background:linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow:0 0 8px rgba(0,240,255,.4); animation:dotPulse 2s ease-in-out infinite}
+    @keyframes dotPulse{0%,100%{box-shadow:0 0 4px rgba(0,240,255,.3)}50%{box-shadow:0 0 12px rgba(0,240,255,.6)}}
     .t-title{font-weight:600}
     .muted{color:var(--muted)}
     footer{margin-top:40px; padding-top:24px; border-top:1px solid var(--border); color:var(--muted); font-size:14px}
     .visually-hidden{position:absolute; clip:rect(1px, 1px, 1px, 1px); padding:0; border:0; height:1px; width:1px; overflow:hidden;}
-    .avatar{width:100%; max-width: clamp(300px, 40vw, 480px); display:block; margin:6px auto 12px; border-radius:18px; object-fit:cover; border:1px solid var(--border); box-shadow:var(--shadow); cursor:pointer; transition:transform .3s cubic-bezier(.34,.1,.68,1), box-shadow .3s ease; animation:slideUp .6s ease-out}
-    .avatar:hover{transform:scale(1.02); box-shadow:0 24px 52px rgba(110,231,183,.24)}
+    .avatar{width:100%; max-width: clamp(300px, 40vw, 480px); display:block; margin:6px auto 12px; border-radius:18px; object-fit:cover; border:1px solid var(--border); box-shadow:var(--shadow); cursor:pointer; transition:transform .3s cubic-bezier(.34,.1,.68,1), box-shadow .3s ease; animation:avatarIn .8s cubic-bezier(.34,.1,.68,1) both}
+    @keyframes avatarIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+    .avatar:hover{transform:scale(1.02); box-shadow:0 24px 52px rgba(0,240,255,.2)}
 
     /* Projects grid */
     .projects-grid{display:grid; gap:18px; grid-template-columns:1fr}
     @media(min-width:860px){.projects-grid{grid-template-columns:1fr 1fr}}
-    .proj-card{border:1px solid var(--border); border-radius:18px; background:var(--panel); box-shadow:var(--shadow); overflow:hidden; position:relative; transition:transform .18s cubic-bezier(.34,.1,.68,1), box-shadow .18s ease; animation:slideUp .5s ease-out}
-    .proj-card:hover{transform:translateY(-6px); box-shadow:0 28px 56px rgba(0,0,0,.42)}
+    .proj-card{border:1px solid var(--border); border-radius:18px; background:var(--panel); box-shadow:var(--shadow); overflow:hidden; position:relative; transition:transform .18s cubic-bezier(.34,.1,.68,1), box-shadow .18s ease, border-color .3s ease}
+    .proj-card:hover{transform:translateY(-6px); box-shadow:0 28px 56px rgba(0,0,0,.42), 0 0 20px rgba(0,240,255,.12); border-color:color-mix(in oklab, var(--accent) 25%, var(--border))}
     .proj-banner{height:150px; background:linear-gradient(135deg,var(--brand,#6ee7b7),var(--brand-2,#60a5fa)); display:flex; align-items:flex-start; justify-content:space-between; padding:14px 16px}
-    .logo-chip{background:rgba(255,255,255,.92); color:#0b0b0e; border-radius:12px; padding:6px 10px; display:flex; gap:8px; align-items:center; border:1px solid rgba(0,0,0,.08)}
+    .logo-chip{background:rgba(255,255,255,.92); color:#06080d; border-radius:12px; padding:6px 10px; display:flex; gap:8px; align-items:center; border:1px solid rgba(0,0,0,.08)}
     .logo-chip img{height:18px; width:auto}
     .proj-body{padding:14px 16px; position:relative; overflow:hidden}
     .proj-title{margin:0 0 8px; font-weight:700; font-size:18px}
@@ -181,31 +204,31 @@
       background: linear-gradient(135deg,
         color-mix(in oklab, var(--on-warm-300) 40%, white) 0%,
         color-mix(in oklab, var(--on-warm-200) 30%, white) 100%);
-      color:#0b0b0e;
+      color:#06080d;
     }
-    .proj-card[data-brand="on"] .logo-chip{ background: rgba(255,255,255,.9); color:#0b0b0e; }
+    .proj-card[data-brand="on"] .logo-chip{ background: rgba(255,255,255,.9); color:#06080d; }
     .proj-card[data-brand="on"] .proj-body,
     .proj-card[data-brand="on"] .proj-banner { position: relative; z-index: 1; }
 
     /* Skills icons */
     .icon-badges{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px}
-    .icon-badge{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;min-width:96px;padding:12px 12px;border-radius:15px;border:1px solid var(--border);background:linear-gradient(180deg, color-mix(in oklab, var(--panel) 90%, transparent), color-mix(in oklab, var(--panel) 70%, transparent));box-shadow:var(--shadow);text-align:center;transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;animation:slideUp .5s ease-out}
-    .icon-badge:hover{transform:translateY(-4px); border-color:var(--accent); box-shadow:0 14px 32px rgba(110,231,183,.18)}
+    .icon-badge{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;min-width:96px;padding:12px 12px;border-radius:15px;border:1px solid var(--border);background:linear-gradient(180deg, color-mix(in oklab, var(--panel) 90%, transparent), color-mix(in oklab, var(--panel) 70%, transparent));box-shadow:var(--shadow);text-align:center;transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease}
+    .icon-badge:hover{transform:translateY(-4px); border-color:var(--accent); box-shadow:0 0 16px rgba(0,240,255,.2), 0 14px 32px rgba(0,240,255,.12)}
     .icon-badge i{font-size:36px}
-    .icon-badge .label{font-size:13px;color:var(--muted);margin-top:7px}
+    .icon-badge .label{font-size:13px;color:var(--muted);margin-top:7px;font-family:var(--font-mono)}
     .icon-badge.text-only .pseudo-icon{font-size:13px;font-weight:600;letter-spacing:.2px}
 
     /* === Chatbot popup === */
     .chat-fab{
       position:fixed; right:20px; bottom:24px; z-index:9999;
       background:linear-gradient(135deg,var(--accent),var(--accent-2));
-      color:#0b0b0e; border:none; border-radius:999px; padding:12px 16px;
+      color:#06080d; border:none; border-radius:999px; padding:12px 16px;
       box-shadow:0 10px 30px rgba(0,0,0,.25); font-weight:700; cursor:pointer;
       transition:transform .18s cubic-bezier(.34,.1,.68,1), box-shadow .2s ease;
-      animation:float 3s ease-in-out infinite
     }
-    @keyframes float{0%,100%{transform:translateY(0px)}50%{transform:translateY(-8px)}}
-    .chat-fab:hover{transform:scale(1.1) translateY(-3px); box-shadow:0 14px 42px rgba(110,231,183,.32)}
+    .chat-fab::before{content:"";position:absolute;inset:-4px;border-radius:999px;background:linear-gradient(135deg,var(--accent),var(--accent-2));z-index:-1;opacity:0;animation:fabPulse 2.5s ease-in-out infinite}
+    @keyframes fabPulse{0%,100%{opacity:0;transform:scale(1)}50%{opacity:.35;transform:scale(1.15)}}
+    .chat-fab:hover{transform:scale(1.1) translateY(-3px); box-shadow:0 0 24px rgba(0,240,255,.35), 0 14px 42px rgba(0,240,255,.2)}
     .chat-fab:active{transform:scale(0.96)}
     .chat-modal{
       position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; z-index:9998;
@@ -231,6 +254,25 @@
     .chat-body{flex:1}
     .chat-body iframe{width:100%; height:100%; border:0}
 
+    /* Scroll reveal */
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s cubic-bezier(.16,1,.3,1), transform .6s cubic-bezier(.16,1,.3,1)}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+
+    /* Tags font */
+    .tag{font-family:var(--font-mono)}
+
+    /* Reduced motion */
+    @media(prefers-reduced-motion:reduce){
+      .reveal{opacity:1!important;transform:none!important;transition:none!important}
+      .blob{animation:none!important}
+      .hero-title{animation:none!important}
+      .badge .cursor{animation:none!important;display:none}
+      .t-item::before{animation:none!important}
+      .chat-fab::before{animation:none!important}
+      .avatar{animation:none!important}
+      body::after{display:none}
+    }
+
     /* --- Mobile-specific polish --- */
     @media (max-width: 600px) {
       html, body { overflow-x: hidden; }
@@ -246,6 +288,11 @@
   </style>
 </head>
 <body>
+  <!-- Ambient blobs -->
+  <div class="blob blob-1" aria-hidden="true"></div>
+  <div class="blob blob-2" aria-hidden="true"></div>
+  <div class="blob blob-3" aria-hidden="true"></div>
+
   <!-- NAV -->
   <header class="nav">
     <div class="nav-inner">
@@ -269,10 +316,8 @@
     <!-- HERO -->
     <section class="grid hero">
       <div class="card" style="padding:24px">
-        <p class="badge"><span class="dot" aria-hidden="true"></span><span class="visually-hidden">Availability: </span>Based in Zug, Switzerland • Open to full-time roles in Data Science &amp; AI Engineering</p>
+        <p class="badge"><span class="dot" aria-hidden="true"></span><span class="visually-hidden">Availability: </span>Based in Zug, Switzerland • Open to full-time roles in Data Science &amp; AI Engineering<span class="cursor" aria-hidden="true"></span></p>
         <h1 class="hero-title">Data Scientist (MSc, Applied Information &amp; Data Science)</h1>
-        <p class="hero-sub">Highly motivated Data Scientist with a strong foundation in data analysis, statistical modeling, visualization, and data engineering. Recently completed my Master’s degree in Applied Information and Data Science and am now actively seeking full-time opportunities in Data Science and AI Engineering.</p>
-        
         <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap">
           <a class="btn" 
             href="https://kennedkqiraj-kennedkqiraj-github-io-app-llama-rag-agxxmo.streamlit.app/" 
@@ -492,6 +537,85 @@
             wrap.appendChild(item);
           });
         }).catch(console.error);
+    })();
+
+    // Scroll-triggered reveal animations
+    (function(){
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if(prefersReduced) return;
+
+      // Mark elements for reveal
+      document.querySelectorAll('.card, .section, .icon-badge, .t-item, .proj-card').forEach(el=>{
+        el.classList.add('reveal');
+      });
+
+      const observer = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){
+            const el = entry.target;
+            // Stagger children
+            const parent = el.closest('.icon-badges, .timeline, .projects-grid');
+            if(parent){
+              const siblings = Array.from(parent.querySelectorAll('.reveal:not(.visible)'));
+              const idx = siblings.indexOf(el);
+              if(idx >= 0){
+                setTimeout(()=>el.classList.add('visible'), idx * 50);
+              } else {
+                el.classList.add('visible');
+              }
+            } else {
+              el.classList.add('visible');
+            }
+            observer.unobserve(el);
+          }
+        });
+      }, {threshold:0.1, rootMargin:'0px 0px -40px 0px'});
+
+      document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+      // Re-observe dynamically added project cards and training items
+      const projGrid = document.getElementById('projectsGrid');
+      const trainWrap = document.getElementById('trainingJsonContainer');
+      const mutObs = new MutationObserver(muts=>{
+        muts.forEach(m=>{
+          m.addedNodes.forEach(n=>{
+            if(n.nodeType===1){
+              n.classList.add('reveal');
+              observer.observe(n);
+            }
+          });
+        });
+      });
+      if(projGrid) mutObs.observe(projGrid, {childList:true});
+      if(trainWrap) mutObs.observe(trainWrap, {childList:true});
+
+      // Draw timeline lines on scroll
+      const timelineObs = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('drawn'); });
+      }, {threshold:0.2});
+      document.querySelectorAll('.timeline').forEach(t=>timelineObs.observe(t));
+    })();
+
+    // Active nav link based on scroll position
+    (function(){
+      const links = document.querySelectorAll('.nav a.link[href^="#"]');
+      const sections = [];
+      links.forEach(l=>{
+        const id = l.getAttribute('href').slice(1);
+        const sec = document.getElementById(id);
+        if(sec) sections.push({el:sec, link:l});
+      });
+      function update(){
+        let current = null;
+        sections.forEach(s=>{
+          const rect = s.el.getBoundingClientRect();
+          if(rect.top <= 120) current = s;
+        });
+        links.forEach(l=>l.classList.remove('active'));
+        if(current) current.link.classList.add('active');
+      }
+      window.addEventListener('scroll', update, {passive:true});
+      update();
     })();
 
     // Chat popup logic

@@ -58,7 +58,7 @@ PROFILE = {
     "roles_open": ["Data Scientist", "AI Engineer", "Data Analyst"],
     "work_mode": ["On-site", "Hybrid", "Remote"],
     "status": "Open to full-time roles",
-    "start_timing": "Flexible start; currently interning at On AG.",
+    "start_timing": "Currently working as a Data Science Intern at Swiss International Air Lines.",
     "languages": ["English", "German (Intermediate)", "Albanian"],
 }
 
@@ -335,11 +335,22 @@ def _system_prompt() -> str:
     </answer-framework>
     """)
 
-def llm_call(prompt: str) -> str:
+def llm_call(prompt: str, history: list = None) -> str:
     if not OPENAI_API_KEY:
         return ("Hosted LLM missing: set OPENAI_API_KEY.\n"
                 "Streamlit Cloud: App → Settings → Secrets → add OPENAI_API_KEY.\n"
                 "Local: export OPENAI_API_KEY=...")
+
+    messages = [{"role": "system", "content": _system_prompt()}]
+
+    # Include conversation history for multi-turn context (last 10 turns max)
+    if history:
+        recent = history[-10:]
+        for m in recent:
+            messages.append({"role": m["role"], "content": m["content"]})
+
+    # The current RAG-augmented prompt as the final user message
+    messages.append({"role": "user", "content": prompt})
 
     try:
         r = requests.post(
@@ -350,10 +361,7 @@ def llm_call(prompt: str) -> str:
             },
             json={
                 "model": OPENAI_MODEL,
-                "messages": [
-                    {"role": "system", "content": _system_prompt()},
-                    {"role": "user", "content": prompt},
-                ],
+                "messages": messages,
                 "temperature": TEMPERATURE,
                 "max_tokens": MAX_TOKENS,
             },
@@ -522,11 +530,11 @@ if q:
                     if is_present_projects_query(q):
                         pres = present_projects_only(projects)
                         prompt = build_present_prompt(q, pres)
-                        ans = llm_call(prompt)
+                        ans = llm_call(prompt, history=st.session_state.history)
                     else:
                         ctxs = retrieve(q, EMB, DOCS, k=MAX_CTX_DOCS)
                         prompt = build_prompt(q, ctxs)
-                        ans = llm_call(prompt)
+                        ans = llm_call(prompt, history=st.session_state.history)
 
             # 4) show + history + log Q&A
             st.markdown(ans)
