@@ -3,16 +3,11 @@ import { Menu, X } from 'lucide-react'
 import { ArrowUpRight, Github, Linkedin, Mail, MapPin, MessageCircle, Phone } from 'lucide-react'
 import projects from '../assets/projects.json'
 import training from '../assets/further_training.json'
+import experience from '../assets/experience.json'
 
 const BG_IMAGE_1='https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260609_195923_b0ba8ace-1d1d-4f2c-9a28-1ab84b330680.png&w=1280&q=85'
 const BG_IMAGE_2='https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260609_201152_bba90a12-bf12-459f-91f0-51f237dbaf3b.png&w=1280&q=85'
 const SPOTLIGHT_R=260
-
-const experience=[
-  {role:'Data Science Intern',company:'Swiss International Air Lines',period:'Mar 2026 — Present',points:['Automating Python data pipelines for operational analytics.','Using Azure Data Factory and Blob Storage for scalable processing and deployment.','Building Power Automate workflows and analyzing Lufthansa Group ground operations data.','Supporting dashboards, stakeholder requirements, and data-quality checks during Azure migrations.']},
-  {role:'Operations Specialist / AI Engineer',company:'The Brain Maze LLC',period:'Jul 2019 — Mar 2026',points:['Built a multi-stage generative AI production pipeline spanning scripts, text-to-speech, and image creation.','Automated the content production lifecycle with LLMs, reducing manual effort and increasing scalability.','Improved reporting workflows for stronger transparency and commercial visibility.']},
-  {role:'Internship',company:'On AG',period:'Feb 2025 — Jan 2026',points:['Product Owner for cloud-based trade-compliance and legal automation.','Extracted and interpreted FTA rules with NLP and large language models.','Designed regulatory ETL pipelines with Python, SQL, and cloud-native services.','Connected legal experts, business stakeholders, and technical teams to drive adoption.']},
-]
 
 const skills: Array<[string,string|null]>=[
   ['Python','assets/pytorch.png'],['R',null],['SQL',null],['PyTorch','assets/pytorch.png'],['n8n','assets/n8n.png'],['Azure','assets/azure.png'],['Databricks','assets/databricks.png'],['Tableau','assets/tableau.png'],['Streamlit','assets/streamlit.png'],['Google Cloud',null],['Git',null],['GitHub',null],['LangChain','assets/langchain.png'],['Data Pipelines','assets/pipeline.png'],['Vertex AI','assets/vertexai.png'],

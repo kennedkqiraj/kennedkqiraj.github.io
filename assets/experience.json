@@ -1,0 +1,37 @@
+[
+  {
+    "role": "Data Science Intern",
+    "company": "Swiss International Air Lines",
+    "period": "Mar 2026 — Present",
+    "current": true,
+    "points": [
+      "Automating Python data pipelines for operational analytics.",
+      "Using Azure Data Factory and Blob Storage for scalable processing and deployment.",
+      "Building Power Automate workflows and analyzing Lufthansa Group ground operations data.",
+      "Supporting dashboards, stakeholder requirements, and data-quality checks during Azure migrations."
+    ]
+  },
+  {
+    "role": "Operations Specialist / AI Engineer",
+    "company": "The Brain Maze LLC",
+    "period": "Jul 2019 — Mar 2026",
+    "current": false,
+    "points": [
+      "Built a multi-stage generative AI production pipeline spanning scripts, text-to-speech, and image creation.",
+      "Automated the content production lifecycle with LLMs, reducing manual effort and increasing scalability.",
+      "Improved reporting workflows for stronger transparency and commercial visibility."
+    ]
+  },
+  {
+    "role": "Internship",
+    "company": "On AG",
+    "period": "Feb 2025 — Jan 2026",
+    "current": false,
+    "points": [
+      "Product Owner for cloud-based trade-compliance and legal automation.",
+      "Extracted and interpreted FTA rules with NLP and large language models.",
+      "Designed regulatory ETL pipelines with Python, SQL, and cloud-native services.",
+      "Connected legal experts, business stakeholders, and technical teams to drive adoption."
+    ]
+  }
+]

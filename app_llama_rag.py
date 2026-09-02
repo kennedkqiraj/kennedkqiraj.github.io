@@ -118,13 +118,24 @@ def doc_from_training(t: Dict[str, Any]) -> str:
         Tags: {tags}
     """)
 
+def doc_from_experience(e: Dict[str, Any]) -> str:
+    role = e.get("role", "")
+    company = e.get("company", "")
+    period = e.get("period", "")
+    current = "yes" if e.get("current") else "no"
+    points = " • ".join(e.get("points", []))
+    return normalize_space(f"""
+        [EXPERIENCE] Role: {role} | Company: {company} | Period: {period} | Current: {current}
+        Responsibilities: {points}
+    """)
+
 # -------------------- Embeddings & Retrieval (NumPy) --------------------
 @st.cache_resource(show_spinner=False)
 def get_embedder():
     return SentenceTransformer(EMBED_MODEL_NAME)
 
 @st.cache_resource(show_spinner=True)
-def build_index(projects: List[Dict[str, Any]], training: List[Dict[str, Any]]) -> Tuple[np.ndarray, List[str]]:
+def build_index(projects: List[Dict[str, Any]], training: List[Dict[str, Any]], experience: List[Dict[str, Any]]) -> Tuple[np.ndarray, List[str]]:
     """Returns (embedding_matrix, docs). Embeddings are L2-normalized."""
     docs: List[str] = []
 
@@ -136,6 +147,12 @@ def build_index(projects: List[Dict[str, Any]], training: List[Dict[str, Any]]) 
 
     for t in training:
         base = doc_from_training(t)
+        for ch in chunk_text(base, 120, 20):
+            if ch:
+                docs.append(ch)
+
+    for e in experience:
+        base = doc_from_experience(e)
         for ch in chunk_text(base, 120, 20):
             if ch:
                 docs.append(ch)
@@ -391,40 +408,36 @@ def build_prompt(question: str, contexts: List[str]) -> str:
     user = f"Question: {question}\n\nContext:\n{ctx}\n\nAnswer:"
     return f"{system}\n\n{user}"
 
-# >>> PRESENT PROJECT LOGIC ----------------------------------------------------
-def is_present_projects_query(q: str) -> bool:
+# Query routing keeps current work tied to experience and projects opt-in.
+def is_current_work_query(q: str) -> bool:
     ql = q.lower()
     patterns = [
-        r"\bpresent project(s)?\b",
-        r"\bcurrent project(s)?\b",
-        r"\bongoing project(s)?\b",
         r"\bwhat (are|am) you working on\b",
         r"\bworking on now\b",
+        r"\bwhat do you do (right )?now\b",
+        r"\bcurrent (job|role|work|position)\b",
         r"\bnowadays\b",
     ]
     return any(re.search(p, ql) for p in patterns)
 
-def present_projects_only(projects: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    out = []
-    for p in projects:
-        title = (p.get("title") or "").lower()
-        if "present" in title:
-            out.append(p)
-    return out
+def is_project_query(q: str) -> bool:
+    return bool(re.search(r"\b(project|projects|portfolio|built|build|created|developed)\b", q.lower()))
 
-def build_present_prompt(question: str, present_ps: List[Dict[str, Any]]) -> str:
-    contexts = [doc_from_project(p) for p in present_ps]
+def build_current_work_prompt(question: str, experience: List[Dict[str, Any]]) -> str:
+    current_roles = [e for e in experience if e.get("current")]
+    contexts = [doc_from_experience(e) for e in current_roles]
     system = textwrap.dedent(f"""
-    You are Kened’s assistant describing ONLY the projects whose title contains the word "Present".
+    Answer only from Kened's CURRENT professional experience below.
+    Do not mention projects or previous employers unless the user explicitly asks about them.
     Make it engaging and concise for a hiring audience:
     - Start with a one-sentence hook (impact/outcome).
-    - Then give 3–5 punchy bullets: what I'm building, stack, why it matters, concrete results.
+    - Then give 3–5 punchy bullets describing my current role and responsibilities.
     - Keep it first-person, confident, concrete.
-    - If nothing is available, say I don't have a project marked as present here.
+    - If nothing is available, say I don't have a current role listed here.
     Limit to ~{MAX_ANSWER_WORDS} words unless the user asks for depth.
     """).strip()
-    ctx = "\n".join(f"- {c}" for c in contexts) if contexts else "- (no present projects found)"
-    user = f"Question: {question}\n\nContext (only 'Present' projects):\n{ctx}\n\nAnswer:"
+    ctx = "\n".join(f"- {c}" for c in contexts) if contexts else "- (no current experience found)"
+    user = f"Question: {question}\n\nCurrent experience:\n{ctx}\n\nAnswer:"
     return f"{system}\n\n{user}"
 # -----------------------------------------------------------------------------
 
@@ -452,11 +465,13 @@ projects = load_json_from(PROJECTS_URL, LOCAL_CANDIDATES, "projects.json") or \
            load_json_from(PROJECTS_URL, LOCAL_CANDIDATES, "assets/projects.json")
 training = load_json_from(TRAINING_URL, LOCAL_CANDIDATES, "further_training.json") or \
            load_json_from(TRAINING_URL, LOCAL_CANDIDATES, "assets/further_training.json")
+experience = load_json_from(None, LOCAL_CANDIDATES, "experience.json") or \
+             load_json_from(None, LOCAL_CANDIDATES, "assets/experience.json")
 
 if not projects and not training:
     st.warning("I can’t find my data (projects / further training). Please ensure both JSON files exist or set the URLs.")
 
-EMB, DOCS = build_index(projects, training)
+EMB, DOCS = build_index(projects, training, experience)
 
 # --- 🔥 WARMUP ON SERVER START (once per process) -----------------------------
 # Ensures the embedder, retrieval, and OpenAI call are hot to avoid cold start.
@@ -527,12 +542,13 @@ if q:
                 if deflection:
                     ans = deflection
                 else:
-                    if is_present_projects_query(q):
-                        pres = present_projects_only(projects)
-                        prompt = build_present_prompt(q, pres)
+                    if is_current_work_query(q) and not is_project_query(q):
+                        prompt = build_current_work_prompt(q, experience)
                         ans = llm_call(prompt, history=st.session_state.history)
                     else:
                         ctxs = retrieve(q, EMB, DOCS, k=MAX_CTX_DOCS)
+                        if not is_project_query(q):
+                            ctxs = [ctx for ctx in ctxs if not ctx.startswith("[PROJECT]")]
                         prompt = build_prompt(q, ctxs)
                         ans = llm_call(prompt, history=st.session_state.history)
 
