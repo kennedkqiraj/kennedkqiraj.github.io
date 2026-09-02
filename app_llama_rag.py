@@ -468,8 +468,8 @@ training = load_json_from(TRAINING_URL, LOCAL_CANDIDATES, "further_training.json
 experience = load_json_from(None, LOCAL_CANDIDATES, "experience.json") or \
              load_json_from(None, LOCAL_CANDIDATES, "assets/experience.json")
 
-if not projects and not training:
-    st.warning("I can’t find my data (projects / further training). Please ensure both JSON files exist or set the URLs.")
+if not projects and not training and not experience:
+    st.warning("I can’t find my data (projects / further training / experience). Please ensure the JSON files exist or set the URLs.")
 
 EMB, DOCS = build_index(projects, training, experience)
 
